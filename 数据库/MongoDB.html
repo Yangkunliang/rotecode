@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB 面试题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .toc-list a.active {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #4ade80;
+        }
+
+        .question-card h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-card h2 .num {
+            background: #4ade80;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .question-card p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .question-card ul, .question-card ol {
+            margin: 12px 0 12px 25px;
+            color: #475569;
+        }
+
+        .question-card li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .question-card strong {
+            color: #1e293b;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #4ade80;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>MongoDB 面试题</h1>
+            
+            <div class="question-card" id="q1">
+                <h2><span class="num">1</span>MongoDB中索引的工作原理及其类型</h2>
+                <p>MongoDB中索引的工作原理类似于传统数据库，用于加速查询操作。索引存储着文档的一个小部分字段，并按照这些字段的排序顺序进行组织。常见的索引类型包括：</p>
+                <ul>
+                    <li><strong>单字段索引：</strong>最基本的索引类型，只对文档中的一个字段进行索引。</li>
+                    <li><strong>复合索引：</strong>对文档中的多个字段进行组合索引，可以支持对这些字段的查询操作。</li>
+                    <li><strong>多键索引：</strong>用于数组字段，为数组中的每个元素创建索引项。</li>
+                    <li><strong>全文索引：</strong>专门用于文本搜索，对文档中的文本内容进行索引。</li>
+                    <li><strong>地理空间索引：</strong>用于地理空间数据的查询。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q2">
+                <h2><span class="num">2</span>MongoDB中的写关注（Write Concern）是什么？</h2>
+                <p>写关注（Write Concern）是MongoDB中用来保证数据写入安全性的机制。它定义了数据被认为是"成功写入"的条件。常见的写关注级别包括：</p>
+                <ul>
+                    <li><strong>w=1：</strong>默认级别，只要主节点确认写入即可。</li>
+                    <li><strong>w>1：</strong>要求除了主节点外，还有指定数量的副本节点确认写入。</li>
+                    <li><strong>w=0：</strong>不等待任何确认，写操作立即返回，但没有任何写入成功的保证。</li>
+                    <li><strong>j=true：</strong>要求写操作的确认必须是数据已经写入到节点的日志中。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q3">
+                <h2><span class="num">3</span>MongoDB的复制集是如何工作的？</h2>
+                <p>MongoDB的复制集提供数据的高可用性，包含一个主节点和多个副本节点。复制集的工作原理包括：</p>
+                <ul>
+                    <li><strong>数据复制：</strong>所有对主节点的写操作都会被复制到副本节点。</li>
+                    <li><strong>故障转移：</strong>当主节点出现故障时，副本节点中的一个会被自动选举为新的主节点。</li>
+                    <li><strong>读写分离：</strong>默认情况下，所有的写操作都在主节点上执行，而读操作可以在副本节点上执行。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q4">
+                <h2><span class="num">4</span>MongoDB的分片（Sharding）策略有哪些？</h2>
+                <p>MongoDB通过分片来支持大规模的数据集和高吞吐量的操作，常见的分片策略包括：</p>
+                <ul>
+                    <li><strong>范围分片（Range Sharding）：</strong>根据分片键的范围将数据分布到不同的分片中。</li>
+                    <li><strong>散列分片（Hashed Sharding）：</strong>对分片键进行散列计算，根据散列值分配数据。</li>
+                    <li><strong>区域分片（Zone Sharding）：</strong>将数据分配到特定的分片区域，可以用于地理位置数据或多数据中心。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q5">
+                <h2><span class="num">5</span>MongoDB中的聚合框架如何工作？</h2>
+                <p>MongoDB的聚合框架提供了一个功能强大的数据处理管道，允许用户对数据进行复杂的转换和分析。它的工作原理包括：</p>
+                <ul>
+                    <li><strong>管道操作：</strong>聚合查询由一系列的管道操作组成，每个操作对数据进行处理后传递给下一个操作。</li>
+                    <li><strong>操作类型：</strong>包括匹配（$match）、投影（$project）、分组（$group）、排序（$sort）、限制（$limit）、跳过（$skip）等。</li>
+                    <li><strong>数据处理：</strong>每个操作对文档集合进行转换，如过滤、聚合、重新整理字段等。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q6">
+                <h2><span class="num">6</span>MongoDB中的事务支持情况及其限制</h2>
+                <p>MongoDB从4.0版本开始引入了对多文档事务的支持。其事务特点和限制包括：</p>
+                <ul>
+                    <li><strong>ACID属性：</strong>MongoDB的事务支持ACID属性，类似于关系型数据库。</li>
+                    <li><strong>作用范围：</strong>事务可以跨多个文档和集合，但所有操作必须在同一个副本集中。</li>
+                    <li><strong>性能考虑：</strong>事务会增加额外的性能开销，尤其是在网络延迟和冲突较多的环境下。</li>
+                    <li><strong>限制：</strong>事务不支持跨数据库操作，且每个事务的运行时间有限制。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q7">
+                <h2><span class="num">7</span>MongoDB的备份和恢复策略有哪些？</h2>
+                <p>MongoDB的备份和恢复策略主要包括：</p>
+                <ul>
+                    <li><strong>Mongodump/Mongorestore工具：</strong>通过这些工具可以导出数据到BSON文件，然后恢复到数据库。</li>
+                    <li><strong>文件系统快照：</strong>在文件系统层面进行数据快照，适用于大型部署。</li>
+                    <li><strong>云备份服务：</strong>如MongoDB Atlas提供的云备份服务，自动备份并提供点时间恢复。</li>
+                    <li><strong>副本集备份：</strong>利用副本集的特性进行备份，如通过辅助节点进行备份以减少对主节点的影响。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q8">
+                <h2><span class="num">8</span>MongoDB中的安全性措施包括哪些方面？</h2>
+                <p>MongoDB的安全性措施包括：</p>
+                <ul>
+                    <li><strong>身份验证和授权：</strong>支持多种认证机制，如SCRAM、LDAP等，并提供基于角色的访问控制。</li>
+                    <li><strong>网络加密：</strong>支持TLS/SSL来加密客户端和服务器之间的通信。</li>
+                    <li><strong>审计日志：</strong>记录数据库活动，帮助追踪任何不正当的访问或操作。</li>
+                    <li><strong>加密存储：</strong>在企业版中提供加密存储功能，可对数据进行透明加密。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q9">
+                <h2><span class="num">9</span>MongoDB中的数据模型设计有哪些最佳实践？</h2>
+                <p>MongoDB的数据模型设计最佳实践包括：</p>
+                <ul>
+                    <li><strong>文档结构规划：</strong>根据应用的查询模式来设计文档结构，充分利用MongoDB的灵活性。</li>
+                    <li><strong>嵌入与引用：</strong>根据数据访问模式选择嵌入文档或引用文档。</li>
+                    <li><strong>索引策略：</strong>合理创建索引以提高查询效率，同时考虑索引对写操作的影响。</li>
+                    <li><strong>避免大文档：</strong>考虑到MongoDB的文档大小限制和性能因素，避免设计过大的文档。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q10">
+                <h2><span class="num">10</span>MongoDB中Oplog的作用是什么？</h2>
+                <p>Oplog（操作日志）是MongoDB复制集的核心机制，用于记录所有修改数据的操作。其主要作用包括：</p>
+                <ul>
+                    <li><strong>数据复制：</strong>Oplog记录的操作被副本节点读取和重放，以此实现数据的同步。</li>
+                    <li><strong>故障恢复：</strong>在主节点故障后，可以使用Oplog来恢复数据状态。</li>
+                    <li><strong>回溯查询：</strong>Oplog可用于实现点时间恢复和回溯查询。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q11">
+                <h2><span class="num">11</span>MongoDB的查询性能如何优化？</h2>
+                <p>优化MongoDB查询性能的方法包括：</p>
+                <ul>
+                    <li><strong>合理使用索引：</strong>创建合适的索引可以显著提高查询效率。</li>
+                    <li><strong>优化查询语句：</strong>精简和优化查询语句，避免返回不必要的数据。</li>
+                    <li><strong>使用投影：</strong>仅返回需要的字段，减少数据传输量。</li>
+                    <li><strong>监控和分析：</strong>利用MongoDB的监控工具分析查询性能，找出瓶颈。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q12">
+                <h2><span class="num">12</span>MongoDB的分片集群中如何处理数据热点问题？</h2>
+                <p>在MongoDB的分片集群中，处理数据热点的策略包括：</p>
+                <ul>
+                    <li><strong>均衡分片：</strong>通过均衡分布数据，减少单个分片的负载。</li>
+                    <li><strong>动态调整分片键：</strong>根据数据访问模式，选择合适的分片键，以避免热点数据集中在某个分片。</li>
+                    <li><strong>监控和调整：</strong>持续监控数据访问模式，及时调整分片策略。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q13">
+                <h2><span class="num">13</span>MongoDB中GridFS的使用场景和优势是什么？</h2>
+                <p>GridFS是MongoDB用于存储和检索大型文件（如图片、视频）的机制。其使用场景和优势包括：</p>
+                <ul>
+                    <li><strong>存储大文件：</strong>适用于超过MongoDB单个文档限制的大型文件。</li>
+                    <li><strong>高效文件处理：</strong>支持文件的分片和并发读写，提高大文件处理的效率。</li>
+                    <li><strong>随机文件访问：</strong>支持对文件的任意部分进行读写，方便进行大文件的处理。</li>
+                    <li><strong>与应用数据整合：</strong>可以与MongoDB中的其他数据一起存储和查询。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q14">
+                <h2><span class="num">14</span>MongoDB中的监控工具有哪些？</h2>
+                <p>MongoDB提供了多种监控工具，主要包括：</p>
+                <ul>
+                    <li><strong>MongoDB Atlas：</strong>提供云监控服务，可以实时监控数据库的各种性能指标。</li>
+                    <li><strong>mongostat和mongotop：</strong>命令行工具，用于实时监控MongoDB的状态和性能。</li>
+                    <li><strong>MMS：</strong>提供数据库的历史性能数据收集和分析。</li>
+                    <li><strong>第三方监控工具：</strong>如Nagios、Zabbix等。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q15">
+                <h2><span class="num">15</span>MongoDB如何处理大量写入操作的性能优化？</h2>
+                <p>处理MongoDB大量写入操作的性能优化方法包括：</p>
+                <ul>
+                    <li><strong>使用批量插入：</strong>减少网络往返次数，提高写入效率。</li>
+                    <li><strong>合理设计文档结构：</strong>避免过于复杂的文档结构。</li>
+                    <li><strong>合理配置写关注：</strong>调整写关注级别，平衡数据一致性和写入性能。</li>
+                    <li><strong>使用足够的硬件资源：</strong>确保服务器有足够的内存和I/O能力。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q16">
+                <h2><span class="num">16</span>MongoDB中的数据一致性和隔离级别如何理解？</h2>
+                <p>MongoDB的数据一致性和隔离级别包括：</p>
+                <ul>
+                    <li><strong>数据一致性：</strong>MongoDB通过复制集和写关注机制来保证数据的一致性。</li>
+                    <li><strong>读隔离：</strong>MongoDB提供了多个读隔离级别，如本地读取和主节点读取。</li>
+                    <li><strong>写隔离：</strong>MongoDB保证单个文档的原子性，但不支持传统关系型数据库中的跨文档事务直到4.0版本。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q17">
+                <h2><span class="num">17</span>MongoDB中的索引覆盖查询是什么？</h2>
+                <p>索引覆盖查询在MongoDB中的特点和工作原理：</p>
+                <ul>
+                    <li><strong>定义：</strong>索引覆盖查询是指查询操作只需要访问索引，而无需访问实际的文档数据。</li>
+                    <li><strong>性能提升：</strong>这种查询类型可以显著提高查询效率，因为索引通常比文档数据小很多。</li>
+                    <li><strong>适用条件：</strong>为了实现索引覆盖，查询字段必须全部包含在索引中。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q18">
+                <h2><span class="num">18</span>MongoDB如何处理事务和并发控制？</h2>
+                <p>MongoDB处理事务和并发控制的机制包括：</p>
+                <ul>
+                    <li><strong>多版本并发控制（MVCC）：</strong>MongoDB使用MVCC机制来管理并发访问。</li>
+                    <li><strong>事务支持：</strong>从4.0版本开始，MongoDB支持多文档事务。</li>
+                    <li><strong>锁机制：</strong>MongoDB使用数据库级和文档级的锁来管理数据访问。</li>
+                    <li><strong>快照隔离：</strong>在事务中，MongoDB提供快照隔离。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q19">
+                <h2><span class="num">19</span>MongoDB的GridFS是什么，它是如何工作的？</h2>
+                <p>MongoDB的GridFS是一种用于存储和检索大文件的机制：</p>
+                <ul>
+                    <li><strong>文件分片：</strong>GridFS将大文件分割成多个较小的块（chunk），每个块作为一个单独的文档存储。</li>
+                    <li><strong>高效存储和检索：</strong>通过这种方式，GridFS可以有效地存储大于BSON文档大小限制的文件。</li>
+                    <li><strong>元数据管理：</strong>GridFS还存储文件的元数据，如文件名、大小和类型等信息。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q20">
+                <h2><span class="num">20</span>MongoDB中的复合索引是如何工作的？</h2>
+                <p>MongoDB中复合索引的工作原理和特点：</p>
+                <ul>
+                    <li><strong>多字段索引：</strong>复合索引是基于多个字段创建的索引。</li>
+                    <li><strong>索引顺序：</strong>在复合索引中，字段的顺序非常重要。</li>
+                    <li><strong>前缀子集：</strong>查询可以利用复合索引的前缀子集，但不能利用非前缀字段。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q21">
+                <h2><span class="num">21</span>MongoDB的监控和性能调优有哪些常用方法？</h2>
+                <p>MongoDB的监控和性能调优常用方法包括：</p>
+                <ul>
+                    <li><strong>数据库日志分析：</strong>通过分析MongoDB的日志文件来识别潜在的性能瓶颈。</li>
+                    <li><strong>性能计数器：</strong>使用MongoDB的内置性能计数器和状态信息来监控数据库运行状态。</li>
+                    <li><strong>查询优化：</strong>分析和优化慢查询，使用索引来提高查询效率。</li>
+                    <li><strong>硬件资源监控：</strong>监控服务器的CPU、内存和磁盘使用情况。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q22">
+                <h2><span class="num">22</span>MongoDB中，如何实现数据备份和恢复？</h2>
+                <p>MongoDB中数据备份和恢复的常用方法：</p>
+                <ul>
+                    <li><strong>mongodump和mongorestore：</strong>使用mongodump工具进行数据备份，使用mongorestore进行数据恢复。</li>
+                    <li><strong>文件系统快照：</strong>对数据库文件所在的文件系统进行快照。</li>
+                    <li><strong>副本集备份：</strong>从副本集的从节点进行备份。</li>
+                    <li><strong>在线备份服务：</strong>使用MongoDB云服务提供的在线备份和恢复功能。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q23">
+                <h2><span class="num">23</span>MongoDB的安全性能如何，它提供了哪些安全特性？</h2>
+                <p>MongoDB的安全性能及提供的安全特性：</p>
+                <ul>
+                    <li><strong>身份验证：</strong>支持多种身份验证机制，包括用户名和密码、LDAP等。</li>
+                    <li><strong>角色基权限控制：</strong>提供细粒度的角色基权限控制。</li>
+                    <li><strong>加密：</strong>支持数据传输加密（SSL/TLS）和数据存储加密。</li>
+                    <li><strong>审计日志：</strong>MongoDB企业版提供审计功能。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q24">
+                <h2><span class="num">24</span>MongoDB的数据模型与关系型数据库比较有哪些不同？</h2>
+                <p>MongoDB的数据模型与关系型数据库的主要不同点：</p>
+                <ul>
+                    <li><strong>文档导向：</strong>MongoDB是文档导向的，存储的是BSON文档，而关系型数据库存储的是行和列的表结构。</li>
+                    <li><strong>模式灵活性：</strong>MongoDB不需要预定义模式，文档结构可以动态变化。</li>
+                    <li><strong>关联处理：</strong>MongoDB的关联是通过嵌入文档或使用引用实现的。</li>
+                    <li><strong>查询语言：</strong>MongoDB的查询语言是基于文档的，关系型数据库则使用SQL语言。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q25">
+                <h2><span class="num">25</span>MongoDB中的分布式锁是如何实现的？</h2>
+                <p>MongoDB实现分布式锁的机制：</p>
+                <ul>
+                    <li><strong>文档作为锁：</strong>使用特定的文档作为锁的标识。</li>
+                    <li><strong>原子操作：</strong>利用MongoDB的原子操作，如findAndModify。</li>
+                    <li><strong>超时机制：</strong>设定超时时间，防止锁长时间占用导致死锁。</li>
+                    <li><strong>锁续约：</strong>定期更新锁的持有状态。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q26">
+                <h2><span class="num">26</span>MongoDB中的数据分片是如何优化查询性能的？</h2>
+                <p>MongoDB数据分片优化查询性能的原理：</p>
+                <ul>
+                    <li><strong>水平扩展：</strong>通过分片将数据分布在多个服务器上，实现数据库的水平扩展。</li>
+                    <li><strong>负载均衡：</strong>分片可以分散查询和写入负载，提高整体性能。</li>
+                    <li><strong>数据局部性：</strong>优化查询，尽可能在单个分片上完成，减少网络开销。</li>
+                    <li><strong>索引效率：</strong>每个分片维护自己的索引，减少索引大小。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q27">
+                <h2><span class="num">27</span>MongoDB中如何处理数据迁移和扩展性问题？</h2>
+                <p>MongoDB处理数据迁移和扩展性问题的策略：</p>
+                <ul>
+                    <li><strong>自动数据均衡：</strong>MongoDB的分片集群自动进行数据均衡。</li>
+                    <li><strong>在线扩展：</strong>支持在不停机的情况下添加新的分片。</li>
+                    <li><strong>迁移控制：</strong>提供工具和命令，控制和优化数据迁移过程。</li>
+                    <li><strong>容量规划：</strong>支持根据业务需求和数据增长趋势进行容量规划。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q28">
+                <h2><span class="num">28</span>MongoDB的MapReduce功能是如何工作的？</h2>
+                <p>MongoDB的MapReduce功能工作原理：</p>
+                <ul>
+                    <li><strong>Map阶段：</strong>用户定义的Map函数处理每个文档，输出键值对。</li>
+                    <li><strong>Shuffle阶段：</strong>MongoDB自动对Map输出进行排序和组合。</li>
+                    <li><strong>Reduce阶段：</strong>Reduce函数对每个键的所有值进行处理，生成最终结果。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q29">
+                <h2><span class="num">29</span>MongoDB中索引的工作原理是什么？</h2>
+                <p>MongoDB中索引的工作原理主要涉及以下几个方面：</p>
+                <ul>
+                    <li><strong>B树数据结构：</strong>MongoDB使用B树（或其变种B+树）作为索引结构。</li>
+                    <li><strong>索引类型：</strong>MongoDB提供多种索引类型，包括单字段索引、复合索引、全文索引等。</li>
+                    <li><strong>索引管理：</strong>当数据被插入、更新或删除时，MongoDB会相应地更新索引。</li>
+                    <li><strong>查询优化：</strong>在执行查询时，MongoDB会使用索引来快速定位数据。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q30">
+                <h2><span class="num">30</span>MongoDB的Write Concern（写关注）机制是什么？</h2>
+                <p>MongoDB的Write Concern机制涉及以下几个关键点：</p>
+                <ul>
+                    <li><strong>数据一致性保障：</strong>Write Concern指定了在进行写操作时需要满足的数据一致性级别。</li>
+                    <li><strong>配置灵活性：</strong>开发者可以根据需要配置不同的Write Concern级别。</li>
+                    <li><strong>故障容错：</strong>在高级别的Write Concern配置下，MongoDB可以提供更好的故障容错能力。</li>
+                    <li><strong>性能权衡：</strong>更高的Write Concern级别通常意味着更高的数据安全性，但可能会影响写操作的性能。</li>
+                </ul>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list">
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('.question-card h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading) => {
+                const id = heading.parentElement.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('.question-card');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', generateToc);
+    </script>
+</body>
+</html>

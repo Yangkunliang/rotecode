@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL 面试题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ade80;
+        }
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        .toc-list a.active {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4ade80;
+        }
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #4ade80;
+        }
+        .question-card h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .question-card h2 .num {
+            background: #4ade80;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .question-card p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .question-card ul, .question-card ol {
+            margin: 12px 0 12px 25px;
+            color: #475569;
+        }
+        .question-card li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .question-card strong {
+            color: #1e293b;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #4ade80;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
+        }
+        @media (max-width: 1200px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>PostgreSQL 面试题</h1>
+            
+            <div class="question-card" id="q1">
+                <h2><span class="num">1</span>PostgreSQL中MVCC机制是如何工作的？</h2>
+                <p>PostgreSQL使用多版本并发控制（MVCC）机制来处理并发数据访问，确保数据的一致性和完整性。MVCC允许事务在不锁定资源的情况下读取数据，同时保证数据的一致性。其工作原理如下：</p>
+                <ul>
+                    <li><strong>版本控制：</strong>每当数据被更新时，PostgreSQL不是替换原有数据，而是新增一个数据版本。这意味着同一数据可以存在多个版本，每个版本对应一个或多个事务的视图。</li>
+                    <li><strong>事务ID：</strong>PostgreSQL为每个事务分配一个唯一的事务ID。每个数据版本都记录了创建它的事务ID和使它失效的事务ID。</li>
+                    <li><strong>可见性规则：</strong>一个事务在读取数据时，只能看到事务ID小于等于当前事务ID的数据版本，并且这些版本未被更晚的事务使之失效。这确保了事务的隔离性，防止了脏读、不可重复读和幻读问题。</li>
+                    <li><strong>垃圾回收：</strong>为了管理旧版本的数据，PostgreSQL定期执行垃圾回收（vacuum）操作，清理那些不再被任何事务访问的数据版本，释放空间。</li>
+                </ul>
+                <p>通过这种机制，PostgreSQL支持高并发访问，同时保证数据的一致性和隔离性。</p>
+            </div>
+
+            <div class="question-card" id="q2">
+                <h2><span class="num">2</span>如何在PostgreSQL中实现表分区？</h2>
+                <p>PostgreSQL中的表分区允许将一个大表分解成多个物理上的小表，这样可以提高查询效率和数据管理的便利性。表分区的实现步骤如下：</p>
+                <ol>
+                    <li><strong>创建父表：</strong>定义一个普通的表作为父表，但不直接在父表中存储数据。</li>
+                    <li><strong>定义分区键：</strong>在创建父表时指定分区键。分区键是决定数据存储到哪个分区中的依据。</li>
+                    <li><strong>创建子表：</strong>为每个分区创建一个子表，并使用CHECK约束来指定该子表数据的范围。每个子表继承自父表。</li>
+                    <li><strong>使用触发器或声明式分区：</strong>可以使用触发器自动将数据插入到正确的分区中。从PostgreSQL 10开始，还支持声明式分区，通过定义分区规则来自动管理数据分区。</li>
+                </ol>
+                <p>通过表分区，可以提高大量数据的查询和维护效率，尤其是对于时间序列数据或业务上有明确分区需求的场景。</p>
+            </div>
+
+            <div class="question-card" id="q3">
+                <h2><span class="num">3</span>PostgreSQL中索引的工作原理及其类型是什么？</h2>
+                <p>PostgreSQL中的索引是一种特殊的数据库结构，它可以帮助数据库更快地检索数据。索引的工作原理和类型如下：</p>
+                <ul>
+                    <li><strong>B树索引：</strong>最常见的索引类型，适用于等值查询和范围查询。B树索引通过维护一个平衡树，其中每个节点都按照键值有序排列，使得数据检索效率大大提高。</li>
+                    <li><strong>哈希索引：</strong>适用于等值查询。它使用哈希表实现，通过计算键值的哈希值来快速定位数据，但不支持范围查询。</li>
+                    <li><strong>GiST索引：</strong>一种通用的搜索树索引，支持多种数据类型的索引，包括几何数据和全文搜索。</li>
+                    <li><strong>GIN索引：</strong>适用于包含多个值的数据项上的搜索，如数组或JSONB数据类型，特别适用于全文搜索。</li>
+                    <li><strong>BRIN索引：</strong>块范围索引，适用于对大数据集进行范围查询。BRIN索引存储每个块中最小和最大的值，适用于物理排序良好的数据列。</li>
+                </ul>
+                <p>索引可以显著提高查询性能，但也需要适当管理，因为它们会占用额外的磁盘空间并影响数据插入的性能。</p>
+            </div>
+
+            <div class="question-card" id="q4">
+                <h2><span class="num">4</span>PostgreSQL的事务隔离级别有哪些，它们之间的区别是什么？</h2>
+                <p>PostgreSQL支持SQL标准定义的四种事务隔离级别，它们在数据一致性和并发性能之间提供了不同的权衡：</p>
+                <ul>
+                    <li><strong>READ UNCOMMITTED：</strong>最低的隔离级别，允许事务读取未提交的数据（脏读）。这可能导致数据不一致，但性能最高。</li>
+                    <li><strong>READ COMMITTED：</strong>这是PostgreSQL的默认隔离级别。事务只能读取已提交的数据，可以避免脏读，但可能出现不可重复读和幻读。</li>
+                    <li><strong>REPEATABLE READ：</strong>确保在同一事务中多次读取同一数据时，结果一致。这可以避免不可重复读，但仍可能出现幻读。</li>
+                    <li><strong>SERIALIZABLE：</strong>最高的隔离级别，确保事务的执行顺序与串行执行的结果一致。这可以防止脏读、不可重复读和幻读，但可能导致性能下降和更多的锁冲突。</li>
+                </ul>
+                <p>选择合适的隔离级别需要根据应用的需求来平衡数据一致性和并发性能。</p>
+            </div>
+
+            <div class="question-card" id="q5">
+                <h2><span class="num">5</span>PostgreSQL如何执行查询优化？</h2>
+                <p>PostgreSQL的查询优化器会自动分析SQL查询并选择最优的执行计划。以下是一些优化查询性能的方法：</p>
+                <ul>
+                    <li><strong>创建合适的索引：</strong>根据查询模式创建适当的索引，如B树索引、GIN索引等，可以显著提高查询速度。</li>
+                    <li><strong>使用ANALYZE：</strong>定期运行ANALYZE命令来更新表的统计信息，帮助查询优化器生成更准确的执行计划。</li>
+                    <li><strong>避免全表扫描：</strong>通过合理使用索引和WHERE子句来避免全表扫描，减少数据读取量。</li>
+                    <li><strong>优化JOIN操作：</strong>确保JOIN条件列上有索引，并考虑JOIN的顺序，以减少中间结果集的大小。</li>
+                    <li><strong>使用EXPLAIN：</strong>通过EXPLAIN命令查看查询的执行计划，识别性能瓶颈并进行优化。</li>
+                </ul>
+                <p>通过这些方法，可以显著提高PostgreSQL查询的性能和响应速度。</p>
+            </div>
+
+            <div class="question-card" id="q6">
+                <h2><span class="num">6</span>如何在PostgreSQL中使用触发器？</h2>
+                <p>PostgreSQL中的触发器是一种特殊的存储过程，它会在特定的数据库事件发生时自动执行。触发器的使用步骤如下：</p>
+                <ul>
+                    <li><strong>创建触发器函数：</strong>定义一个PL/pgSQL函数，该函数将在触发器触发时执行。函数可以访问NEW和OLD关键字来引用触发操作前后的数据行。</li>
+                    <li><strong>创建触发器：</strong>使用CREATE TRIGGER语句将触发器函数绑定到特定的表和事件上。触发器可以在INSERT、UPDATE或DELETE操作之前或之后触发。</li>
+                    <li><strong>使用触发器：</strong>触发器会自动执行，无需手动调用。例如，可以使用触发器来维护数据完整性、记录审计日志或实现复杂的业务逻辑。</li>
+                </ul>
+                <p>触发器是实现自动化数据处理和业务规则的强大工具，但需要注意它们可能会影响数据库的性能。</p>
+            </div>
+
+            <div class="question-card" id="q7">
+                <h2><span class="num">7</span>PostgreSQL中的Write-Ahead Logging (WAL)机制是什么？</h2>
+                <p>Write-Ahead Logging（WAL）是PostgreSQL用于保证数据持久性和恢复能力的核心机制。其工作原理如下：</p>
+                <ul>
+                    <li><strong>写前日志：</strong>在将数据写入数据库之前，先将变更记录写入WAL日志文件。这样即使系统崩溃，也可以通过WAL日志恢复未提交的事务。</li>
+                    <li><strong>事务提交：</strong>当事务提交时，PostgreSQL确保WAL日志已经写入磁盘，然后才返回成功给客户端。这保证了事务的持久性。</li>
+                    <li><strong>恢复过程：</strong>在数据库启动时，如果发现未完成的事务，PostgreSQL会重放WAL日志中的操作，将数据库恢复到一致状态。</li>
+                    <li><strong>检查点：</strong>定期创建检查点，将内存中的脏数据页写入磁盘，并更新WAL日志的起始位置，减少恢复时间。</li>
+                </ul>
+                <p>WAL机制是PostgreSQL保证数据完整性和可靠性的关键组件。</p>
+            </div>
+
+            <div class="question-card" id="q8">
+                <h2><span class="num">8</span>PostgreSQL中的角色和权限管理是如何工作的？</h2>
+                <p>PostgreSQL使用角色系统来管理数据库的访问权限。角色可以是用户或组，权限管理的主要特点如下：</p>
+                <ul>
+                    <li><strong>角色创建：</strong>使用CREATE ROLE语句创建角色，可以指定角色的属性，如是否可以登录、是否可以创建数据库等。</li>
+                    <li><strong>权限授予：</strong>使用GRANT语句将权限授予角色，包括对数据库、表、视图等对象的访问权限。</li>
+                    <li><strong>角色继承：</strong>角色可以继承其他角色的权限，通过设置INHERIT属性来实现。这允许创建角色组，简化权限管理。</li>
+                    <li><strong>权限撤销：</strong>使用REVOKE语句撤销已授予的权限。</li>
+                    <li><strong>超级用户：</strong>postgres是默认的超级用户，拥有所有权限。在生产环境中应避免直接使用超级用户进行日常操作。</li>
+                </ul>
+                <p>合理的角色和权限管理是保证数据库安全的重要措施。</p>
+            </div>
+
+            <div class="question-card" id="q9">
+                <h2><span class="num">9</span>PostgreSQL中的物化视图是什么？</h2>
+                <p>物化视图是一种特殊的视图，它将查询结果物理存储在磁盘上，而不是在每次访问时动态计算。物化视图的特点和使用场景如下：</p>
+                <ul>
+                    <li><strong>数据存储：</strong>物化视图存储查询的结果集，类似于表，可以提高查询性能，特别是对于复杂查询或大数据集。</li>
+                    <li><strong>刷新机制：</strong>物化视图需要定期刷新以保持数据的最新状态。可以手动刷新（REFRESH MATERIALIZED VIEW）或设置自动刷新。</li>
+                    <li><strong>索引支持：</strong>可以在物化视图上创建索引，进一步提高查询性能。</li>
+                    <li><strong>适用场景：</strong>适用于数据仓库、报表查询等需要快速访问汇总数据的场景。</li>
+                </ul>
+                <p>物化视图在查询性能和数据新鲜度之间提供了一种权衡，需要根据应用需求来选择是否使用。</p>
+            </div>
+
+            <div class="question-card" id="q10">
+                <h2><span class="num">10</span>PostgreSQL中的并发控制机制是什么？</h2>
+                <p>PostgreSQL使用多种机制来控制并发访问，确保数据一致性和隔离性：</p>
+                <ul>
+                    <li><strong>MVCC：</strong>多版本并发控制是PostgreSQL并发控制的核心。它允许事务在不锁定数据的情况下读取数据，通过维护数据的多个版本来实现。</li>
+                    <li><strong>锁机制：</strong>PostgreSQL使用多种类型的锁来协调并发操作，包括表级锁和行级锁。行级锁允许更高的并发度。</li>
+                    <li><strong>乐观锁：</strong>在某些情况下，PostgreSQL使用乐观锁策略，允许事务继续执行，只在提交时检查是否有冲突。</li>
+                    <li><strong>死锁检测：</strong>PostgreSQL会自动检测死锁，并终止其中一个事务以打破死锁。</li>
+                </ul>
+                <p>这些机制共同工作，确保PostgreSQL在高并发环境下的性能和数据一致性。</p>
+            </div>
+
+            <div class="question-card" id="q11">
+                <h2><span class="num">11</span>PostgreSQL中的扩展系统是什么？</h2>
+                <p>PostgreSQL的扩展系统允许用户添加新的功能和数据类型，扩展数据库的能力：</p>
+                <ul>
+                    <li><strong>扩展类型：</strong>扩展可以添加新的数据类型（如JSONB、PostGIS几何类型）、函数、操作符和索引类型。</li>
+                    <li><strong>扩展管理：</strong>使用CREATE EXTENSION语句安装扩展，使用DROP EXTENSION语句卸载扩展。</li>
+                    <li><strong>常用扩展：</strong>如pg_trgm（用于模糊搜索）、pg_stat_statements（用于查询性能分析）、PostGIS（用于地理空间数据）等。</li>
+                    <li><strong>自定义扩展：</strong>开发者可以创建自己的扩展，将自定义功能打包并分发给其他用户。</li>
+                </ul>
+                <p>扩展系统使得PostgreSQL具有高度的可扩展性，可以根据需求添加各种功能。</p>
+            </div>
+
+            <div class="question-card" id="q12">
+                <h2><span class="num">12</span>PostgreSQL中的连接池是什么？</h2>
+                <p>连接池是一种管理数据库连接的技术，可以提高应用程序的性能和可扩展性：</p>
+                <ul>
+                    <li><strong>连接复用：</strong>连接池维护一组预先建立的数据库连接，应用程序可以重复使用这些连接，避免频繁创建和销毁连接的开销。</li>
+                    <li><strong>连接管理：</strong>连接池负责管理连接的创建、分配和释放，确保连接的有效使用。</li>
+                    <li><strong>性能优化：</strong>通过减少连接建立的开销，连接池可以显著提高应用程序的响应速度和吞吐量。</li>
+                    <li><strong>常用工具：</strong>如PgBouncer、Pgpool-II等都是常用的PostgreSQL连接池工具。</li>
+                </ul>
+                <p>连接池是高并发应用中不可或缺的组件，可以有效管理数据库连接资源。</p>
+            </div>
+
+            <div class="question-card" id="q13">
+                <h2><span class="num">13</span>PostgreSQL中的备份和恢复策略有哪些？</h2>
+                <p>PostgreSQL提供了多种备份和恢复方法，以确保数据的安全性和可用性：</p>
+                <ul>
+                    <li><strong>物理备份：</strong>使用pg_basebackup进行数据库的物理备份，适用于大型数据库的快速备份和恢复。</li>
+                    <li><strong>逻辑备份：</strong>使用pg_dump进行数据库的逻辑备份，可以选择性地备份特定的表或数据库。</li>
+                    <li><strong>WAL日志备份：</strong>通过备份WAL日志，可以实现点时间恢复，将数据库恢复到任意时间点。</li>
+                    <li><strong>流复制：</strong>使用流复制创建备用数据库，提供高可用性和故障转移能力。</li>
+                </ul>
+                <p>合理的备份策略是保证数据安全的关键，需要根据业务需求选择合适的备份方法。</p>
+            </div>
+
+            <div class="question-card" id="q14">
+                <h2><span class="num">14</span>PostgreSQL中的TOAST技术是什么？</h2>
+                <p>TOAST（The Oversized-Attribute Storage Technique）是PostgreSQL用于处理大对象的存储技术：</p>
+                <ul>
+                    <li><strong>大对象存储：</strong>TOAST允许PostgreSQL存储超过页面大小（通常为8KB）的数据，如大文本、图像或二进制数据。</li>
+                    <li><strong>压缩存储：</strong>TOAST可以自动压缩大对象，减少存储空间占用。</li>
+                    <li><strong>外部分区：</strong>对于非常大的对象，TOAST可以将数据存储在主表之外的单独TOAST表中，提高查询性能。</li>
+                    <li><strong>透明访问：</strong>TOAST对用户是透明的，用户不需要关心数据是如何存储的。</li>
+                </ul>
+                <p>TOAST技术使得PostgreSQL能够高效地处理大对象数据，而不影响常规查询的性能。</p>
+            </div>
+
+            <div class="question-card" id="q15">
+                <h2><span class="num">15</span>PostgreSQL中的查询计划缓存是什么？</h2>
+                <p>PostgreSQL使用查询计划缓存来提高重复查询的性能：</p>
+                <ul>
+                    <li><strong>计划缓存：</strong>当执行一个SQL查询时，PostgreSQL会生成查询计划并缓存它。如果相同的查询再次执行，PostgreSQL会直接使用缓存的计划，而不需要重新生成。</li>
+                    <li><strong>计划失效：</strong>当表的统计信息发生变化或表结构被修改时，缓存的计划会失效，需要重新生成。</li>
+                    <li><strong>计划稳定性：</strong>查询计划缓存可以提高查询性能的稳定性，特别是对于复杂查询。</li>
+                </ul>
+                <p>查询计划缓存是PostgreSQL优化查询性能的重要机制之一。</p>
+            </div>
+
+            <div class="question-card" id="q16">
+                <h2><span class="num">16</span>PostgreSQL中的并行查询是什么？</h2>
+                <p>PostgreSQL支持并行查询，可以利用多核处理器提高查询性能：</p>
+                <ul>
+                    <li><strong>并行执行：</strong>对于大型查询，PostgreSQL可以将查询分解为多个子任务，并行执行这些子任务，从而加快查询速度。</li>
+                    <li><strong>并行度控制：</strong>可以通过配置参数控制并行查询的并行度，如max_parallel_workers_per_gather。</li>
+                    <li><strong>适用场景：</strong>并行查询适用于大型表的扫描、排序和聚合操作。</li>
+                </ul>
+                <p>并行查询可以显著提高大型查询的性能，充分利用现代多核服务器的处理能力。</p>
+            </div>
+
+            <div class="question-card" id="q17">
+                <h2><span class="num">17</span>PostgreSQL中的表空间是什么？</h2>
+                <p>表空间是PostgreSQL中用于组织数据存储的逻辑概念：</p>
+                <ul>
+                    <li><strong>存储管理：</strong>表空间允许将数据库对象（如表、索引）存储在不同的物理位置，如不同的磁盘或存储设备。</li>
+                    <li><strong>I/O优化：</strong>通过将频繁访问的表和索引放在高性能存储设备上，可以提高查询性能。</li>
+                    <li><strong>空间管理：</strong>表空间可以帮助管理磁盘空间，将不同类型的数据分离存储。</li>
+                    <li><strong>创建和使用：</strong>使用CREATE TABLESPACE语句创建表空间，并在创建表或索引时指定表空间。</li>
+                </ul>
+                <p>表空间提供了灵活的存储管理能力，适用于大型数据库的部署和优化。</p>
+            </div>
+
+            <div class="question-card" id="q18">
+                <h2><span class="num">18</span>PostgreSQL中的JSON支持是什么？</h2>
+                <p>PostgreSQL提供了强大的JSON支持，包括JSON和JSONB两种数据类型：</p>
+                <ul>
+                    <li><strong>JSON类型：</strong>存储JSON数据的原始文本格式，适合存储和检索，但查询性能较低。</li>
+                    <li><strong>JSONB类型：</strong>存储JSON数据的二进制格式，支持索引和高效查询操作。</li>
+                    <li><strong>JSON函数：</strong>PostgreSQL提供了丰富的函数来操作JSON数据，如jsonb_extract_path、jsonb_array_elements等。</li>
+                    <li><strong>GIN索引：</strong>可以在JSONB列上创建GIN索引，提高查询性能。</li>
+                </ul>
+                <p>JSON支持使得PostgreSQL能够存储和查询半结构化数据，适用于需要灵活数据模型的应用场景。</p>
+            </div>
+
+            <div class="question-card" id="q19">
+                <h2><span class="num">19</span>PostgreSQL中的序列是什么？</h2>
+                <p>序列是PostgreSQL中用于生成唯一数字序列的数据库对象：</p>
+                <ul>
+                    <li><strong>自动递增：</strong>序列常用于生成主键值，通过nextval()函数获取下一个值。</li>
+                    <li><strong>序列属性：</strong>序列可以配置起始值、增量、最大值、最小值和缓存大小等属性。</li>
+                    <li><strong>使用场景：</strong>序列广泛用于生成唯一标识符，如订单号、用户ID等。</li>
+                    <li><strong>SERIAL类型：</strong>PostgreSQL提供了SERIAL和BIGSERIAL伪类型，它们会自动创建序列并设置默认值。</li>
+                </ul>
+                <p>序列是生成唯一标识符的常用工具，确保数据的唯一性和完整性。</p>
+            </div>
+
+            <div class="question-card" id="q20">
+                <h2><span class="num">20</span>PostgreSQL中的临时表是什么？</h2>
+                <p>临时表是PostgreSQL中临时存在的表，用于存储中间结果：</p>
+                <ul>
+                    <li><strong>生命周期：</strong>临时表只在当前会话中存在，会话结束后自动删除。</li>
+                    <li><strong>隔离性：</strong>临时表对其他会话不可见，避免了命名冲突和数据干扰。</li>
+                    <li><strong>使用场景：</strong>临时表常用于存储复杂查询的中间结果，或在存储过程中临时存储数据。</li>
+                    <li><strong>性能优化：</strong>临时表可以提高复杂查询的性能，减少中间结果的重复计算。</li>
+                </ul>
+                <p>临时表是处理复杂查询和数据处理任务的有用工具。</p>
+            </div>
+
+            <div class="question-card" id="q21">
+                <h2><span class="num">21</span>PostgreSQL中的视图是什么？</h2>
+                <p>视图是基于SQL查询的虚拟表，提供了数据的逻辑表示：</p>
+                <ul>
+                    <li><strong>数据抽象：</strong>视图可以隐藏复杂的查询逻辑，提供简洁的数据访问接口。</li>
+                    <li><strong>数据安全：</strong>通过视图可以限制用户对数据的访问，只暴露必要的列或行。</li>
+                    <li><strong>逻辑独立性：</strong>视图可以屏蔽底层表结构的变化，保持应用程序的稳定性。</li>
+                    <li><strong>可更新视图：</strong>在某些条件下，视图可以被更新，更新会反映到底层表中。</li>
+                </ul>
+                <p>视图是数据库设计中常用的工具，提供了灵活的数据访问和安全控制能力。</p>
+            </div>
+
+            <div class="question-card" id="q22">
+                <h2><span class="num">22</span>PostgreSQL中的存储过程是什么？</h2>
+                <p>存储过程是一组预编译的SQL语句，可以作为单个单元执行：</p>
+                <ul>
+                    <li><strong>代码复用：</strong>存储过程可以封装复杂的业务逻辑，供多个应用程序调用。</li>
+                    <li><strong>性能优化：</strong>存储过程预编译后存储在数据库中，可以提高执行效率。</li>
+                    <li><strong>事务控制：</strong>存储过程可以包含事务控制语句，实现复杂的业务事务。</li>
+                    <li><strong>参数支持：</strong>存储过程支持输入和输出参数，提供灵活的数据交互。</li>
+                </ul>
+                <p>存储过程是实现业务逻辑和数据处理的重要工具，广泛应用于企业级应用中。</p>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list">
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('.question-card h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading, index) => {
+                const id = heading.parentElement.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('.question-card');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', generateToc);
+    </script>
+</body>
+</html>

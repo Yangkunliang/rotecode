@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试背题系统</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            📚 <span>面试背题</span>系统
+        </div>
+
+        <div class="progress-summary">
+            <div class="label">学习进度</div>
+            <div class="value"><span id="progress-count">0</span> / <span id="progress-total">19</span></div>
+            <div class="progress-bar">
+                <div class="fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <button class="reset-btn" onclick="resetProgress()">🔄</button>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <div class="nav-title expanded" onclick="toggleSubmenu(this)">
+                    <span class="icon">🗄️</span>
+                    数据库
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu show">
+                    <a class="submenu-item" href="#" onclick="openTab('mysql', 'MySQL', 19, event)" data-page="mysql" data-count="19">
+                        MySQL <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('redis', 'Redis', 25, event)" data-page="redis" data-count="25">
+                        Redis <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('mongodb', 'MongoDB', 30, event)" data-page="mongodb" data-count="30">
+                        MongoDB <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('oracle', 'Oracle', 36, event)" data-page="oracle" data-count="36">
+                        Oracle <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('postgresql', 'PostgreSQL', 22, event)" data-page="postgresql" data-count="22">
+                        PostgreSQL <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('memcached', 'Memcached', 30, event)" data-page="memcached" data-count="30">
+                        Memcached <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('mybatis', 'MyBatis', 21, event)" data-page="mybatis" data-count="21">
+                        MyBatis <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('mybatis-plus', 'Mybatis-Plus', 20, event)" data-page="mybatis-plus" data-count="20">
+                        Mybatis-Plus <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('sqlite', 'SQLite', 21, event)" data-page="sqlite" data-count="21">
+                        SQLite <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('sqlserver', 'SQLServer', 24, event)" data-page="sqlserver" data-count="24">
+                        SQLServer <span class="badge">✓</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">💻</span>
+                    计算机基础
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">操作系统 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">计算机网络 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">数据结构与算法 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">计算机组成原理 <span class="badge">✓</span></a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">🎨</span>
+                    前端
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">HTML/CSS <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">JavaScript <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">TypeScript <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">Vue.js <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">React <span class="badge">✓</span></a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">☕</span>
+                    Java
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">Java 基础 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">JVM <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">Spring <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">微服务 <span class="badge">✓</span></a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">🔷</span>
+                    Go
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">Go 基础 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">Goroutine <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">微服务 <span class="badge">✓</span></a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">🐍</span>
+                    Python
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">Python 基础 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">Django/Flask <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">爬虫 <span class="badge">✓</span></a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">🔧</span>
+                    DevOps
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">Docker <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">Kubernetes <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">CI/CD <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">Linux <span class="badge">✓</span></a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">🏗️</span>
+                    系统设计
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#">分布式系统 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">高并发 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">缓存系统 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#">消息队列 <span class="badge">✓</span></a>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div>
+                <h2 id="page-title">面试背题系统</h2>
+                <div class="breadcrumb" id="breadcrumb">首页</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="toggleSidebar()">☰ 菜单</button>
+            </div>
+        </header>
+
+        <div class="tab-bar" id="tab-bar"></div>
+        <div class="content-area" id="content-area">
+            <div class="welcome-section">
+                <h1>📚 面试背题系统</h1>
+                <p class="subtitle">选择左侧菜单中的分类开始学习</p>
+                
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-number">10</div>
+                        <div class="stat-label">数据库专题</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">290</div>
+                        <div class="stat-label">面试题目</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-completed">0</div>
+                        <div class="stat-label">已掌握</div>
+                    </div>
+                </div>
+
+                <div class="quick-start">
+                    <h3>🚀 快速开始</h3>
+                    <p>点击左侧「数据库」菜单，选择想学习的主题即可开始刷题</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const STORAGE_KEY = 'interview_progress';
+        const openTabs = {};
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        }
+
+        function toggleSubmenu(element) {
+            element.classList.toggle('expanded');
+            element.nextElementSibling.classList.toggle('show');
+        }
+
+        function openTab(pageId, pageName, questionCount, event) {
+            event.preventDefault();
+            
+            const submenuItems = document.querySelectorAll('.submenu-item');
+            submenuItems.forEach(item => item.classList.remove('active'));
+            
+            const activeItem = document.querySelector(`[data-page="${pageId}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+            
+            if (openTabs[pageId]) {
+                switchTab(pageId);
+            } else {
+                createTab(pageId, pageName, questionCount);
+            }
+            
+            document.querySelector('.sidebar').classList.add('collapsed');
+        }
+
+        function createTab(pageId, pageName, questionCount) {
+            const tabBar = document.getElementById('tab-bar');
+            const contentArea = document.getElementById('content-area');
+            const welcomeSection = document.querySelector('.welcome-section');
+            
+            if (welcomeSection) {
+                welcomeSection.style.display = 'none';
+            }
+            
+            const tab = document.createElement('div');
+            tab.className = 'tab-item';
+            tab.id = 'tab-' + pageId;
+            tab.innerHTML = pageName + '<span class="tab-close" onclick="closeTab(\'' + pageId + '\', event)">×</span>';
+            tab.onclick = function(e) {
+                if (!e.target.classList.contains('tab-close')) {
+                    switchTab(pageId);
+                }
+            };
+            tabBar.appendChild(tab);
+            
+            const pageFile = '数据库/' + pageId.charAt(0).toUpperCase() + pageId.slice(1).replace(/-/g, '') + '.html';
+            
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = 'content-' + pageId;
+            tabContent.style.cssText = 'height: calc(100vh - 140px); overflow: hidden;';
+            tabContent.innerHTML = '<iframe src="' + pageFile + '" style="width: 100%; height: 100%; border: none; background: #f5f5f5;"></iframe>';
+            contentArea.appendChild(tabContent);
+            
+            openTabs[pageId] = { name: pageName, count: questionCount };
+            
+            switchTab(pageId);
+        }
+
+        function switchTab(pageId) {
+            const tabItems = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabItems.forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.background = '#f1f5f9';
+                tab.style.color = '#64748b';
+                tab.style.borderColor = '#e2e8f0';
+            });
+            
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            const activeTab = document.getElementById('tab-' + pageId);
+            const activeContent = document.getElementById('content-' + pageId);
+            
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.style.background = '#1e293b';
+                activeTab.style.color = '#fff';
+                activeTab.style.borderColor = '#1e293b';
+            }
+            
+            if (activeContent) {
+                activeContent.style.display = 'block';
+            }
+            
+            updateBreadcrumb(openTabs[pageId].name);
+        }
+
+        function closeTab(pageId, event) {
+            event.stopPropagation();
+            
+            const tab = document.getElementById('tab-' + pageId);
+            const content = document.getElementById('content-' + pageId);
+            
+            if (tab) tab.remove();
+            if (content) content.remove();
+            
+            delete openTabs[pageId];
+            
+            const remainingTabs = Object.keys(openTabs);
+            if (remainingTabs.length > 0) {
+                switchTab(remainingTabs[remainingTabs.length - 1]);
+            } else {
+                showWelcome();
+            }
+        }
+
+        function showWelcome() {
+            const welcomeSection = document.querySelector('.welcome-section');
+            if (welcomeSection) {
+                welcomeSection.style.display = 'block';
+            }
+            updateBreadcrumb('首页');
+        }
+
+        function updateBreadcrumb(name) {
+            document.getElementById('breadcrumb').textContent = name;
+        }
+
+        function updateTabProgress(pageId) {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            const progress = saved ? JSON.parse(saved) : {};
+            const completed = progress[pageId] || [];
+            
+            const contentEl = document.getElementById('content-' + pageId);
+            if (!contentEl) return;
+            
+            contentEl.querySelectorAll('.question-card h2').forEach(h2 => {
+                const id = h2.parentElement.id;
+                if (completed.includes(id)) {
+                    h2.classList.add('completed');
+                } else {
+                    h2.classList.remove('completed');
+                }
+            });
+        }
+
+        function updateOverviewStats() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            const progress = saved ? JSON.parse(saved) : {};
+            let totalCompleted = 0;
+            
+            Object.values(progress).forEach(items => {
+                if (Array.isArray(items)) {
+                    totalCompleted += items.length;
+                }
+            });
+            
+            document.getElementById('total-completed').textContent = totalCompleted;
+        }
+
+        function initDbGrid() {
+            const dbGrid = document.getElementById('db-grid');
+            if (!dbGrid) return;
+            
+            const dbItems = document.querySelectorAll('.submenu-item[data-page]');
+            
+            dbItems.forEach(item => {
+                const page = item.dataset.page;
+                const count = item.dataset.count || 0;
+                const name = item.textContent.replace('✓', '').trim();
+                
+                const card = document.createElement('a');
+                card.className = 'db-card';
+                card.href = '#';
+                card.onclick = function(e) {
+                    openTab(page, name, parseInt(count), e);
+                };
+                card.innerHTML = '<div class="db-name">' + name + '</div><div class="db-count">' + count + ' 题</div>';
+                dbGrid.appendChild(card);
+            });
+        }
+
+        function initWelcomeGrid() {
+            const container = document.querySelector('.welcome-section');
+            if (!container) return;
+            
+            const dbGrid = document.createElement('div');
+            dbGrid.className = 'db-grid';
+            dbGrid.id = 'db-grid';
+            
+            const dbItems = [
+                { page: 'mysql', name: 'MySQL', count: 19 },
+                { page: 'redis', name: 'Redis', count: 25 },
+                { page: 'mongodb', name: 'MongoDB', count: 30 },
+                { page: 'oracle', name: 'Oracle', count: 36 },
+                { page: 'postgresql', name: 'PostgreSQL', count: 22 },
+                { page: 'memcached', name: 'Memcached', count: 30 },
+                { page: 'mybatis', name: 'MyBatis', count: 21 },
+                { page: 'mybatis-plus', name: 'Mybatis-Plus', count: 20 },
+                { page: 'sqlite', name: 'SQLite', count: 21 },
+                { page: 'sqlserver', name: 'SQLServer', count: 24 }
+            ];
+            
+            dbItems.forEach(item => {
+                const card = document.createElement('a');
+                card.className = 'db-card';
+                card.href = '#';
+                card.onclick = function(e) {
+                    openTab(item.page, item.name, item.count, e);
+                };
+                card.innerHTML = '<div class="db-name">' + item.name + '</div><div class="db-count">' + item.count + ' 题</div>';
+                dbGrid.appendChild(card);
+            });
+            
+            const quickStart = container.querySelector('.quick-start');
+            if (quickStart && quickStart.nextElementSibling) {
+                container.insertBefore(dbGrid, quickStart.nextElementSibling);
+            } else {
+                container.appendChild(dbGrid);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOverviewStats();
+            initWelcomeGrid();
+        });
+    </script>
+</body>
+</html>

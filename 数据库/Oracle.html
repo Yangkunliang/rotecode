@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle 面试题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f97316;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .toc-list a.active {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f97316;
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #f97316;
+        }
+
+        .question-card h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-card h2 .num {
+            background: #f97316;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .question-card p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .question-card ul, .question-card ol {
+            margin: 12px 0 12px 25px;
+            color: #475569;
+        }
+
+        .question-card li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .question-card strong {
+            color: #1e293b;
+        }
+
+        .question-card code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #ea580c;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #f97316;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Oracle 面试题</h1>
+            
+            <div class="question-card" id="q1">
+                <h2><span class="num">1</span>Oracle中的PL/SQL和SQL有什么区别？</h2>
+                <p>PL/SQL和SQL在Oracle中的主要区别包括：</p>
+                <ul>
+                    <li><strong>编程能力：</strong>PL/SQL是一种程序化语言，支持变量、条件语句和循环，而SQL主要用于数据查询和更新。</li>
+                    <li><strong>执行方式：</strong>PL/SQL可以执行一整块代码，而SQL语句逐条执行。</li>
+                    <li><strong>用途：</strong>PL/SQL适用于编写复杂的数据库应用程序，SQL用于简单的数据操作和查询。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q2">
+                <h2><span class="num">2</span>Oracle数据库中的表分区是什么？它的优势在哪里？</h2>
+                <p>表分区是Oracle数据库中一种将表和索引分解为更小、更易管理的部分的技术。其优势包括：</p>
+                <ul>
+                    <li><strong>性能提升：</strong>可以提高查询性能，特别是对于大型表。</li>
+                    <li><strong>可管理性：</strong>分区表更容易管理和维护。</li>
+                    <li><strong>高可用性：</strong>分区有助于提高数据的可用性和恢复性能。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q3">
+                <h2><span class="num">3</span>Oracle中的索引组织表和堆组织表的区别</h2>
+                <p>索引组织表（IOT）和堆组织表在Oracle中的区别主要包括：</p>
+                <ul>
+                    <li><strong>存储结构：</strong>IOT是基于索引的表结构，数据按主键顺序存储；堆组织表则是数据在物理存储上无特定顺序。</li>
+                    <li><strong>性能：</strong>IOT在某些查询上性能更好，特别是主键查找。</li>
+                    <li><strong>使用场景：</strong>IOT适用于主键访问模式频繁的场景，而堆组织表适用于更广泛的场景。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q4">
+                <h2><span class="num">4</span>Oracle数据库中的序列是什么？它的用途有哪些？</h2>
+                <p>序列（Sequence）在Oracle中是一个数据库对象，用于生成唯一的数值。用途包括：</p>
+                <ul>
+                    <li><strong>生成唯一标识符：</strong>用于自动生成唯一的行标识符。</li>
+                    <li><strong>自动编号：</strong>在插入记录时自动产生编号。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q5">
+                <h2><span class="num">5</span>Oracle中的触发器是什么？它有哪些类型？</h2>
+                <p>触发器是Oracle数据库中的一个特殊类型的存储过程，它在特定数据库操作发生时自动执行。类型包括：</p>
+                <ul>
+                    <li><strong>行级触发器：</strong>在修改某一行时触发。</li>
+                    <li><strong>语句级触发器：</strong>在执行特定SQL语句时触发。</li>
+                    <li><strong>BEFORE和AFTER触发器：</strong>分别在操作执行前后触发。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q6">
+                <h2><span class="num">6</span>Oracle数据库的逻辑存储结构包括哪些部分？</h2>
+                <p>Oracle数据库的逻辑存储结构主要包括：</p>
+                <ul>
+                    <li><strong>数据块：</strong>最小的存储单位。</li>
+                    <li><strong>段：</strong>一组具有特定用途的数据块，如表段和索引段。</li>
+                    <li><strong>区（Extent）：</strong>由连续数据块组成，用于存储特定的段。</li>
+                    <li><strong>表空间：</strong>数据库中数据的最高逻辑级别，由一个或多个数据文件组成。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q7">
+                <h2><span class="num">7</span>Oracle中的MVCC（多版本并发控制）机制</h2>
+                <p>Oracle中的MVCC机制用于实现高效的并发控制，其核心原理包括：</p>
+                <ul>
+                    <li><strong>数据版本化：</strong>对每个事务提供数据的一个快照版本，以支持同时读取和写入操作。</li>
+                    <li><strong>非阻塞性读取：</strong>读取操作不会阻塞写入操作，反之亦然。</li>
+                    <li><strong>隔离级别：</strong>支持不同的事务隔离级别，确保数据一致性和并发性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q8">
+                <h2><span class="num">8</span>Oracle中的Explain Plan命令是用来做什么的？</h2>
+                <p>Explain Plan命令在Oracle中用于显示SQL语句的执行计划。它的主要作用包括：</p>
+                <ul>
+                    <li><strong>查询优化：</strong>帮助开发者理解和优化SQL查询性能。</li>
+                    <li><strong>分析执行路径：</strong>显示数据库如何执行特定的SQL查询，包括使用的索引和连接方法。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q9">
+                <h2><span class="num">9</span>Oracle中，什么是V$视图和DBA_视图？</h2>
+                <p>V$视图和DBA_视图在Oracle中用于提供数据库的动态和静态信息：</p>
+                <ul>
+                    <li><strong>V$视图：</strong>提供数据库的动态性能和统计信息，如V$SESSION和V$SQL。</li>
+                    <li><strong>DBA_视图：</strong>提供数据库的全局静态信息，如DBA_TABLES和DBA_USERS。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q10">
+                <h2><span class="num">10</span>Oracle数据库中的数据泵(Data Pump)是什么？</h2>
+                <p>数据泵（Data Pump）是Oracle数据库的一种工具，用于高效的数据导入和导出。其特点包括：</p>
+                <ul>
+                    <li><strong>高性能：</strong>相比传统的exp和imp工具，数据泵提供更快的数据移动。</li>
+                    <li><strong>灵活性：</strong>支持多种数据抽取和加载方式。</li>
+                    <li><strong>网络传输：</strong>支持通过网络直接传输数据。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q11">
+                <h2><span class="num">11</span>Oracle中的PL/SQL包是什么？它的优势有哪些？</h2>
+                <p>PL/SQL包是一组逻辑相关的PL/SQL程序单元的集合，如过程和函数。其优势包括：</p>
+                <ul>
+                    <li><strong>模块化：</strong>便于组织和管理复杂的PL/SQL代码。</li>
+                    <li><strong>性能：</strong>可以提高代码执行效率。</li>
+                    <li><strong>封装性：</strong>提供了更好的数据隐藏和封装。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q12">
+                <h2><span class="num">12</span>Oracle中的闪回查询(Flashback Query)是什么？</h2>
+                <p>闪回查询是Oracle中一种可以查看过去某个时间点数据状态的功能。它允许用户查询历史数据，而无需恢复或回滚数据库。</p>
+            </div>
+
+            <div class="question-card" id="q13">
+                <h2><span class="num">13</span>Oracle中的自动存储管理(ASM)是什么？</h2>
+                <p>自动存储管理(ASM)是Oracle提供的一种数据库文件系统和磁盘管理器，用于简化数据库文件的布局和管理。其特点包括：</p>
+                <ul>
+                    <li><strong>简化管理：</strong>自动管理数据库存储结构。</li>
+                    <li><strong>提高性能：</strong>通过均衡I/O分配提高数据库性能。</li>
+                    <li><strong>增强可靠性：</strong>支持磁盘镜像和条带化，提高数据可靠性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q14">
+                <h2><span class="num">14</span>Oracle中的连接池技术及其优势</h2>
+                <p>连接池技术在Oracle中用于管理数据库连接资源。其优势包括：</p>
+                <ul>
+                    <li><strong>资源重用：</strong>连接可以被多个用户共享，避免了频繁创建和销毁连接的开销。</li>
+                    <li><strong>提高性能：</strong>减少了数据库连接和断开的时间，提高应用程序的响应速度。</li>
+                    <li><strong>更好的可伸缩性：</strong>支持应用程序在高负载下的性能稳定性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q15">
+                <h2><span class="num">15</span>Oracle数据库中的游标是什么？它的作用是什么？</h2>
+                <p>游标（Cursor）在Oracle数据库中是用来处理SQL语句返回的结果集的。它的作用包括：</p>
+                <ul>
+                    <li><strong>逐行处理：</strong>游标允许逐行访问和处理查询结果。</li>
+                    <li><strong>更精确的数据操作：</strong>通过游标，可以对数据集中的每一行执行复杂的逻辑操作。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q16">
+                <h2><span class="num">16</span>Oracle中的表空间是什么？它如何工作？</h2>
+                <p>表空间（Tablespace）是Oracle数据库中存储数据的逻辑单位。它的工作原理包括：</p>
+                <ul>
+                    <li><strong>数据组织：</strong>表空间包含了一个或多个数据文件，这些文件存储了数据库中的实际数据。</li>
+                    <li><strong>空间管理：</strong>通过表空间可以有效管理数据库的存储结构。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q17">
+                <h2><span class="num">17</span>Oracle中的快照(Snapshot)和物化视图(Materialized View)有什么区别？</h2>
+                <p>虽然快照（现在通常称为物化视图）和物化视图在Oracle中经常被交替使用，但它们有以下区别：</p>
+                <ul>
+                    <li><strong>更新方式：</strong>物化视图可以定期刷新，而快照是一种更静态的数据表示。</li>
+                    <li><strong>应用场景：</strong>物化视图适用于需要定期更新和高效查询的场景，如数据仓库。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q18">
+                <h2><span class="num">18</span>Oracle数据库中的NVL和COALESCE函数有什么区别？</h2>
+                <p>NVL和COALESCE都是Oracle中用于处理NULL值的函数，但有以下区别：</p>
+                <ul>
+                    <li><strong>参数数量：</strong>NVL接受两个参数，而COALESCE可以接受两个或多个参数。</li>
+                    <li><strong>评估方式：</strong>NVL总是评估两个参数，而COALESCE只评估直到找到第一个非NULL值的参数。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q19">
+                <h2><span class="num">19</span>Oracle中的动态SQL是什么？它有什么优势？</h2>
+                <p>动态SQL是指在运行时构建并执行的SQL语句。它在Oracle中的优势包括：</p>
+                <ul>
+                    <li><strong>灵活性：</strong>可以根据程序逻辑动态构建复杂的SQL语句。</li>
+                    <li><strong>适应性：</strong>可以应对那些在编译时无法确定的数据库操作。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q20">
+                <h2><span class="num">20</span>Oracle数据库的归档日志模式和非归档日志模式的区别</h2>
+                <p>归档日志模式和非归档日志模式是Oracle数据库的两种运行模式：</p>
+                <ul>
+                    <li><strong>归档日志模式：</strong>在这种模式下，所有的重做日志文件在被覆盖前都会被保存。</li>
+                    <li><strong>非归档日志模式：</strong>在这种模式下，重做日志文件可以在空间需要时被覆盖，不保存历史日志。</li>
+                    <li><strong>数据恢复：</strong>归档日志模式支持更完整的数据恢复选项。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q21">
+                <h2><span class="num">21</span>Oracle中的同义词(Synonym)是什么？它的使用场景是什么？</h2>
+                <p>同义词（Synonym）在Oracle中是一个指向另一个对象（如表、视图等）的别名。它的使用场景包括：</p>
+                <ul>
+                    <li><strong>简化名称：</strong>为复杂的对象名称提供简单的别名。</li>
+                    <li><strong>安全性：</strong>通过同义词隐藏对象的真实名称和位置，增强安全性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q22">
+                <h2><span class="num">22</span>Oracle数据库中的REDO日志和UNDO数据有什么区别？</h2>
+                <p>REDO日志和UNDO数据在Oracle数据库中的主要区别包括：</p>
+                <ul>
+                    <li><strong>用途：</strong>REDO日志用于记录数据库中已提交的所有更改，以便在系统故障时恢复；UNDO数据用于存储未提交的更改，以支持回滚操作。</li>
+                    <li><strong>持久性：</strong>REDO日志持久化到磁盘，UNDO数据通常存储在UNDO表空间中。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q23">
+                <h2><span class="num">23</span>Oracle中的数据字典是什么？它的主要用途是什么？</h2>
+                <p>数据字典是Oracle数据库中存储关于数据库结构的元数据的集合。其主要用途包括：</p>
+                <ul>
+                    <li><strong>存储表结构：</strong>包括表、列、索引、约束等的定义信息。</li>
+                    <li><strong>存储系统权限和角色信息：</strong>包含数据库用户、权限和角色的详细信息。</li>
+                    <li><strong>查询优化：</strong>用于优化器决策过程中的查询优化。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q24">
+                <h2><span class="num">24</span>Oracle中的PL/SQL异常处理是如何工作的？</h2>
+                <p>PL/SQL的异常处理机制允许在程序中优雅地处理错误和异常。它的工作原理包括：</p>
+                <ul>
+                    <li><strong>异常识别：</strong>在代码中识别潜在的错误点。</li>
+                    <li><strong>异常处理：</strong>使用EXCEPTION子句处理错误，防止程序崩溃。</li>
+                    <li><strong>自定义异常：</strong>可以定义和抛出自定义异常。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q25">
+                <h2><span class="num">25</span>Oracle中的全局临时表是什么？它的特点和用途是什么？</h2>
+                <p>全局临时表是Oracle中的一种特殊表，其特点和用途包括：</p>
+                <ul>
+                    <li><strong>数据范围：</strong>数据仅在当前会话中可见。</li>
+                    <li><strong>性能优化：</strong>用于存储临时数据，提高处理速度。</li>
+                    <li><strong>减少对主数据库的影响：</strong>由于数据不是永久存储的，对数据库的影响更小。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q26">
+                <h2><span class="num">26</span>Oracle中的锁机制及其类型</h2>
+                <p>Oracle数据库的锁机制用于控制对共享资源的并发访问。锁的类型包括：</p>
+                <ul>
+                    <li><strong>DML锁：</strong>用于控制数据操纵语言（如INSERT、UPDATE）的并发访问。</li>
+                    <li><strong>DDL锁：</strong>用于控制数据定义语言（如CREATE、ALTER）的并发访问。</li>
+                    <li><strong>内部锁和闩锁：</strong>由Oracle自动管理，用于保护数据库的内部结构。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q27">
+                <h2><span class="num">27</span>Oracle中的分布式事务是什么？它如何工作？</h2>
+                <p>分布式事务指跨多个数据库节点的事务。在Oracle中，它通过以下方式工作：</p>
+                <ul>
+                    <li><strong>两阶段提交：</strong>为了保证跨节点的数据一致性，使用两阶段提交协议。</li>
+                    <li><strong>事务协调器：</strong>负责协调各个节点间的事务提交或回滚。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q28">
+                <h2><span class="num">28</span>Oracle数据库优化的常用方法有哪些？</h2>
+                <p>Oracle数据库优化的常用方法包括：</p>
+                <ul>
+                    <li><strong>SQL优化：</strong>重写低效的SQL查询。</li>
+                    <li><strong>使用索引：</strong>合理创建和使用索引来加快查询速度。</li>
+                    <li><strong>内存管理：</strong>调整SGA和PGA以优化内存使用。</li>
+                    <li><strong>物理设计优化：</strong>优化数据文件、表空间和磁盘布局。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q29">
+                <h2><span class="num">29</span>Oracle中的RMAN是什么？它的主要用途是什么？</h2>
+                <p>RMAN（Recovery Manager）是Oracle提供的一种数据库备份和恢复解决方案。其主要用途包括：</p>
+                <ul>
+                    <li><strong>数据库备份：</strong>提供全库、表空间或数据文件级别的备份。</li>
+                    <li><strong>数据库恢复：</strong>支持完整和点时间恢复。</li>
+                    <li><strong>备份管理：</strong>管理和维护数据库的备份集和恢复策略。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q30">
+                <h2><span class="num">30</span>Oracle中的逻辑备份与物理备份的区别</h2>
+                <p>逻辑备份和物理备份是Oracle中两种不同类型的备份方法：</p>
+                <ul>
+                    <li><strong>逻辑备份：</strong>导出数据库中特定对象（如表、视图、存储过程）的逻辑数据。</li>
+                    <li><strong>物理备份：</strong>拷贝数据库文件，如数据文件、控制文件和重做日志文件。</li>
+                    <li><strong>使用场景：</strong>逻辑备份适合数据迁移和轻量级备份；物理备份适合灾难恢复和完整备份。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q31">
+                <h2><span class="num">31</span>Oracle数据库中的锁机制是如何工作的？</h2>
+                <p>Oracle数据库的锁机制通过以下方式工作：</p>
+                <ul>
+                    <li><strong>锁的类型：</strong>Oracle提供多种锁类型，包括行级锁、表级锁和更高级别的锁。</li>
+                    <li><strong>自动行级锁定：</strong>当数据被修改时，Oracle自动在被修改的行上放置行级锁。</li>
+                    <li><strong>意向锁：</strong>Oracle使用意向锁来指示对某个数据结构中数据行的锁定意图。</li>
+                    <li><strong>死锁检测：</strong>Oracle监测并解决死锁问题，当检测到死锁时，会自动回滚其中一个事务。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q32">
+                <h2><span class="num">32</span>Oracle数据库中的MVCC（多版本并发控制）是如何工作的？</h2>
+                <p>Oracle中的MVCC工作原理如下：</p>
+                <ul>
+                    <li><strong>创建数据副本：</strong>当一个事务要修改数据时，Oracle为被修改的行创建一个新的版本。</li>
+                    <li><strong>读一致性：</strong>读操作总是访问事务开始时刻的数据版本。</li>
+                    <li><strong>回滚段：</strong>旧的数据版本被存储在回滚段中。</li>
+                    <li><strong>减少锁竞争：</strong>由于读写操作工作在不同版本的数据上，MVCC显著减少了锁竞争。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q33">
+                <h2><span class="num">33</span>Oracle中的表空间是什么，它的作用是什么？</h2>
+                <p>Oracle中的表空间是逻辑上对数据文件的划分，其作用包括：</p>
+                <ul>
+                    <li><strong>数据管理：</strong>表空间提供了一种组织数据库对象的方式。</li>
+                    <li><strong>存储管理：</strong>通过表空间可以控制数据文件的分布和存储。</li>
+                    <li><strong>性能优化：</strong>可以将不同的表空间放置在不同的物理介质上。</li>
+                    <li><strong>数据隔离：</strong>可以将不同的用户或应用分配到不同的表空间。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q34">
+                <h2><span class="num">34</span>Oracle数据库的归档日志模式与非归档日志模式有何区别？</h2>
+                <p>归档日志模式与非归档日志模式的区别主要在于：</p>
+                <ul>
+                    <li><strong>数据恢复能力：</strong>归档日志模式可以进行完整的数据恢复。</li>
+                    <li><strong>日志文件处理：</strong>在归档日志模式下，当重做日志满时，日志文件会被存档。</li>
+                    <li><strong>备份方式：</strong>归档模式支持热备份，而非归档模式通常只能进行冷备份。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q35">
+                <h2><span class="num">35</span>Oracle中序列的作用是什么，如何创建和使用序列？</h2>
+                <p>Oracle中序列的作用及其创建和使用方式如下：</p>
+                <ul>
+                    <li><strong>作用：</strong>序列用于生成唯一的数值，通常用于自动生成主键值。</li>
+                    <li><strong>创建序列：</strong><code>CREATE SEQUENCE seq_name START WITH 1 INCREMENT BY 1 NOCACHE;</code></li>
+                    <li><strong>使用序列：</strong>使用<code>seq_name.NEXTVAL</code>获取序列的下一个值。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q36">
+                <h2><span class="num">36</span>Oracle中的PL/SQL是什么，它与SQL有什么不同？</h2>
+                <p>PL/SQL是Oracle数据库的过程化SQL语言，其与SQL的主要区别包括：</p>
+                <ul>
+                    <li><strong>程序结构：</strong>PL/SQL支持变量、条件语句、循环等程序结构。</li>
+                    <li><strong>过程化特性：</strong>PL/SQL允许创建存储过程、函数、触发器等。</li>
+                    <li><strong>错误处理：</strong>PL/SQL提供了异常处理机制。</li>
+                    <li><strong>性能优化：</strong>PL/SQL通过减少应用服务器与数据库之间的交互来优化性能。</li>
+                </ul>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('.question-card h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading) => {
+                const id = heading.parentElement.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('.question-card');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', generateToc);
+    </script>
+</body>
+</html>

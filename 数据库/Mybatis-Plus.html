@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mybatis-Plus 面试题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #059669;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .toc-list a.active {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #059669;
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #059669;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .question-card h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-card h2 .num {
+            background: #059669;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .question-card h2 .check-circle {
+            width: 26px;
+            height: 26px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .question-card:hover .check-circle {
+            border-color: #059669;
+            background: #ecfdf5;
+        }
+
+        .question-card.completed h2 .check-circle {
+            background: #4ade80;
+            border-color: #4ade80;
+            color: #fff;
+        }
+
+        .question-card.completed {
+            opacity: 0.7;
+        }
+
+        .question-card.completed h2 {
+            text-decoration: line-through;
+        }
+
+        .question-card p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .question-card ul, .question-card ol {
+            margin: 12px 0 12px 25px;
+            color: #475569;
+        }
+
+        .question-card li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .question-card strong {
+            color: #1e293b;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #059669;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Mybatis-Plus 面试题</h1>
+            
+            <div class="question-card" id="q1" onclick="toggleComplete('q1')">
+                <h2><span class="check-circle"></span><span class="num">1</span>Mybatis-Plus 怎样利用Interceptor拦截器实现查询缓存？</h2>
+                <p>在Mybatis-Plus中，利用Interceptor拦截器实现查询缓存主要涉及自定义拦截器来捕获查询操作，并与缓存机制（如Redis）集成。</p>
+                <ul>
+                    <li><strong>自定义拦截器：</strong>创建一个类实现Mybatis的<code>Interceptor</code>接口。在<code>intercept</code>方法中，编写逻辑来判断当前操作是否为查询操作。</li>
+                    <li><strong>查询结果缓存逻辑：</strong>如果缓存中不存在当前查询的结果，执行查询操作，将查询结果存入缓存。如果缓存中已存在查询结果，则直接从缓存中获取数据。</li>
+                    <li><strong>配置拦截器：</strong>在Mybatis-Plus的配置类或XML配置文件中注册自定义的拦截器。</li>
+                    <li><strong>缓存键的设计：</strong>建议包含查询语句及其参数值，以确保缓存的唯一性和准确性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q2" onclick="toggleComplete('q2')">
+                <h2><span class="check-circle"></span><span class="num">2</span>Mybatis-Plus 中如何实现字段级别的权限控制？</h2>
+                <p>实现Mybatis-Plus中字段级别的权限控制通常需要结合动态SQL和自定义拦截器进行实现：</p>
+                <ul>
+                    <li><strong>自定义拦截器：</strong>开发一个自定义拦截器，实现Mybatis的<code>Interceptor</code>接口。在<code>intercept</code>方法中，根据当前用户的权限信息动态修改SQL语句。</li>
+                    <li><strong>权限信息集成：</strong>在拦截器中集成权限信息来源，如Spring Security、Shiro等安全框架。</li>
+                    <li><strong>动态SQL修改：</strong>利用Mybatis提供的SQL构建器或直接操作SQL字符串，根据权限信息动态添加或隐藏查询字段。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q3" onclick="toggleComplete('q3')">
+                <h2><span class="check-circle"></span><span class="num">3</span>Mybatis-Plus 怎样支持动态数据源在同一事务中的切换？</h2>
+                <p>支持Mybatis-Plus动态数据源在同一事务中切换比较复杂，主要因为事务管理通常绑定到一个具体的数据源。</p>
+                <ul>
+                    <li><strong>事务管理器配置：</strong>配置一个全局事务管理器，能够管理多个数据源。可以通过自定义事务管理器，如<code>ChainedTransactionManager</code>来实现跨多个数据源的事务管理。</li>
+                    <li><strong>动态数据源上下文管理：</strong>实现一个动态数据源的上下文管理器，用于在执行操作前后切换数据源标识。</li>
+                    <li><strong>AOP事务切面：</strong>通过Spring AOP或其他AOP框架，创建一个事务切面，拦截需要在同一事务中切换数据源的方法。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q4" onclick="toggleComplete('q4')">
+                <h2><span class="check-circle"></span><span class="num">4</span>Mybatis-Plus 如何配合Elasticsearch实现高性能的全文搜索？</h2>
+                <p>将Mybatis-Plus与Elasticsearch结合实现高性能全文搜索涉及以下步骤：</p>
+                <ul>
+                    <li><strong>数据同步机制：</strong>配置数据同步机制，如Logstash、Kafka或自定义同步服务，将Mybatis-Plus管理的数据库数据同步到Elasticsearch。</li>
+                    <li><strong>Elasticsearch配置：</strong>根据需要搜索的数据定义合适的索引和映射。</li>
+                    <li><strong>搜索服务实现：</strong>在应用中实现一个搜索服务，使用Elasticsearch客户端API构建搜索查询。</li>
+                    <li><strong>结果处理和展示：</strong>根据Elasticsearch返回的搜索结果，通过Mybatis-Plus进行进一步的数据处理。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q5" onclick="toggleComplete('q5')">
+                <h2><span class="check-circle"></span><span class="num">5</span>Mybatis-Plus 如何实现基于注解的复合主键策略？</h2>
+                <p>Mybatis-Plus本身不直接支持基于注解的复合主键策略，但可以通过以下方法间接实现：</p>
+                <ul>
+                    <li><strong>自定义主键策略：</strong>对于需要复合主键的实体，可以在实体类中包含一个内部类来封装复合主键。</li>
+                    <li><strong>使用@TableName注解：</strong>通过合理设计数据库和实体类，可以将复合主键的处理逻辑融入到业务逻辑中。</li>
+                    <li><strong>手动处理SQL：</strong>在Mapper接口或XML文件中手动编写SQL语句，明确指定复合主键的各个字段。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q6" onclick="toggleComplete('q6')">
+                <h2><span class="check-circle"></span><span class="num">6</span>Mybatis-Plus 在分布式事务管理中的应用有哪些注意事项？</h2>
+                <p>在Mybatis-Plus中应用分布式事务管理时，需要注意以下几点：</p>
+                <ul>
+                    <li><strong>事务管理器选择：</strong>分布式环境下，应选择支持分布式事务的事务管理器，如Atomikos、Bitronix或Spring Cloud的分布式事务解决方案。</li>
+                    <li><strong>资源同步：</strong>确保所有参与分布式事务的服务和数据源都能够正确注册到事务管理器中。</li>
+                    <li><strong>性能考量：</strong>分布式事务相比本地事务会增加网络通信的开销。</li>
+                    <li><strong>幂等性保证：</strong>在分布式系统中，必须确保事务操作的幂等性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q7" onclick="toggleComplete('q7')">
+                <h2><span class="check-circle"></span><span class="num">7</span>Mybatis-Plus 怎样结合CQRS模式使用？</h2>
+                <p>结合Mybatis-Plus和CQRS（Command Query Responsibility Segregation）模式使用时，可以按以下步骤操作：</p>
+                <ul>
+                    <li><strong>分离读写操作：</strong>根据CQRS模式，将系统的操作分为命令（写操作）和查询（读操作）两部分。</li>
+                    <li><strong>定义命令和查询模型：</strong>对于写操作，定义Command模型。对于读操作，定义Query模型。</li>
+                    <li><strong>使用不同的数据源：</strong>在更复杂的CQRS实现中，可能会使用到不同的数据存储系统来处理读写操作。</li>
+                    <li><strong>事件驱动同步：</strong>当命令操作修改数据时，可以发布事件，由事件处理机制更新查询模型的数据。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q8" onclick="toggleComplete('q8')">
+                <h2><span class="check-circle"></span><span class="num">8</span>Mybatis-Plus 如何配合微服务架构实现数据的一致性？</h2>
+                <p>在微服务架构中使用Mybatis-Plus实现数据一致性，需要考虑跨服务的数据操作问题：</p>
+                <ul>
+                    <li><strong>分布式事务框架：</strong>使用分布式事务框架，如Seata、Spring Cloud Transaction等。</li>
+                    <li><strong>最终一致性：</strong>采用基于消息队列的事件驱动架构，实现服务间的数据同步和最终一致性。</li>
+                    <li><strong>Saga模式：</strong>Saga模式通过将长事务分解为一系列局部事务，每个局部事务由不同的微服务管理。</li>
+                    <li><strong>TCC模式：</strong>对于每个操作，分为尝试（Try）、确认（Confirm）和取消（Cancel）三个阶段。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q9" onclick="toggleComplete('q9')">
+                <h2><span class="check-circle"></span><span class="num">9</span>Mybatis-Plus 如何实现数据脱敏？</h2>
+                <p>在Mybatis-Plus中实现数据脱敏通常涉及到以下几个步骤：</p>
+                <ul>
+                    <li><strong>自定义TypeHandler：</strong>创建自定义的Mybatis <code>TypeHandler</code>，用于在数据库读写时自动进行数据脱敏处理。</li>
+                    <li><strong>在实体类上应用：</strong>在实体类的敏感字段上使用<code>@TableField</code>注解指定使用的自定义<code>TypeHandler</code>。</li>
+                    <li><strong>使用AOP进行数据脱敏：</strong>可以通过Spring AOP在应用层面对特定方法的返回值进行数据脱敏处理。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q10" onclick="toggleComplete('q10')">
+                <h2><span class="check-circle"></span><span class="num">10</span>Mybatis-Plus 在读写分离架构中的应用策略是什么？</h2>
+                <p>在读写分离架构中应用Mybatis-Plus的策略主要包括以下几点：</p>
+                <ul>
+                    <li><strong>配置多数据源：</strong>在项目中配置主（写）数据库和从（读）数据库的数据源。</li>
+                    <li><strong>动态数据源路由：</strong>通过实现Spring的<code>AbstractRoutingDataSource</code>，根据当前的数据库操作（读/写）动态选择使用主库还是从库。</li>
+                    <li><strong>事务管理考虑：</strong>在读写分离的场景中，需要特别注意事务管理。更新操作应确保在主库上执行。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q11" onclick="toggleComplete('q11')">
+                <h2><span class="check-circle"></span><span class="num">11</span>Mybatis-Plus 怎样实现对历史数据的有效管理？</h2>
+                <p>Mybatis-Plus实现对历史数据的有效管理可以采用以下策略：</p>
+                <ul>
+                    <li><strong>数据归档策略：</strong>定期将旧数据从主业务表移动到历史表中。</li>
+                    <li><strong>使用逻辑删除：</strong>对于不再需要在主业务流程中使用但又不能完全删除的数据，可以通过逻辑删除的方式进行管理。</li>
+                    <li><strong>版本控制：</strong>对于需要保留修改历史的数据，可以在数据表中增加版本号字段。</li>
+                    <li><strong>时间戳分区：</strong>对于大量历史数据的管理，可以考虑使用数据库的分区表功能。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q12" onclick="toggleComplete('q12')">
+                <h2><span class="check-circle"></span><span class="num">12</span>Mybatis-Plus 在大数据量处理中的性能优化技巧有哪些？</h2>
+                <p>在处理大数据量时，Mybatis-Plus的性能优化技巧主要包括：</p>
+                <ul>
+                    <li><strong>分页查询：</strong>使用Mybatis-Plus提供的分页插件进行分页查询。</li>
+                    <li><strong>批量操作：</strong>利用Mybatis-Plus的<code>saveBatch</code>、<code>updateBatchById</code>等方法进行批量插入、更新操作。</li>
+                    <li><strong>字段选择性查询：</strong>使用<code>selectList</code>或<code>selectMaps</code>方法时，通过<code>QueryWrapper</code>指定需要查询的字段。</li>
+                    <li><strong>索引优化：</strong>确保数据库表上的索引设计合理。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q13" onclick="toggleComplete('q13')">
+                <h2><span class="check-circle"></span><span class="num">13</span>Mybatis-Plus 中如何处理枚举类型字段的条件查询？</h2>
+                <p>在Mybatis-Plus中处理枚举类型字段的条件查询，主要涉及枚举类型的映射和查询构造：</p>
+                <ul>
+                    <li><strong>枚举类映射：</strong>首先确保数据库中枚举字段的存储形式与Java中枚举类的定义相匹配。</li>
+                    <li><strong>条件查询构造：</strong>使用<code>QueryWrapper</code>或<code>LambdaQueryWrapper</code>构造条件查询时，直接引用枚举类型的字段。</li>
+                    <li><strong>类型处理器定制：</strong>如果枚举存储与标准的整数或字符串不同，可以自定义TypeHandler。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q14" onclick="toggleComplete('q14')">
+                <h2><span class="check-circle"></span><span class="num">14</span>Mybatis-Plus 怎样实现自定义全局操作拦截？</h2>
+                <p>实现Mybatis-Plus自定义全局操作拦截，需要自定义Mybatis的拦截器（Interceptor）：</p>
+                <ul>
+                    <li><strong>自定义Interceptor实现：</strong>创建一个类实现Mybatis的<code>Interceptor</code>接口。在<code>intercept</code>方法中实现你的拦截逻辑。</li>
+                    <li><strong>注解配置拦截器：</strong>使用@Intercepts和@Signature注解定义拦截器拦截的类型和方法。</li>
+                    <li><strong>注册拦截器：</strong>在Mybatis-Plus配置类中添加自定义拦截器。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q15" onclick="toggleComplete('q15')">
+                <h2><span class="check-circle"></span><span class="num">15</span>Mybatis-Plus 如何优化大量数据的删除操作？</h2>
+                <p>优化Mybatis-Plus进行大量数据删除操作的策略：</p>
+                <ul>
+                    <li><strong>分批删除：</strong>将要删除的数据分批处理，每批次处理一定数量的数据。</li>
+                    <li><strong>使用IN条件：</strong>如果数据量不是极大的，可以构建一个包含多个主键或条件的IN语句进行删除。</li>
+                    <li><strong>临时表间接删除：</strong>对于极大量数据的删除，可以考虑将待删除的记录的标识先插入到一个临时表。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q16" onclick="toggleComplete('q16')">
+                <h2><span class="check-circle"></span><span class="num">16</span>Mybatis-Plus 如何自动处理多数据源事务？</h2>
+                <p>在Mybatis-Plus中自动处理多数据源事务，通常需要结合Spring的事务管理机制：</p>
+                <ul>
+                    <li><strong>配置多数据源：</strong>使用如dynamic-datasource-spring-boot-starter等第三方库来配置和管理多个数据源。</li>
+                    <li><strong>声明式事务管理：</strong>利用Spring的<code>@Transactional</code>注解来声明事务的边界。</li>
+                    <li><strong>自定义事务管理器：</strong>针对每个数据源定义一个事务管理器，并使用<code>ChainedTransactionManager</code>来链式管理这些事务管理器。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q17" onclick="toggleComplete('q17')">
+                <h2><span class="check-circle"></span><span class="num">17</span>Mybatis-Plus 中的乐观锁和悲观锁实现方式？</h2>
+                <p>Mybatis-Plus支持乐观锁和悲观锁，以提高并发访问时的数据一致性。</p>
+                <p><strong>乐观锁实现方式：</strong></p>
+                <ul>
+                    <li>Mybatis-Plus实现乐观锁主要通过版本号机制。它需要在数据库表中添加一个版本字段（version）。</li>
+                    <li>在更新数据时，会比较当前数据的版本号与数据库中存储的版本号，只有当版本号相同时才更新数据。</li>
+                    <li>在Mybatis-Plus中，通过在实体类字段上添加<code>@Version</code>注解来启用乐观锁。</li>
+                </ul>
+                <p><strong>悲观锁实现方式：</strong></p>
+                <ul>
+                    <li>悲观锁则是通过数据库的锁机制来实现。</li>
+                    <li>使用<code>@Select</code>注解中的lock标记来启用悲观锁。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q18" onclick="toggleComplete('q18')">
+                <h2><span class="check-circle"></span><span class="num">18</span>Mybatis-Plus 自动填充功能实现原理是什么？</h2>
+                <p>Mybatis-Plus提供了自动填充功能，用于在插入或更新记录时自动填充特定字段：</p>
+                <ul>
+                    <li><strong>注解配置：</strong>在实体类的字段上使用<code>@TableField</code>注解，并设置fill属性来指定填充时机。</li>
+                    <li><strong>FillMetaObjectHandler：</strong>创建一个类继承<code>MetaObjectHandler</code>接口，重写对应的填充方法。</li>
+                    <li><strong>填充时机：</strong>可以设置为INSERT、UPDATE或INSERT_UPDATE。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q19" onclick="toggleComplete('q19')">
+                <h2><span class="check-circle"></span><span class="num">19</span>Mybatis-Plus 如何实现分页插件的原理？</h2>
+                <p>Mybatis-Plus的分页插件是基于Mybatis的拦截器实现的：</p>
+                <ul>
+                    <li><strong>分页参数：</strong>分页插件首先从ThreadLocal中获取分页参数。</li>
+                    <li><strong>SQL拦截：</strong>在执行SQL前，拦截器会修改原始SQL，添加分页语句。</li>
+                    <li><strong>count查询：</strong>分页插件会自动添加count查询来获取总记录数。</li>
+                    <li><strong>结果封装：</strong>将分页结果封装到Page对象中返回。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q20" onclick="toggleComplete('q20')">
+                <h2><span class="check-circle"></span><span class="num">20</span>Mybatis-Plus 的SQL注入器工作原理是什么？</h2>
+                <p>Mybatis-Plus的SQL注入器用于扩展基础CRUD操作：</p>
+                <ul>
+                    <li><strong>AbstractSqlInjector：</strong>SQL注入器继承自<code>AbstractSqlInjector</code>类。</li>
+                    <li><strong>注入方法：</strong>重写<code>getMethodList</code>方法，注入自定义的SQL方法。</li>
+                    <li><strong>BaseMapper扩展：</strong>通过SQL注入器，可以为BaseMapper添加更多通用方法。</li>
+                    <li><strong>使用场景：</strong>常用于实现逻辑删除、统一批量操作等。</li>
+                </ul>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list">
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        const STORAGE_KEY = 'mybatisplus_progress';
+        const totalQuestions = 20;
+
+        function generateToc() {
+            const headings = document.querySelectorAll('.question-card h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading) => {
+                const id = heading.parentElement.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text.substring(text.indexOf(' ') + 1);
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('.question-card');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function saveProgress(completed) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+            updateUI();
+        }
+
+        function toggleComplete(id) {
+            const completed = loadProgress();
+            const index = completed.indexOf(id);
+            if (index === -1) completed.push(id);
+            else completed.splice(index, 1);
+            saveProgress(completed);
+        }
+
+        function updateUI() {
+            const completed = loadProgress();
+            document.querySelectorAll('.question-card').forEach(card => {
+                const id = card.getAttribute('id');
+                if (completed.includes(id)) {
+                    card.classList.add('completed');
+                } else {
+                    card.classList.remove('completed');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateToc();
+            updateUI();
+        });
+    </script>
+</body>
+</html>

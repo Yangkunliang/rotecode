@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redis 面试题</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .toc-list a.active {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #4ade80;
+        }
+
+        .question-card h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-card h2 .num {
+            background: #4ade80;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .question-card p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .question-card ul, .question-card ol {
+            margin: 12px 0 12px 25px;
+            color: #475569;
+        }
+
+        .question-card li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .question-card strong {
+            color: #1e293b;
+        }
+
+        .question-card code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #dc2626;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #4ade80;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Redis 面试题</h1>
+            
+            <div class="question-card" id="q1">
+                <h2><span class="num">1</span>Redis持久化机制有哪些？</h2>
+                <p>Redis支持两种主要的持久化机制：RDB（快照）和AOF（追加文件）。</p>
+                <ul>
+                    <li><strong>RDB（Redis Database）：</strong>在指定的时间间隔内，执行快照存储，将内存中的所有数据保存到磁盘上的一个快照文件中。这个机制可以通过在<code>redis.conf</code>配置文件中设置不同的策略来触发。</li>
+                    <li><strong>AOF（Append Only File）：</strong>记录每次写操作指令，将其追加到文件末尾。AOF持久化提供了更高级别的数据安全性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q2">
+                <h2><span class="num">2</span>Redis的过期策略和内存淘汰机制是什么？</h2>
+                <p>Redis的过期策略主要有两种：惰性删除和定时删除。</p>
+                <ul>
+                    <li><strong>惰性删除：</strong>当访问一个已经设置过期时间的key时，Redis会检查这个key是否已过期，如果过期则删除。</li>
+                    <li><strong>定时删除：</strong>Redis会定期执行一次扫描操作，随机检查一些key是否过期。</li>
+                </ul>
+                <p><strong>内存淘汰机制：</strong>当内存使用达到配置的阈值时，Redis会根据配置的淘汰策略来删除一些key。常见策略有：</p>
+                <ul>
+                    <li><strong>noeviction：</strong>不进行任何淘汰，新写入操作会报错。</li>
+                    <li><strong>allkeys-lru：</strong>从所有key中使用LRU算法进行淘汰。</li>
+                    <li><strong>volatile-lru：</strong>仅从设置了过期时间的key中，使用LRU算法进行淘汰。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q3">
+                <h2><span class="num">3</span>Redis哨兵模式（Sentinel）的工作原理是什么？</h2>
+                <p>Redis Sentinel是Redis的高可用解决方案，它负责监控Redis master和slave服务器，实现故障转移和服务自动发现。</p>
+                <ul>
+                    <li><strong>监控：</strong>Sentinel会监控所有Redis节点的运行状态。</li>
+                    <li><strong>通知：</strong>当某个Redis实例出现故障时，Sentinel可以通过API或者配置的回调脚本来通知管理员。</li>
+                    <li><strong>自动故障迁移：</strong>如果master节点不可用，Sentinel会自动从slave节点中选举一个新的master节点。</li>
+                    <li><strong>配置提供者：</strong>Sentinel还能提供一个查询服务，客户端可以查询到当前的master节点是哪个。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q4">
+                <h2><span class="num">4</span>Redis集群（Cluster）的工作原理是什么？</h2>
+                <p>Redis集群通过分片来提供在多个Redis节点间的数据共享。</p>
+                <ul>
+                    <li><strong>自动分片：</strong>Redis集群将数据自动分成16384个哈希槽，每个节点负责一部分哈希槽。</li>
+                    <li><strong>高可用性：</strong>每个数据分片可以有多个副本，确保数据的安全。</li>
+                    <li><strong>读写分离：</strong>客户端可以从副本节点读取数据，以减轻主节点的读取压力。</li>
+                    <li><strong>无中心架构：</strong>没有中心节点，每个节点都保存着集群的状态。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q5">
+                <h2><span class="num">5</span>Redis如何做到高性能的？</h2>
+                <p>Redis能够提供高性能数据读写的原因主要归结于以下几点：</p>
+                <ul>
+                    <li><strong>完全基于内存：</strong>Redis的所有数据都存储在内存中，访问内存比访问磁盘要快得多。</li>
+                    <li><strong>数据结构简单：</strong>Redis使用高效的数据结构，如字符串、列表、集合、散列表等。</li>
+                    <li><strong>单线程模型：</strong>Redis利用单线程模型处理命令请求，避免了多线程之间的上下文切换和竞争条件。</li>
+                    <li><strong>IO多路复用：</strong>Redis使用IO多路复用技术进行网络通信。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q6">
+                <h2><span class="num">6</span>Redis支持的数据类型有哪些？</h2>
+                <p>Redis支持五种主要的数据类型：</p>
+                <ul>
+                    <li><strong>字符串（String）：</strong>最基本的类型，可以包含任何数据。</li>
+                    <li><strong>列表（List）：</strong>一个由字符串组成的有序序列，可以在序列的头部或尾部添加元素。</li>
+                    <li><strong>集合（Set）：</strong>由不重复字符串组成的无序集合。</li>
+                    <li><strong>哈希（Hash）：</strong>键值对集合，适合存储对象。</li>
+                    <li><strong>有序集合（Sorted Set）：</strong>集合中的每个元素都会关联一个浮点数分数。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q7">
+                <h2><span class="num">7</span>Redis事务的特性和限制是什么？</h2>
+                <p>Redis事务提供了一种将多个命令打包，然后一次性、顺序地执行的机制。</p>
+                <p><strong>特性：</strong></p>
+                <ul>
+                    <li><strong>原子性：</strong>事务中的所有命令作为一个整体被执行。</li>
+                    <li><strong>隔离性：</strong>事务执行期间，事务内的命令请求不会被其他客户端命令请求所中断。</li>
+                    <li><strong>顺序性：</strong>事务中的命令按照添加到事务的顺序依次执行。</li>
+                </ul>
+                <p><strong>限制：</strong></p>
+                <ul>
+                    <li><strong>不支持回滚：</strong>如果事务中某个命令执行失败，事务的其余命令仍将被执行。</li>
+                    <li><strong>没有隔离级别的概念：</strong>在Redis事务执行期间，其他客户端提交的命令可能会在事务命令之间执行。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q8">
+                <h2><span class="num">8</span>Redis如何实现分布式锁？</h2>
+                <p>Redis实现分布式锁主要通过SET命令的NX（Not Exists）选项和EX（Expire）选项来实现。</p>
+                <ul>
+                    <li><strong>互斥性：</strong>利用SET命令的NX选项，只有当锁不存在时，才能设置成功。</li>
+                    <li><strong>死锁避免：</strong>通过为锁设置一个过期时间（EX选项），防止死锁的发生。</li>
+                    <li><strong>锁续期：</strong>持有锁的客户端需要定期重新设置锁的过期时间。</li>
+                    <li><strong>释放锁：</strong>锁的持有者完成任务后，可以通过DEL命令删除锁。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q9">
+                <h2><span class="num">9</span>如何解决Redis的热点key问题？</h2>
+                <p>解决Redis热点key问题通常采取以下策略：</p>
+                <ul>
+                    <li><strong>热点key分片：</strong>将热点key通过添加前缀或后缀的方式分散到多个key上。</li>
+                    <li><strong>读写分离：</strong>将热点数据的读写操作分离，读操作可以通过主从复制在多个从节点上进行。</li>
+                    <li><strong>设置热点key的过期时间：</strong>对于某些短时间内访问量极高的key，可以设置较短的过期时间。</li>
+                    <li><strong>利用缓存层：</strong>在应用层和Redis之间增加一层本地缓存（如Guava Cache）。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q10">
+                <h2><span class="num">10</span>Redis中的发布/订阅模型是怎样的？</h2>
+                <p>Redis的发布/订阅（pub/sub）模型是一种消息通信模式。</p>
+                <ul>
+                    <li><strong>发布者：</strong>不直接将消息发送给特定的订阅者，而是将消息发布到一个频道。</li>
+                    <li><strong>订阅者：</strong>订阅一个或多个频道，只接收订阅频道的消息。</li>
+                    <li><strong>支持模式匹配订阅：</strong>订阅者可以订阅匹配特定模式的频道。</li>
+                    <li><strong>解耦：</strong>发布者和订阅者互不了解，提高了系统的可扩展性和维护性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q11">
+                <h2><span class="num">11</span>Redis如何实现分布式会话？</h2>
+                <p>Redis实现分布式会话的常见方法是使用其作为会话存储：</p>
+                <ul>
+                    <li><strong>会话共享：</strong>在多个应用服务器之间共享用户会话信息，使用Redis存储会话数据。</li>
+                    <li><strong>会话标识：</strong>用户每次请求时携带一个唯一的会话标识（如Cookie中的SessionID）。</li>
+                    <li><strong>过期策略：</strong>利用Redis的过期机制自动删除过期的会话。</li>
+                    <li><strong>安全性：</strong>可以通过Redis的数据加密和安全连接来保证会话数据的安全性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q12">
+                <h2><span class="num">12</span>Redis中Lua脚本的使用场景有哪些？</h2>
+                <p>Redis中Lua脚本的使用场景包括：</p>
+                <ul>
+                    <li><strong>原子操作：</strong>对多个操作进行打包，通过Lua脚本在Redis服务器上执行，保证了操作的原子性。</li>
+                    <li><strong>减少网络开销：</strong>将多个命令合并在一个脚本中执行，减少了客户端和服务器之间的通信次数。</li>
+                    <li><strong>复杂逻辑处理：</strong>在脚本中可以实现比Redis原生命令更复杂的逻辑。</li>
+                    <li><strong>提高性能：</strong>Lua脚本执行时Redis会暂停其他命令的处理。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q13">
+                <h2><span class="num">13</span>Redis中的Bitmaps是什么，以及其应用场景？</h2>
+                <p>Bitmaps是Redis中的一种数据结构，它通过一个bit位来表示某个元素对应的值或状态。</p>
+                <ul>
+                    <li><strong>用户在线状态：</strong>利用每个bit位表示用户的在线状态，1表示在线，0表示离线。</li>
+                    <li><strong>日活用户统计：</strong>用不同的bit位表示每天的用户访问情况。</li>
+                    <li><strong>特征标签：</strong>利用bitmaps来存储用户的特征标签。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q14">
+                <h2><span class="num">14</span>Redis的HyperLogLog是什么，以及其应用场景？</h2>
+                <p>HyperLogLog是Redis提供的一种基于概率的数据结构，用于高效率地进行基数统计。</p>
+                <ul>
+                    <li><strong>大数据量的去重计数：</strong>如统计一个大型网站每天的独立访客数量（UV）。</li>
+                    <li><strong>实时分析：</strong>适用于需要快速响应的场景。</li>
+                    <li><strong>数据流分析：</strong>在数据流处理中，可以用于估算流中的独立元素数量。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q15">
+                <h2><span class="num">15</span>Redis的GEO是什么，以及其应用场景？</h2>
+                <p>Redis的GEO是基于地理位置的数据类型，它允许你将地理位置信息存储在Redis中，并进行地理空间查询。</p>
+                <ul>
+                    <li><strong>位置存储：</strong>可以存储世界上任何地方的位置信息。</li>
+                    <li><strong>半径查询：</strong>可以查询给定位置在指定半径内的所有点。</li>
+                    <li><strong>距离计算：</strong>可以计算两个地理位置之间的距离。</li>
+                    <li><strong>地理位置排序：</strong>可以根据距离用户位置的远近对地理位置进行排序。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q16">
+                <h2><span class="num">16</span>Redis流(Streams)是什么，以及其应用场景？</h2>
+                <p>Redis流是Redis的一种新的数据类型，是为了更好地解决消息队列和发布/订阅模式的问题而设计的。</p>
+                <ul>
+                    <li><strong>消息队列：</strong>Redis流可以作为生产者和消费者模式下的消息队列。</li>
+                    <li><strong>日志收集：</strong>适用于收集来自不同源的日志数据。</li>
+                    <li><strong>实时消息系统：</strong>可以构建实时消息系统。</li>
+                    <li><strong>流处理：</strong>Redis流支持对数据流进行复杂的处理和分析。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q17">
+                <h2><span class="num">17</span>Redis中的ZSET是如何实现的？</h2>
+                <p>Redis中的ZSET（有序集合）是通过跳跃列表（Skip List）和散列表（Hash Table）的结合来实现的。</p>
+                <ul>
+                    <li><strong>跳跃列表：</strong>跳跃列表是ZSET的主要数据结构，可以快速地进行元素查找、插入、删除操作。</li>
+                    <li><strong>散列表：</strong>散列表用于存储成员到分数的映射，提高了查找成员分数的效率。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q18">
+                <h2><span class="num">18</span>Redis的快照（RDB）和AOF日志如何同时使用？</h2>
+                <p>在Redis中，快照（RDB）和AOF可以同时使用，以利用两者各自的优点。</p>
+                <ul>
+                    <li><strong>数据恢复：</strong>AOF用于提供数据的完整性和持久性，Redis会优先加载AOF文件来恢复原始数据。</li>
+                    <li><strong>性能和存储：</strong>RDB在创建快照时对性能的影响较小，而AOF可能会因为频繁的写操作对性能产生影响。</li>
+                    <li><strong>灾难恢复：</strong>结合使用RDB和AOF可以提高数据安全性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q19">
+                <h2><span class="num">19</span>Redis中的管道技术有什么用途？</h2>
+                <p>Redis的管道技术（Pipelining）主要用于提高数据传输效率。</p>
+                <ul>
+                    <li><strong>批量操作：</strong>管道技术非常适合进行批量数据操作和批量查询。</li>
+                    <li><strong>性能提升：</strong>对于需要大量读写操作的应用，使用管道可以显著提升性能。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q20">
+                <h2><span class="num">20</span>Redis的事务是如何工作的？</h2>
+                <p>Redis的事务通过MULTI、EXEC、WATCH等命令来实现。</p>
+                <ul>
+                    <li><strong>事务开始：</strong>使用MULTI命令标记事务的开始。</li>
+                    <li><strong>命令入队：</strong>在MULTI和EXEC之间输入的所有命令不会立即执行，而是被放入一个队列中。</li>
+                    <li><strong>执行事务：</strong>当使用EXEC命令时，所有队列中的命令会被原子性地执行。</li>
+                    <li><strong>监视键：</strong>WATCH命令可以用来监视一个或多个key。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q21">
+                <h2><span class="num">21</span>Redis如何实现键的自动过期？</h2>
+                <p>Redis实现键自动过期的机制主要依靠两种策略：惰性过期和定期过期。</p>
+                <ul>
+                    <li><strong>惰性过期：</strong>当访问一个键时，Redis会检查该键是否设置了过期时间，如果已过期，则在访问时将其删除。</li>
+                    <li><strong>定期过期：</strong>Redis会定期随机检查一些键，并删除其中已过期的键。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q22">
+                <h2><span class="num">22</span>如何优化Redis的内存使用？</h2>
+                <p>优化Redis内存使用的策略包括：</p>
+                <ul>
+                    <li><strong>使用合适的数据类型：</strong>根据实际需要选择最合适的数据类型。</li>
+                    <li><strong>键名和值的优化：</strong>使用短的键名和值，减少内存占用。</li>
+                    <li><strong>数据分片：</strong>将大的数据集分片存储在不同的键中。</li>
+                    <li><strong>使用内存淘汰策略：</strong>配置合适的内存淘汰策略。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q23">
+                <h2><span class="num">23</span>Redis的哨兵模式和集群模式有何区别？</h2>
+                <p>Redis的哨兵模式（Sentinel）和集群模式（Cluster）主要区别在于用途和架构：</p>
+                <ul>
+                    <li><strong>用途差异：</strong>哨兵模式主要提供高可用性，集群模式则提供了数据的自动分片和高可用性。</li>
+                    <li><strong>架构差异：</strong>哨兵模式通过多个哨兵节点和Redis服务节点组成，集群模式通过多个Redis节点组成。</li>
+                    <li><strong>数据分片：</strong>集群模式自动将数据分散到多个节点上，哨兵模式不提供数据分片特性。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q24">
+                <h2><span class="num">24</span>Redis如何处理大量连接的场景？</h2>
+                <p>处理大量连接的场景，Redis采取了以下措施：</p>
+                <ul>
+                    <li><strong>使用I/O多路复用技术：</strong>Redis服务器使用I/O多路复用技术来同时管理多个连接。</li>
+                    <li><strong>连接池：</strong>客户端可以使用连接池来复用连接。</li>
+                    <li><strong>调整操作系统参数：</strong>例如，增加文件描述符的限制。</li>
+                    <li><strong>优化Redis配置：</strong>例如，调整<code>tcp-backlog</code>参数。</li>
+                </ul>
+            </div>
+
+            <div class="question-card" id="q25">
+                <h2><span class="num">25</span>Redis的数据过期和删除策略有哪些？</h2>
+                <p>Redis的数据过期和删除策略包括：</p>
+                <ul>
+                    <li><strong>定时删除：</strong>设置键的过期时间时，创建一个定时器，让定时器在键过期时立即执行删除操作。</li>
+                    <li><strong>惰性删除：</strong>放任键过期不管，但每次从键空间中获取键时，都检查取得的键是否过期。</li>
+                    <li><strong>定期删除：</strong>每隔一段时间，程序就对数据库进行一次检查，删除里面的过期键。</li>
+                </ul>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list">
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('.question-card h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading) => {
+                const id = heading.parentElement.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('.question-card');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', generateToc);
+    </script>
+</body>
+</html>

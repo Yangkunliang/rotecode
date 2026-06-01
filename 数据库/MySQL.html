@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL 面试题及答案整理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .toc-list a.active {
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 4px solid #4ade80;
+        }
+
+        h3 {
+            font-size: 16px;
+            color: #334155;
+            margin-top: 22px;
+            margin-bottom: 14px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 13px;
+        }
+
+        th {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin: 14px 0 14px 28px;
+            color: #475569;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 13px;
+            color: #e11d48;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 18px 0;
+            font-size: 13px;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .tag-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tag-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .highlight {
+            background: #f0fdf4;
+            padding: 15px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #4ade80;
+            margin: 18px 0;
+        }
+
+        .highlight strong {
+            color: #166534;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #4ade80;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>MySQL 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. InnoDB 与 MyISAM 存储引擎的区别</h2>
+            <table>
+                <tr><th>特性</th><th>InnoDB</th><th>MyISAM</th></tr>
+                <tr><td>事务支持</td><td><span class="tag tag-success">✅ 支持</span></td><td><span class="tag tag-danger">❌ 不支持</span></td></tr>
+                <tr><td>锁粒度</td><td>行级锁</td><td>表级锁</td></tr>
+                <tr><td>外键约束</td><td><span class="tag tag-success">✅ 支持</span></td><td><span class="tag tag-danger">❌ 不支持</span></td></tr>
+                <tr><td>全文索引</td><td><span class="tag tag-danger">❌ 不支持</span>（5.6前）</td><td><span class="tag tag-success">✅ 支持</span></td></tr>
+                <tr><td>崩溃恢复</td><td><span class="tag tag-success">✅ 自动恢复</span></td><td><span class="tag tag-danger">❌ 较脆弱</span></td></tr>
+                <tr><td>存储限制</td><td>受文件系统限制</td><td>支持较大文件</td></tr>
+            </table>
+            <div class="highlight">
+                <strong>其他区别：</strong>
+                <ul>
+                    <li>InnoDB 支持 MVCC，适用于高并发场景</li>
+                    <li>MyISAM 适用于只读或少量写操作的场景</li>
+                </ul>
+            </div>
+
+            <h2 id="section-2">2. MySQL 索引类型及使用场景</h2>
+            <h3>主要索引类型</h3>
+            <table>
+                <tr><th>索引类型</th><th>说明</th><th>使用场景</th></tr>
+                <tr><td><strong>主键索引</strong> (PRIMARY KEY)</td><td>唯一标识表中每一行</td><td>主键查询</td></tr>
+                <tr><td><strong>唯一索引</strong> (UNIQUE)</td><td>确保列值唯一</td><td>唯一性约束</td></tr>
+                <tr><td><strong>普通索引</strong> (INDEX)</td><td>基本索引类型</td><td>加速查询</td></tr>
+                <tr><td><strong>全文索引</strong> (FULLTEXT)</td><td>全文搜索</td><td>文本内容搜索</td></tr>
+                <tr><td><strong>复合索引</strong> (COMPOSITE)</td><td>多列组合</td><td>多列查询条件</td></tr>
+                <tr><td><strong>空间索引</strong> (SPATIAL)</td><td>地理空间数据</td><td>GIS 应用</td></tr>
+            </table>
+
+            <h3>B-Tree 与 Hash 索引对比</h3>
+            <table>
+                <tr><th>特性</th><th>B-Tree</th><th>Hash</th></tr>
+                <tr><td>结构</td><td>平衡树</td><td>哈希表</td></tr>
+                <tr><td>范围查询</td><td><span class="tag tag-success">✅ 支持</span></td><td><span class="tag tag-danger">❌ 不支持</span></td></tr>
+                <tr><td>等值查询</td><td><span class="tag tag-success">✅ 支持</span></td><td><span class="tag tag-success">✅ 更快</span></td></tr>
+            </table>
+
+            <h3>B-Tree 索引适用场景</h3>
+            <ul>
+                <li>全值匹配</li>
+                <li>匹配列前缀</li>
+                <li>匹配范围值</li>
+                <li>精确匹配</li>
+                <li>ORDER BY 操作</li>
+            </ul>
+
+            <h2 id="section-3">3. MySQL 高效分页查询</h2>
+            <h3>分页优化方法</h3>
+            <ol>
+                <li><strong>避免大 OFFSET</strong>
+                    <ul>
+                        <li><code>LIMIT 100000, 10</code> 性能差</li>
+                        <li>改用 <code>WHERE id > last_id LIMIT 10</code></li>
+                    </ul>
+                </li>
+                <li><strong>使用覆盖索引</strong> - 查询只访问索引，不回表</li>
+                <li><strong>利用查询缓存</strong> - 适用于数据变化不频繁的场景</li>
+                <li><strong>记录上次位置</strong> - 记住上次查询的最后位置，而不是使用 OFFSET</li>
+            </ol>
+
+            <h2 id="section-4">4. MySQL 锁机制</h2>
+            <h3>锁的分类</h3>
+            <ul>
+                <li><strong>表级锁：</strong>锁定整个表，开销小，并发低</li>
+                <li><strong>行级锁：</strong>锁定单行数据，开销大，并发高</li>
+                <li><strong>页级锁：</strong>介于表级和行级之间</li>
+            </ul>
+
+            <h3>InnoDB 锁类型</h3>
+            <ul>
+                <li><strong>共享锁 (S Lock)：</strong>允许读，阻止写</li>
+                <li><strong>排他锁 (X Lock)：</strong>允许写，阻止其他锁</li>
+                <li><strong>意向锁：</strong>表级锁，表示事务准备在某行上加锁</li>
+            </ul>
+
+            <h2 id="section-5">5. 事务隔离级别</h2>
+            <table>
+                <tr><th>隔离级别</th><th>脏读</th><th>不可重复读</th><th>幻读</th></tr>
+                <tr><td>READ UNCOMMITTED</td><td><span class="tag tag-danger">❌ 可能</span></td><td><span class="tag tag-danger">❌ 可能</span></td><td><span class="tag tag-danger">❌ 可能</span></td></tr>
+                <tr><td>READ COMMITTED</td><td><span class="tag tag-success">✅ 防止</span></td><td><span class="tag tag-danger">❌ 可能</span></td><td><span class="tag tag-danger">❌ 可能</span></td></tr>
+                <tr><td>REPEATABLE READ</td><td><span class="tag tag-success">✅ 防止</span></td><td><span class="tag tag-success">✅ 防止</span></td><td><span class="tag tag-danger">❌ 可能</span></td></tr>
+                <tr><td>SERIALIZABLE</td><td><span class="tag tag-success">✅ 防止</span></td><td><span class="tag tag-success">✅ 防止</span></td><td><span class="tag tag-success">✅ 防止</span></td></tr>
+            </table>
+            <p>MySQL 默认隔离级别为 REPEATABLE READ。</p>
+
+            <h2 id="section-6">6. MySQL 死锁处理</h2>
+            <h3>死锁产生条件</h3>
+            <ul>
+                <li>互斥条件：资源不可共享</li>
+                <li>请求与保持条件：持有资源并请求新资源</li>
+                <li>不剥夺条件：资源不可强制剥夺</li>
+                <li>循环等待条件：形成等待环路</li>
+            </ul>
+
+            <h3>死锁解决方法</h3>
+            <ul>
+                <li>按顺序访问资源</li>
+                <li>设置锁超时时间</li>
+                <li>使用死锁检测与回滚</li>
+                <li>减少事务持有锁的时间</li>
+            </ul>
+
+            <h2 id="section-7">7. ACID 特性</h2>
+            <ul>
+                <li><strong>原子性 (Atomicity)：</strong>事务是原子的，要么全部执行，要么全部不执行</li>
+                <li><strong>一致性 (Consistency)：</strong>事务执行前后数据库状态一致</li>
+                <li><strong>隔离性 (Isolation)：</strong>事务之间相互隔离</li>
+                <li><strong>持久性 (Durability)：</strong>事务提交后数据持久保存</li>
+            </ul>
+
+            <h2 id="section-8">8. 索引覆盖</h2>
+            <p><strong>覆盖索引：</strong>查询所需的所有列都在索引中，无需回表查询。</p>
+            <div class="highlight">
+                <strong>优势：</strong>减少磁盘 I/O，提高查询性能
+            </div>
+            <p><strong>适用场景：</strong>频繁执行的查询，列较少的查询。</p>
+
+            <h2 id="section-9">9. GROUP BY 与 ORDER BY</h2>
+            <h3>GROUP BY 优化</h3>
+            <ul>
+                <li>使用索引避免排序</li>
+                <li>尽量在索引列上进行 GROUP BY</li>
+                <li>减少 GROUP BY 的列数</li>
+            </ul>
+
+            <h3>ORDER BY 优化</h3>
+            <ul>
+                <li>使用索引避免排序</li>
+                <li>避免在 ORDER BY 中使用函数</li>
+                <li>减少排序的数据量</li>
+            </ul>
+
+            <h2 id="section-10">10. 慢查询日志</h2>
+            <h3>慢查询日志配置</h3>
+            <ul>
+                <li><code>slow_query_log = ON</code> - 开启慢查询日志</li>
+                <li><code>long_query_time = 2</code> - 设置慢查询阈值（秒）</li>
+                <li><code>log_queries_not_using_indexes = ON</code> - 记录未使用索引的查询</li>
+            </ul>
+
+            <h3>慢查询分析工具</h3>
+            <ul>
+                <li><strong>mysqldumpslow：</strong>MySQL 自带的慢查询日志分析工具</li>
+                <li><strong>pt-query-digest：</strong>Percona Toolkit 中的工具</li>
+            </ul>
+
+            <h2 id="section-11">11. JOIN 类型</h2>
+            <table>
+                <tr><th>JOIN 类型</th><th>说明</th></tr>
+                <tr><td><strong>INNER JOIN</strong></td><td>返回两表匹配的行</td></tr>
+                <tr><td><strong>LEFT JOIN</strong></td><td>返回左表所有行，右表匹配的行</td></tr>
+                <tr><td><strong>RIGHT JOIN</strong></td><td>返回右表所有行，左表匹配的行</td></tr>
+                <tr><td><strong>FULL JOIN</strong></td><td>返回两表所有行</td></tr>
+                <tr><td><strong>CROSS JOIN</strong></td><td>笛卡尔积</td></tr>
+            </table>
+
+            <h2 id="section-12">12. 二级索引</h2>
+            <p><strong>二级索引：</strong>除主键索引外的其他索引。</p>
+            <ul>
+                <li>InnoDB 的二级索引叶子节点存储主键值</li>
+                <li>通过二级索引查询需要回表（除非覆盖索引）</li>
+                <li>二级索引可以加速查询，但会降低写性能</li>
+            </ul>
+
+            <h2 id="section-13">13. MVCC 机制</h2>
+            <p><strong>MVCC (Multi-Version Concurrency Control)：</strong>多版本并发控制。</p>
+            <h3>工作原理</h3>
+            <ul>
+                <li>每行记录有两个隐藏列：<code>trx_id</code>（事务ID）和 <code>roll_pointer</code>（回滚指针）</li>
+                <li>事务读取时根据可见性规则判断数据版本</li>
+                <li>Undo 日志存储旧版本数据</li>
+            </ul>
+
+            <h2 id="section-14">14. MySQL 高可用架构</h2>
+            <ul>
+                <li><strong>主从复制：</strong>一主多从，读负载均衡</li>
+                <li><strong>MGR (MySQL Group Replication)：</strong>多主复制，自动故障转移</li>
+                <li><strong>半同步复制：</strong>至少一个从库确认后才提交</li>
+                <li><strong>ProxySQL：</strong>数据库中间件，读写分离</li>
+            </ul>
+
+            <h2 id="section-15">15. 二阶段提交 (2PC)</h2>
+            <h3>两阶段</h3>
+            <ol>
+                <li><strong>准备阶段：</strong>协调者询问所有参与者是否可以提交</li>
+                <li><strong>提交阶段：</strong>协调者根据反馈决定提交或回滚</li>
+            </ol>
+            <div class="highlight">
+                <strong>问题：</strong>协调者故障会导致数据不一致
+            </div>
+
+            <h2 id="section-16">16. 视图</h2>
+            <p><strong>视图：</strong>基于 SQL 查询的虚拟表。</p>
+            <h3>视图的作用</h3>
+            <ul>
+                <li>简化复杂查询</li>
+                <li>数据安全（限制访问）</li>
+                <li>逻辑独立性</li>
+            </ul>
+            <div class="highlight">
+                <strong>注意：</strong>视图不存储数据，每次访问都会执行查询
+            </div>
+
+            <h2 id="section-17">17. 大表优化</h2>
+            <ul>
+                <li><strong>分表：</strong>水平分表、垂直分表</li>
+                <li><strong>分区：</strong>按范围、列表、哈希分区</li>
+                <li><strong>索引优化：</strong>合理创建索引</li>
+                <li><strong>读写分离：</strong>主库写，从库读</li>
+                <li><strong>缓存：</strong>使用 Redis 缓存热点数据</li>
+            </ul>
+
+            <h2 id="section-18">18. 存储过程与函数</h2>
+            <h3>存储过程</h3>
+            <ul>
+                <li>预编译的 SQL 语句集合</li>
+                <li>支持流程控制（IF、WHILE 等）</li>
+                <li>可返回多个结果集</li>
+            </ul>
+
+            <h3>函数</h3>
+            <ul>
+                <li>必须返回单个值</li>
+                <li>可在 SQL 语句中调用</li>
+            </ul>
+
+            <h2 id="section-19">19. 查询优化方法</h2>
+            <ul>
+                <li>使用 EXPLAIN 分析执行计划</li>
+                <li>避免 SELECT *</li>
+                <li>合理使用索引</li>
+                <li>避免在 WHERE 子句中使用函数</li>
+                <li>使用连接代替子查询</li>
+                <li>限制返回行数</li>
+            </ul>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list">
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('h2');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', generateToc);
+    </script>
+</body>
+</html>
