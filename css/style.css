@@ -21,29 +21,93 @@ body {
     height: 100vh;
     left: 0;
     top: 0;
+    transition: width 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar.collapsed {
+    width: 72px;
 }
 
 .logo {
-    padding: 20px 25px;
+    padding: 16px 14px;
     font-size: 20px;
     font-weight: 700;
     border-bottom: 1px solid #333;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 64px;
 }
 
-.logo span {
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.brand-icon {
+    flex-shrink: 0;
+}
+
+.brand-name {
     color: #4ade80;
 }
 
+.sidebar-collapse-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #3f3f52;
+    border-radius: 8px;
+    background: #2a2a3e;
+    color: #a0a0a0;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    transition: all 0.2s;
+}
+
+.sidebar-collapse-btn:hover {
+    border-color: #4ade80;
+    color: #4ade80;
+}
+
+.sidebar.collapsed .logo {
+    justify-content: center;
+    padding: 16px 10px;
+}
+
+.sidebar.collapsed .brand-name,
+.sidebar.collapsed .brand-suffix {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-collapse-btn {
+    position: absolute;
+    top: 66px;
+    right: -13px;
+    z-index: 2;
+    transform: rotate(180deg);
+}
+
 .progress-summary {
-    padding: 10px 20px;
-    background: rgba(74, 222, 128, 0.1);
-    border-bottom: 1px solid #333;
+    margin: 12px;
+    padding: 12px;
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.18);
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 10px;
+}
+
+.progress-summary .progress-info {
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: space-between;
+    grid-column: 1 / -1;
 }
 
 .progress-summary .label {
@@ -64,7 +128,7 @@ body {
 }
 
 .progress-summary .progress-bar {
-    flex: 1;
+    align-self: center;
     height: 4px;
     background: #333;
     border-radius: 2px;
@@ -76,7 +140,7 @@ body {
     background: transparent;
     border: 1px solid #444;
     color: #888;
-    padding: 4px 10px;
+    padding: 3px 8px;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -105,6 +169,12 @@ body {
     transition: all 0.2s;
     font-size: 14px;
     color: #a0a0a0;
+}
+
+.nav-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .nav-title:hover {
@@ -181,12 +251,42 @@ body {
     display: block;
 }
 
+.sidebar.collapsed .nav-menu {
+    padding-top: 12px;
+    overflow: visible;
+}
+
+.sidebar.collapsed .nav-item {
+    margin: 4px 10px;
+}
+
+.sidebar.collapsed .nav-title {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.sidebar.collapsed .nav-title .icon {
+    margin-right: 0;
+}
+
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .nav-title .arrow,
+.sidebar.collapsed .submenu,
+.sidebar.collapsed .progress-summary {
+    display: none;
+}
+
 /* 主内容区 */
 .main-content {
     flex: 1;
     margin-left: 260px;
     background: #f5f5f5;
     min-height: 100vh;
+    transition: margin-left 0.2s ease;
+}
+
+body.sidebar-collapsed .main-content {
+    margin-left: 72px;
 }
 
 .header {
@@ -204,6 +304,28 @@ body {
     color: #333;
     font-weight: 600;
     line-height: 1.2;
+}
+
+.learned-btn {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.learned-btn:hover {
+    border-color: #4ade80;
+    background: #dcfce7;
+}
+
+.learned-btn.done {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #fff;
 }
 
 .breadcrumb {
@@ -539,6 +661,88 @@ pre code {
     margin: 0;
 }
 
+.study-calendar {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.section-title h3 {
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.text-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.text-btn:hover {
+    color: #ef4444;
+}
+
+.calendar-list {
+    display: grid;
+    gap: 10px;
+}
+
+.calendar-day {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.calendar-date {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.calendar-pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.calendar-page {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.calendar-page:hover {
+    background: #dcfce7;
+    border-color: #4ade80;
+}
+
+.empty-calendar {
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+}
+
 .db-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -575,13 +779,42 @@ pre code {
 
 @media (max-width: 768px) {
     .sidebar {
+        width: 260px;
         transform: translateX(-100%);
         z-index: 1000;
+    }
+    .sidebar.collapsed {
+        width: 260px;
     }
     .sidebar.active {
         transform: translateX(0);
     }
+    .sidebar.collapsed .brand-name,
+    .sidebar.collapsed .brand-suffix {
+        display: inline;
+    }
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .nav-title .arrow,
+    .sidebar.collapsed .progress-summary {
+        display: flex;
+    }
+    .sidebar.collapsed .submenu.show {
+        display: block;
+    }
+    .sidebar.collapsed .nav-title {
+        justify-content: flex-start;
+        padding: 12px 15px;
+    }
+    .sidebar.collapsed .nav-title .icon {
+        margin-right: 12px;
+    }
+    .sidebar-collapse-btn {
+        display: none;
+    }
     .main-content {
+        margin-left: 0;
+    }
+    body.sidebar-collapsed .main-content {
         margin-left: 0;
     }
     .menu-toggle {

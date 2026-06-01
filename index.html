@@ -11,23 +11,18 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="logo">
-            📚 <span>面试背题</span>系统
-        </div>
-
-        <div class="progress-summary">
-            <div class="label">学习进度</div>
-            <div class="value"><span id="progress-count">0</span> / <span id="progress-total">19</span></div>
-            <div class="progress-bar">
-                <div class="fill" id="progress-fill" style="width: 0%"></div>
+            <div class="brand">
+                <span class="brand-icon">📚</span>
+                <span class="brand-name">面试背题</span><span class="brand-suffix">系统</span>
             </div>
-            <button class="reset-btn" onclick="resetProgress()">🔄</button>
+            <button class="sidebar-collapse-btn" type="button" onclick="toggleSidebar()" title="折叠侧边栏" aria-label="折叠侧边栏">‹</button>
         </div>
 
         <nav class="nav-menu">
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
                     <span class="icon">🗄️</span>
-                    数据库
+                    <span class="nav-label">数据库</span>
                     <span class="arrow">›</span>
                 </div>
                 <div class="submenu">
@@ -66,109 +61,72 @@
 
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">💻</span>
-                    计算机基础
+                    <span class="icon">🔍</span>
+                    <span class="nav-label">搜索引擎</span>
                     <span class="arrow">›</span>
                 </div>
                 <div class="submenu">
-                    <a class="submenu-item" href="#">操作系统 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">计算机网络 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">数据结构与算法 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">计算机组成原理 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#" onclick="openTab('elasticsearch', 'ElasticSearch', 40, event)" data-page="elasticsearch" data-count="40">
+                        ElasticSearch <span class="badge">✓</span>
+                    </a>
                 </div>
             </div>
 
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🎨</span>
-                    前端
+                    <span class="icon">🔗</span>
+                    <span class="nav-label">分布式中间件</span>
                     <span class="arrow">›</span>
                 </div>
                 <div class="submenu">
-                    <a class="submenu-item" href="#">HTML/CSS <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">JavaScript <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">TypeScript <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">Vue.js <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">React <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#" onclick="openTab('mycat', 'MyCat', 30, event)" data-page="mycat" data-count="30">
+                        MyCat <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('nacos', 'Nacos', 30, event)" data-page="nacos" data-count="30">
+                        Nacos <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('zookeeper', 'Zookeeper', 30, event)" data-page="zookeeper" data-count="30">
+                        Zookeeper <span class="badge">✓</span>
+                    </a>
                 </div>
             </div>
 
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">☕</span>
-                    Java
+                    <span class="icon">🖥️</span>
+                    <span class="nav-label">服务器开发</span>
                     <span class="arrow">›</span>
                 </div>
                 <div class="submenu">
-                    <a class="submenu-item" href="#">Java 基础 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">JVM <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">Spring <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">微服务 <span class="badge">✓</span></a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🔷</span>
-                    Go
-                    <span class="arrow">›</span>
-                </div>
-                <div class="submenu">
-                    <a class="submenu-item" href="#">Go 基础 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">Goroutine <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">微服务 <span class="badge">✓</span></a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🐍</span>
-                    Python
-                    <span class="arrow">›</span>
-                </div>
-                <div class="submenu">
-                    <a class="submenu-item" href="#">Python 基础 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">Django/Flask <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">爬虫 <span class="badge">✓</span></a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🔧</span>
-                    DevOps
-                    <span class="arrow">›</span>
-                </div>
-                <div class="submenu">
-                    <a class="submenu-item" href="#">Docker <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">Kubernetes <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">CI/CD <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">Linux <span class="badge">✓</span></a>
-                </div>
-            </div>
-
-            <div class="nav-item">
-                <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🏗️</span>
-                    系统设计
-                    <span class="arrow">›</span>
-                </div>
-                <div class="submenu">
-                    <a class="submenu-item" href="#">分布式系统 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">高并发 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">缓存系统 <span class="badge">✓</span></a>
-                    <a class="submenu-item" href="#">消息队列 <span class="badge">✓</span></a>
+                    <a class="submenu-item" href="#" onclick="openTab('nginx', 'Nginx', 35, event)" data-page="nginx" data-count="35">
+                        Nginx <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('netty', 'Netty', 35, event)" data-page="netty" data-count="35">
+                        Netty <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('linux', 'Linux', 35, event)" data-page="linux" data-count="35">
+                        Linux <span class="badge">✓</span>
+                    </a>
                 </div>
             </div>
         </nav>
+
+        <div class="progress-summary">
+            <div class="progress-info">
+                <div class="label">学习进度</div>
+                <div class="value"><span id="progress-count">0</span> / <span id="progress-total">19</span></div>
+            </div>
+            <div class="progress-bar">
+                <div class="fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <button class="reset-btn" onclick="resetProgress()">重置</button>
+        </div>
     </aside>
 
     <main class="main-content">
         <header class="header">
             <h2 id="page-title">面试背题系统</h2>
-            <div class="header-actions">
-                <button class="btn btn-outline" onclick="toggleSidebar()">☰ 菜单</button>
-            </div>
+            <button class="learned-btn" id="learned-btn" onclick="markCurrentPageLearned()" hidden>标记今日学完</button>
         </header>
 
         <div class="tab-bar" id="tab-bar"></div>
@@ -179,16 +137,16 @@
                 
                 <div class="stats-cards">
                     <div class="stat-card">
-                        <div class="stat-number">10</div>
-                        <div class="stat-label">数据库专题</div>
+                        <div class="stat-number">17</div>
+                        <div class="stat-label">已接入专题</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">290</div>
+                        <div class="stat-number">483</div>
                         <div class="stat-label">面试题目</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="total-completed">0</div>
-                        <div class="stat-label">已掌握</div>
+                        <div class="stat-label">已学完页面</div>
                     </div>
                 </div>
 
@@ -196,13 +154,23 @@
                     <h3>🚀 快速开始</h3>
                     <p>点击左侧「数据库」菜单，选择想学习的主题即可开始刷题</p>
                 </div>
+
+                <section class="study-calendar">
+                    <div class="section-title">
+                        <h3>📅 学习日历</h3>
+                        <button class="text-btn" onclick="resetLearnedPages()">清空记录</button>
+                    </div>
+                    <div class="calendar-list" id="calendar-list"></div>
+                </section>
             </div>
         </div>
     </main>
 
     <script>
         const STORAGE_KEY = 'interview_progress';
+        const PAGE_PROGRESS_KEY = 'interview_page_progress';
         const openTabs = {};
+        let activePageId = '';
         const pageFiles = {
             mysql: '数据库/MySQL.html',
             redis: '数据库/Redis.html',
@@ -213,14 +181,34 @@
             mybatis: '数据库/MyBatis.html',
             'mybatis-plus': '数据库/Mybatis-Plus.html',
             sqlite: '数据库/SQLite.html',
-            sqlserver: '数据库/SQLServer.html'
+            sqlserver: '数据库/SQLServer.html',
+            elasticsearch: '搜索引擎/ElasticSearch.html',
+            mycat: '分布式中间件/MyCat.html',
+            nacos: '分布式中间件/Nacos.html',
+            zookeeper: '分布式中间件/Zookeeper.html',
+            nginx: '服务器开发/Nginx.html',
+            netty: '服务器开发/Netty.html',
+            linux: '服务器开发/Linux.html'
         };
 
         function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
+            const sidebar = document.querySelector('.sidebar');
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            if (isMobile) {
+                sidebar.classList.toggle('active');
+                return;
+            }
+
+            sidebar.classList.toggle('collapsed');
+            document.body.classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
         }
 
         function toggleSubmenu(element) {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar.classList.contains('collapsed')) {
+                toggleSidebar();
+            }
             element.classList.toggle('expanded');
             element.nextElementSibling.classList.toggle('show');
         }
@@ -242,7 +230,9 @@
                 createTab(pageId, pageName, questionCount);
             }
             
-            document.querySelector('.sidebar').classList.add('collapsed');
+            if (window.matchMedia('(max-width: 768px)').matches) {
+                document.querySelector('.sidebar').classList.remove('active');
+            }
         }
 
         function createTab(pageId, pageName, questionCount) {
@@ -308,7 +298,9 @@
                 activeContent.style.display = 'block';
             }
             
+            activePageId = pageId;
             updateBreadcrumb(openTabs[pageId].name);
+            updateLearnedButton(pageId);
         }
 
         function closeTab(pageId, event) {
@@ -335,7 +327,10 @@
             if (welcomeSection) {
                 welcomeSection.style.display = 'block';
             }
+            activePageId = '';
             updateBreadcrumb('首页');
+            updateLearnedButton('');
+            renderStudyCalendar();
         }
 
         function updateBreadcrumb(name) {
@@ -362,17 +357,133 @@
         }
 
         function updateOverviewStats() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            const progress = saved ? JSON.parse(saved) : {};
-            let totalCompleted = 0;
-            
-            Object.values(progress).forEach(items => {
-                if (Array.isArray(items)) {
-                    totalCompleted += items.length;
-                }
+            const learnedPages = getLearnedPages();
+            const pageTotal = document.querySelectorAll('.submenu-item[data-page]').length;
+            const progressCount = document.getElementById('progress-count');
+            const progressTotal = document.getElementById('progress-total');
+            const progressFill = document.getElementById('progress-fill');
+            const totalCompleted = document.getElementById('total-completed');
+
+            progressCount.textContent = learnedPages.length;
+            progressTotal.textContent = pageTotal;
+            progressFill.style.width = pageTotal ? Math.round(learnedPages.length / pageTotal * 100) + '%' : '0%';
+            totalCompleted.textContent = learnedPages.length;
+            updateLearnedNav();
+        }
+
+        function getLearnedPages() {
+            const saved = localStorage.getItem(PAGE_PROGRESS_KEY);
+            const pages = saved ? JSON.parse(saved) : [];
+            return Array.isArray(pages) ? pages : [];
+        }
+
+        function saveLearnedPages(pages) {
+            localStorage.setItem(PAGE_PROGRESS_KEY, JSON.stringify(pages));
+            updateOverviewStats();
+            renderStudyCalendar();
+            updateLearnedButton(activePageId);
+        }
+
+        function getTodayText() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        function markCurrentPageLearned() {
+            if (!activePageId || !openTabs[activePageId]) return;
+
+            const pages = getLearnedPages();
+            const existing = pages.find(item => item.pageId === activePageId);
+            const now = new Date().toISOString();
+            const today = getTodayText();
+
+            if (existing) {
+                existing.name = openTabs[activePageId].name;
+                existing.date = today;
+                existing.completedAt = now;
+            } else {
+                pages.push({
+                    pageId: activePageId,
+                    name: openTabs[activePageId].name,
+                    date: today,
+                    completedAt: now
+                });
+            }
+
+            saveLearnedPages(pages);
+        }
+
+        function resetLearnedPages() {
+            if (!confirm('确定要清空页面学完记录吗？')) return;
+            localStorage.removeItem(PAGE_PROGRESS_KEY);
+            updateOverviewStats();
+            renderStudyCalendar();
+            updateLearnedButton(activePageId);
+        }
+
+        function resetProgress() {
+            resetLearnedPages();
+        }
+
+        function updateLearnedButton(pageId) {
+            const button = document.getElementById('learned-btn');
+            if (!button) return;
+
+            if (!pageId) {
+                button.hidden = true;
+                return;
+            }
+
+            const learned = getLearnedPages().find(item => item.pageId === pageId);
+            button.hidden = false;
+            button.classList.toggle('done', Boolean(learned));
+            button.textContent = learned ? '今日已学完 ✓' : '标记今日学完';
+        }
+
+        function updateLearnedNav() {
+            const learnedIds = getLearnedPages().map(item => item.pageId);
+
+            document.querySelectorAll('.submenu-item[data-page]').forEach(item => {
+                item.classList.toggle('completed', learnedIds.includes(item.dataset.page));
             });
-            
-            document.getElementById('total-completed').textContent = totalCompleted;
+        }
+
+        function renderStudyCalendar() {
+            const calendarList = document.getElementById('calendar-list');
+            if (!calendarList) return;
+
+            const pages = getLearnedPages().sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+
+            if (pages.length === 0) {
+                calendarList.innerHTML = '<div class="empty-calendar">还没有学完记录。打开一个页面后点击“标记今日学完”。</div>';
+                return;
+            }
+
+            const grouped = pages.reduce((result, item) => {
+                if (!result[item.date]) result[item.date] = [];
+                result[item.date].push(item);
+                return result;
+            }, {});
+
+            calendarList.innerHTML = Object.keys(grouped).map(date => {
+                const items = grouped[date].map(item => {
+                    return '<button class="calendar-page" onclick="openTabFromCalendar(&quot;' + item.pageId + '&quot;)">' + item.name + '</button>';
+                }).join('');
+
+                return '<div class="calendar-day"><div class="calendar-date">' + date + '</div><div class="calendar-pages">' + items + '</div></div>';
+            }).join('');
+        }
+
+        function openTabFromCalendar(pageId) {
+            const item = document.querySelector('.submenu-item[data-page="' + pageId + '"]');
+            if (!item) return;
+
+            const name = item.textContent.replace('✓', '').trim();
+            const count = parseInt(item.dataset.count || '0', 10);
+            openTab(pageId, name, count, { preventDefault: function() {} });
         }
 
         function initDbGrid() {
@@ -405,41 +516,20 @@
             dbGrid.className = 'db-grid';
             dbGrid.id = 'db-grid';
             
-            const dbItems = [
-                { page: 'mysql', name: 'MySQL', count: 19 },
-                { page: 'redis', name: 'Redis', count: 25 },
-                { page: 'mongodb', name: 'MongoDB', count: 30 },
-                { page: 'oracle', name: 'Oracle', count: 36 },
-                { page: 'postgresql', name: 'PostgreSQL', count: 22 },
-                { page: 'memcached', name: 'Memcached', count: 30 },
-                { page: 'mybatis', name: 'MyBatis', count: 21 },
-                { page: 'mybatis-plus', name: 'Mybatis-Plus', count: 20 },
-                { page: 'sqlite', name: 'SQLite', count: 21 },
-                { page: 'sqlserver', name: 'SQLServer', count: 24 }
-            ];
-            
-            dbItems.forEach(item => {
-                const card = document.createElement('a');
-                card.className = 'db-card';
-                card.href = '#';
-                card.onclick = function(e) {
-                    openTab(item.page, item.name, item.count, e);
-                };
-                card.innerHTML = '<div class="db-name">' + item.name + '</div><div class="db-count">' + item.count + ' 题</div>';
-                dbGrid.appendChild(card);
-            });
-            
             const quickStart = container.querySelector('.quick-start');
             if (quickStart && quickStart.nextElementSibling) {
                 container.insertBefore(dbGrid, quickStart.nextElementSibling);
             } else {
                 container.appendChild(dbGrid);
             }
+
+            initDbGrid();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             updateOverviewStats();
             initWelcomeGrid();
+            renderStudyCalendar();
         });
     </script>
 </body>
