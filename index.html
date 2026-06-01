@@ -25,12 +25,12 @@
 
         <nav class="nav-menu">
             <div class="nav-item">
-                <div class="nav-title expanded" onclick="toggleSubmenu(this)">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
                     <span class="icon">🗄️</span>
                     数据库
                     <span class="arrow">›</span>
                 </div>
-                <div class="submenu show">
+                <div class="submenu">
                     <a class="submenu-item" href="#" onclick="openTab('mysql', 'MySQL', 19, event)" data-page="mysql" data-count="19">
                         MySQL <span class="badge">✓</span>
                     </a>
@@ -165,10 +165,7 @@
 
     <main class="main-content">
         <header class="header">
-            <div>
-                <h2 id="page-title">面试背题系统</h2>
-                <div class="breadcrumb" id="breadcrumb">首页</div>
-            </div>
+            <h2 id="page-title">面试背题系统</h2>
             <div class="header-actions">
                 <button class="btn btn-outline" onclick="toggleSidebar()">☰ 菜单</button>
             </div>
@@ -206,6 +203,18 @@
     <script>
         const STORAGE_KEY = 'interview_progress';
         const openTabs = {};
+        const pageFiles = {
+            mysql: '数据库/MySQL.html',
+            redis: '数据库/Redis.html',
+            mongodb: '数据库/MongoDB.html',
+            oracle: '数据库/Oracle.html',
+            postgresql: '数据库/PostgreSQL.html',
+            memcached: '数据库/Memcached.html',
+            mybatis: '数据库/MyBatis.html',
+            'mybatis-plus': '数据库/Mybatis-Plus.html',
+            sqlite: '数据库/SQLite.html',
+            sqlserver: '数据库/SQLServer.html'
+        };
 
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('collapsed');
@@ -256,12 +265,12 @@
             };
             tabBar.appendChild(tab);
             
-            const pageFile = '数据库/' + pageId.charAt(0).toUpperCase() + pageId.slice(1).replace(/-/g, '') + '.html';
+            const pageFile = pageFiles[pageId];
             
             const tabContent = document.createElement('div');
             tabContent.className = 'tab-content';
             tabContent.id = 'content-' + pageId;
-            tabContent.style.cssText = 'height: calc(100vh - 140px); overflow: hidden;';
+            tabContent.style.cssText = 'height: calc(100vh - 64px); overflow: hidden;';
             tabContent.innerHTML = '<iframe src="' + pageFile + '" style="width: 100%; height: 100%; border: none; background: #f5f5f5;"></iframe>';
             contentArea.appendChild(tabContent);
             
@@ -330,7 +339,8 @@
         }
 
         function updateBreadcrumb(name) {
-            document.getElementById('breadcrumb').textContent = name;
+            const pageTitle = document.getElementById('page-title');
+            pageTitle.textContent = name === '首页' ? '面试背题系统' : name;
         }
 
         function updateTabProgress(pageId) {
