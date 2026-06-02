@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快手Java社招面试题</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+        header h1 { font-size: 28px; margin-bottom: 10px; }
+        .content-wrapper { background: white; border-radius: 8px; padding: 30px; }
+        .topic { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #eee; }
+        .topic:last-child { border-bottom: none; }
+        .topic h2 { color: #005bea; font-size: 20px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #005bea; }
+        .topic h3 { font-size: 16px; margin: 16px 0 12px; color: #444; }
+        .topic p { margin-bottom: 12px; text-indent: 2em; color: #555; }
+        .topic ul { margin: 12px 0 12px 30px; }
+        .topic li { margin-bottom: 8px; color: #555; }
+        pre { background: #2d2d2d; color: #ccc; padding: 16px; border-radius: 6px; overflow-x: auto; margin: 16px 0; font-family: 'Monaco', monospace; font-size: 13px; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Monaco', monospace; font-size: 14px; color: #c7254e; }
+        .highlight { color: #005bea; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>快手Java社招面试题</h1>
+        </header>
+        <div class="content-wrapper">
+            <div class="topic">
+                <h2>1、Java中的HashMap和HashTable有什么区别？</h2>
+                <ul>
+                    <li><span class="highlight">同步性：</span>HashMap是非同步的，线程不安全；HashTable是同步的，线程安全。</li>
+                    <li><span class="highlight">空值处理：</span>HashMap允许null键和null值；HashTable不允许null键和null值。</li>
+                    <li><span class="highlight">性能：</span>由于HashTable的同步机制，它的性能比HashMap差。</li>
+                    <li><span class="highlight">继承关系：</span>HashMap继承自AbstractMap类，HashTable继承自Dictionary类。</li>
+                    <li><span class="highlight">迭代器：</span>HashMap的迭代器是fail-fast的，而HashTable的枚举器不是fail-fast的。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>2、Java中的线程池是如何工作的？</h2>
+                <ul>
+                    <li><span class="highlight">线程池的组成：</span>线程池通常由线程池管理器、工作线程、任务队列和任务接口组成。</li>
+                    <li><span class="highlight">工作原理：</span>当一个任务提交到线程池时，线程池会选择一个空闲线程来执行任务。</li>
+                    <li><span class="highlight">线程复用：</span>线程池中的线程在完成任务后不会被销毁，而是被复用。</li>
+                    <li><span class="highlight">拒绝策略：</span>当任务队列已满且线程池中的线程都在工作时，线程池会根据拒绝策略处理新任务。</li>
+                    <li><span class="highlight">常见类型：</span>Java提供了多种线程池类型，如FixedThreadPool、CachedThreadPool、ScheduledThreadPool等。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>3、Java中的equals和==有什么区别？</h2>
+                <ul>
+                    <li><span class="highlight">==运算符：</span>用于比较两个对象的引用是否指向同一个对象，或者比较两个基本类型的值是否相等。</li>
+                    <li><span class="highlight">equals方法：</span>用于比较两个对象的内容是否相等。</li>
+                    <li><span class="highlight">默认实现：</span>Object类中的equals方法默认使用==运算符。</li>
+                    <li><span class="highlight">重写equals：</span>通常需要重写equals方法来比较对象的实际内容。</li>
+                    <li><span class="highlight">hashCode的约定：</span>如果两个对象通过equals方法比较相等，那么它们的hashCode值也必须相等。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>4、解释Java中的类加载机制</h2>
+                <ul>
+                    <li><span class="highlight">加载阶段：</span>类加载器读取类的字节码文件，并创建对应的Class对象。</li>
+                    <li><span class="highlight">链接阶段：</span>验证类的字节码，为静态字段分配存储空间，并解析符号引用。</li>
+                    <li><span class="highlight">初始化阶段：</span>执行静态初始化块和静态字段的初始化。</li>
+                    <li><span class="highlight">类加载器层次：</span>Java使用三层类加载器：Bootstrap、Extension和Application类加载器。</li>
+                    <li><span class="highlight">双亲委派模型：</span>类加载器在加载类时，首先委托给父类加载器。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>5、Java中的异常处理机制是如何工作的？</h2>
+                <ul>
+                    <li><span class="highlight">异常类型：</span>分为检查型异常和非检查型异常。</li>
+                    <li><span class="highlight">try-catch-finally：</span>用于捕获和处理异常。</li>
+                    <li><span class="highlight">异常链：</span>允许将一个异常包装在另一个异常中。</li>
+                    <li><span class="highlight">资源管理：</span>使用try-with-resources自动关闭资源。</li>
+                    <li><span class="highlight">自定义异常：</span>可以创建自定义异常类。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>6、什么是Java的反射机制？</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>反射机制允许程序在运行时访问和操作类的信息。</li>
+                    <li><span class="highlight">获取类信息：</span>可以获取类的字段、方法、构造函数等信息。</li>
+                    <li><span class="highlight">创建对象：</span>可以通过反射创建类的实例。</li>
+                    <li><span class="highlight">调用方法：</span>可以动态调用对象的方法。</li>
+                    <li><span class="highlight">修改字段：</span>可以修改对象的字段值，包括私有字段。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>7、Java中的volatile关键字有什么作用？</h2>
+                <ul>
+                    <li><span class="highlight">可见性：</span>保证了变量的修改对所有线程的可见性。</li>
+                    <li><span class="highlight">禁止指令重排序：</span>确保指令按照程序顺序执行。</li>
+                    <li><span class="highlight">不保证原子性：</span>volatile不保证复合操作的原子性。</li>
+                    <li><span class="highlight">使用场景：</span>常用于状态标志、双重检查锁定等场景。</li>
+                    <li><span class="highlight">性能考虑：</span>volatile变量的读写比普通变量慢。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>8、Java中的泛型是如何工作的？</h2>
+                <ul>
+                    <li><span class="highlight">类型安全：</span>编译时进行类型检查。</li>
+                    <li><span class="highlight">类型擦除：</span>编译后泛型信息被擦除。</li>
+                    <li><span class="highlight">通配符：</span>使用?表示未知类型。</li>
+                    <li><span class="highlight">限定类型：</span>可以限定泛型的类型范围。</li>
+                    <li><span class="highlight">泛型方法：</span>方法可以有自己的泛型参数。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>9、解释Java中的Lambda表达式</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>Lambda表达式是一种简洁的表示可传递的匿名函数的方式。</li>
+                    <li><span class="highlight">语法：</span>(参数) -> 表达式或语句块。</li>
+                    <li><span class="highlight">函数式接口：</span>Lambda表达式只能用于函数式接口。</li>
+                    <li><span class="highlight">捕获变量：</span>Lambda表达式可以捕获外部变量。</li>
+                    <li><span class="highlight">方法引用：</span>可以使用方法引用简化Lambda表达式。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>10、Java中的接口和抽象类有什么区别？</h2>
+                <ul>
+                    <li><span class="highlight">方法实现：</span>接口只能有抽象方法，抽象类可以有抽象和具体方法。</li>
+                    <li><span class="highlight">多继承：</span>类可以实现多个接口，但只能继承一个抽象类。</li>
+                    <li><span class="highlight">构造函数：</span>接口不能有构造函数，抽象类可以有。</li>
+                    <li><span class="highlight">访问修饰符：</span>接口方法默认是public，抽象类方法可以有各种访问修饰符。</li>
+                    <li><span class="highlight">用途：</span>接口用于定义行为契约，抽象类用于定义模板方法。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>11、解释Java中的多态性</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>多态性是指同一个操作作用于不同对象时产生不同的结果。</li>
+                    <li><span class="highlight">编译时多态：</span>通过方法重载实现。</li>
+                    <li><span class="highlight">运行时多态：</span>通过方法重写实现。</li>
+                    <li><span class="highlight">向上转型：</span>子类对象可以赋值给父类引用。</li>
+                    <li><span class="highlight">动态绑定：</span>运行时根据对象的实际类型调用方法。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>12、Java中的NIO是什么？</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>NIO是Java的非阻塞IO API。</li>
+                    <li><span class="highlight">核心组件：</span>包括Channel、Buffer和Selector。</li>
+                    <li><span class="highlight">非阻塞模式：</span>允许线程在等待IO操作完成时执行其他任务。</li>
+                    <li><span class="highlight">选择器：</span>允许单个线程管理多个通道。</li>
+                    <li><span class="highlight">性能：</span>相比传统IO，NIO在高并发场景下性能更好。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>13、解释Java中的序列化机制</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>序列化是将对象转换为字节流的过程。</li>
+                    <li><span class="highlight">用途：</span>用于对象的持久化存储和网络传输。</li>
+                    <li><span class="highlight">实现：</span>实现Serializable接口。</li>
+                    <li><span class="highlight">serialVersionUID：</span>用于版本控制。</li>
+                    <li><span class="highlight">反序列化：</span>将字节流转换回对象。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>14、Java中的单例模式有哪些实现方式？</h2>
+                <ul>
+                    <li><span class="highlight">饿汉式：</span>类加载时就创建实例。</li>
+                    <li><span class="highlight">懒汉式：</span>第一次调用时创建实例。</li>
+                    <li><span class="highlight">双重检查锁定：</span>减少同步开销。</li>
+                    <li><span class="highlight">静态内部类：</span>利用类加载机制保证线程安全。</li>
+                    <li><span class="highlight">枚举方式：</span>最安全的实现方式。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>15、解释Java中的垃圾回收机制</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>自动回收不再使用的对象占用的内存。</li>
+                    <li><span class="highlight">标记-清除：</span>标记不再使用的对象并清除。</li>
+                    <li><span class="highlight">复制算法：</span>将存活对象复制到新空间。</li>
+                    <li><span class="highlight">标记-整理：</span>标记后整理内存。</li>
+                    <li><span class="highlight">分代收集：</span>根据对象存活时间采用不同算法。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>16、Java中的ConcurrentHashMap是如何实现线程安全的？</h2>
+                <ul>
+                    <li><span class="highlight">分段锁：</span>将数据分成多个段，每个段独立加锁。</li>
+                    <li><span class="highlight">CAS操作：</span>使用CAS保证原子性。</li>
+                    <li><span class="highlight">volatile：</span>保证可见性。</li>
+                    <li><span class="highlight">无锁操作：</span>某些操作不需要加锁。</li>
+                    <li><span class="highlight">性能：</span>比HashTable性能更高。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>17、解释Java中的AOP</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>面向切面编程，用于横切关注点的分离。</li>
+                    <li><span class="highlight">核心概念：</span>包括切面、切点、通知、连接点等。</li>
+                    <li><span class="highlight">实现方式：</span>可以使用动态代理或AspectJ。</li>
+                    <li><span class="highlight">应用场景：</span>日志记录、事务管理、安全检查等。</li>
+                    <li><span class="highlight">优势：</span>提高代码的可维护性和可重用性。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>18、Java中的ThreadLocal是什么？</h2>
+                <ul>
+                    <li><span class="highlight">定义：</span>ThreadLocal提供线程本地变量。</li>
+                    <li><span class="highlight">作用：</span>每个线程都有自己独立的变量副本。</li>
+                    <li><span class="highlight">使用场景：</span>数据库连接、Session管理等。</li>
+                    <li><span class="highlight">内存泄漏：</span>需要注意及时清理ThreadLocal。</li>
+                    <li><span class="highlight">性能：</span>避免了线程同步的开销。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>19、解释Java中的JVM内存结构</h2>
+                <ul>
+                    <li><span class="highlight">堆：</span>存储对象实例和数组。</li>
+                    <li><span class="highlight">栈：</span>存储方法调用和局部变量。</li>
+                    <li><span class="highlight">方法区：</span>存储类信息、常量池等。</li>
+                    <li><span class="highlight">程序计数器：</span>记录当前线程执行的字节码位置。</li>
+                    <li><span class="highlight">本地方法栈：</span>存储本地方法调用。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>20、Java中的wait和sleep有什么区别？</h2>
+                <ul>
+                    <li><span class="highlight">所属类：</span>wait是Object类的方法，sleep是Thread类的方法。</li>
+                    <li><span class="highlight">锁释放：</span>wait会释放锁，sleep不会释放锁。</li>
+                    <li><span class="highlight">使用场景：</span>wait用于线程间通信，sleep用于暂停执行。</li>
+                    <li><span class="highlight">异常处理：</span>wait需要捕获InterruptedException。</li>
+                    <li><span class="highlight">唤醒方式：</span>wait需要notify或notifyAll唤醒，sleep到时间自动唤醒。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

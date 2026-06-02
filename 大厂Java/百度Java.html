@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百度Java社招面试题</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #231942 0%, #5e548e 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+        header h1 { font-size: 28px; margin-bottom: 10px; }
+        .content-wrapper { background: white; border-radius: 8px; padding: 30px; }
+        .topic { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #eee; }
+        .topic:last-child { border-bottom: none; }
+        .topic h2 { color: #5e548e; font-size: 20px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #5e548e; }
+        .topic h3 { font-size: 16px; margin: 16px 0 12px; color: #444; }
+        .topic p { margin-bottom: 12px; text-indent: 2em; color: #555; }
+        .topic ul { margin: 12px 0 12px 30px; }
+        .topic li { margin-bottom: 8px; color: #555; }
+        pre { background: #2d2d2d; color: #ccc; padding: 16px; border-radius: 6px; overflow-x: auto; margin: 16px 0; font-family: 'Monaco', monospace; font-size: 13px; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Monaco', monospace; font-size: 14px; color: #c7254e; }
+        .highlight { color: #5e548e; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>百度Java社招面试题</h1>
+        </header>
+        <div class="content-wrapper">
+            <div class="topic">
+                <h2>1、Java中的HashMap和HashTable的区别是什么？</h2>
+                <ul>
+                    <li><span class="highlight">同步性：</span>HashMap是非同步的，不保证多线程同时修改时的一致性。而HashTable是同步的，适用于多线程环境，但因为同步会导致性能下降。</li>
+                    <li><span class="highlight">空值处理：</span>HashMap允许使用一个null键和多个null值，而HashTable不允许键或值为null。</li>
+                    <li><span class="highlight">继承的父类：</span>HashMap继承自AbstractMap类，而HashTable继承自Dictionary类。</li>
+                    <li><span class="highlight">性能：</span>由于HashTable的同步特性，它在单线程程序中相比HashMap通常会慢。</li>
+                    <li><span class="highlight">迭代器：</span>HashMap的迭代器是fail-fast迭代器，而HashTable的枚举器不是fail-fast的。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>2、Java中的强引用、软引用、弱引用和虚引用有什么区别？</h2>
+                <ul>
+                    <li><span class="highlight">强引用：</span>最普遍的引用类型，如果一个对象具有强引用，垃圾收集器绝不会回收它。</li>
+                    <li><span class="highlight">软引用：</span>内存足够时不会被回收，内存不足时会被回收。适用于实现内存敏感的缓存。</li>
+                    <li><span class="highlight">弱引用：</span>只能生存到下一次垃圾收集之前。无论内存是否足够，都会被回收。</li>
+                    <li><span class="highlight">虚引用：</span>最弱的一种引用关系，无法通过虚引用来获取对象实例，它的唯一作用是在这个对象被收集器回收时收到一个系统通知。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>3、Java中synchronized和ReentrantLock有什么区别？</h2>
+                <ul>
+                    <li><span class="highlight">锁的实现方式：</span>synchronized是依赖于JVM实现的，而ReentrantLock是JDK实现的。</li>
+                    <li><span class="highlight">功能丰富性：</span>ReentrantLock提供比synchronized更多的功能，如可中断的锁等待、公平锁、锁绑定多个条件等。</li>
+                    <li><span class="highlight">锁的释放：</span>synchronized会在方法或同步块执行完自动释放锁，ReentrantLock需要手动释放锁。</li>
+                    <li><span class="highlight">性能：</span>在JDK1.6之前，ReentrantLock性能明显优于synchronized。但之后的JVM优化使得synchronized的性能大幅提升。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>4、Java内存模型（JMM）中的happens-before原则是什么？</h2>
+                <ul>
+                    <li><span class="highlight">程序顺序规则：</span>一个线程内保证语义的串行化。</li>
+                    <li><span class="highlight">锁规则：</span>解锁操作happens-before于后续对同一个锁的加锁操作。</li>
+                    <li><span class="highlight">volatile变量规则：</span>对一个volatile变量的写操作happens-before于后续对这个变量的读操作。</li>
+                    <li><span class="highlight">传递性：</span>如果操作A happens-before操作B，且操作B happens-before操作C，那么操作A happens-before操作C。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>5、如何在Java中实现线程安全的单例模式？</h2>
+                <ul>
+                    <li><span class="highlight">饿汉式：</span>类加载时就初始化单例实例，保证线程安全。但它不是懒加载模式。</li>
+                    <li><span class="highlight">懒汉式（线程安全）：</span>在getInstance方法上加synchronized关键字。</li>
+                    <li><span class="highlight">双重检查锁定：</span>在getInstance方法中减少使用同步，只在实例未被创建时进行同步。</li>
+                    <li><span class="highlight">静态内部类：</span>利用类加载机制保证初始化实例时只有一个线程。</li>
+                    <li><span class="highlight">枚举实现：</span>利用枚举的特性，不仅能避免多线程问题，还能防止反序列化重新创建新的对象。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>6、Java中的NIO与IO的主要区别是什么？</h2>
+                <ul>
+                    <li><span class="highlight">阻塞模式：</span>IO是阻塞式的，NIO支持非阻塞模式。</li>
+                    <li><span class="highlight">数据处理方式：</span>IO基于字节流和字符流进行操作，而NIO基于Channel和Buffer进行数据的处理。</li>
+                    <li><span class="highlight">选择器：</span>NIO引入了选择器的概念，允许单个线程管理多个输入和输出通道。</li>
+                    <li><span class="highlight">性能：</span>NIO在处理并发连接和高负载时，相比于传统的IO有更好的性能。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>7、解释Java的反射机制及其用途</h2>
+                <ul>
+                    <li><span class="highlight">在运行时分析类的能力：</span>反射可以被用来获取类的方法和属性列表。</li>
+                    <li><span class="highlight">在运行时查看对象：</span>通过反射可以查看对象，即使你没有任何关于它的编译时信息。</li>
+                    <li><span class="highlight">实现泛型代码：</span>反射机制使得代码能够在运行时动态加载，增加了程序的灵活性和可扩展性。</li>
+                    <li><span class="highlight">简化开发和管理代码：</span>框架如Spring和Hibernate，都大量使用了反射机制。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>8、讲述Java中的动态代理是如何工作的</h2>
+                <ul>
+                    <li><span class="highlight">创建接口及其实现：</span>动态代理需要至少定义一个接口及其实现类。</li>
+                    <li><span class="highlight">创建调用处理器：</span>实现InvocationHandler接口，定义方法调用的逻辑。</li>
+                    <li><span class="highlight">生成代理对象：</span>通过Proxy类的newProxyInstance方法，动态地在内存中生成代理对象。</li>
+                    <li><span class="highlight">执行方法调用：</span>当代理对象的方法被调用时，会自动转发给InvocationHandler的invoke方法。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>9、讲解Java中的类加载机制</h2>
+                <ul>
+                    <li><span class="highlight">加载：</span>类加载器将.class文件加载到内存中，并为之创建一个java.lang.Class对象。</li>
+                    <li><span class="highlight">链接：</span>验证加载的类是否有正确的内部结构，为静态字段分配存储空间。</li>
+                    <li><span class="highlight">初始化：</span>对类的静态变量初始化为默认值，执行静态代码块。</li>
+                    <li><span class="highlight">双亲委派模型：</span>当一个类加载器试图加载某个类时，它首先委托给其父类加载器进行加载。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>10、解释Java中的泛型以及它的类型擦除</h2>
+                <ul>
+                    <li><span class="highlight">类型安全检查：</span>编译器使用泛型类型进行类型检查，确保代码在运行时不会出现ClassCastException。</li>
+                    <li><span class="highlight">类型擦除：</span>编译器在编译过程中将所有泛型类型参数替换为它们的边界或Object。</li>
+                    <li><span class="highlight">桥接方法：</span>为了保持多态性，编译器可能会生成桥接方法。</li>
+                    <li><span class="highlight">限制：</span>泛型的类型参数只能是类类型，不能是基本数据类型。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>11、在Java中，如何避免死锁？</h2>
+                <ul>
+                    <li><span class="highlight">避免嵌套锁：</span>尽量保持每个线程在同一时刻只锁定一个资源。</li>
+                    <li><span class="highlight">锁顺序：</span>确保所有线程获取多个锁的顺序一致。</li>
+                    <li><span class="highlight">锁超时：</span>使用带有超时时间的尝试锁定方法，如tryLock()。</li>
+                    <li><span class="highlight">检测死锁：</span>使用工具或JMX来监控和检测系统的锁使用情况。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>12、Java中的注解是什么？它是如何工作的？</h2>
+                <ul>
+                    <li><span class="highlight">定义注解：</span>通过@interface关键字来定义一个注解。</li>
+                    <li><span class="highlight">应用注解：</span>在代码中使用定义好的注解来标记方法、类、变量等元素。</li>
+                    <li><span class="highlight">注解处理：</span>在编译时或运行时，通过反射机制读取类、方法或字段上的注解信息。</li>
+                    <li><span class="highlight">应用场景：</span>注解广泛用于配置框架如Spring、Hibernate，进行测试等。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>13、解释Java中的AOP（面向切面编程）及其应用</h2>
+                <ul>
+                    <li><span class="highlight">日志记录：</span>自动记录方法的执行情况，帮助跟踪和调试。</li>
+                    <li><span class="highlight">事务管理：</span>在方法执行前后实现自动的事务处理。</li>
+                    <li><span class="highlight">安全控制：</span>在方法执行前进行安全性检查。</li>
+                    <li><span class="highlight">异常处理：</span>对方法执行中的异常进行统一处理。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>14、讲述Java中的依赖注入（DI）及其好处</h2>
+                <ul>
+                    <li><span class="highlight">减少耦合：</span>依赖注入使得依赖关系管理更加灵活，降低了类之间的耦合。</li>
+                    <li><span class="highlight">增强模块性：</span>通过接口编程和依赖注入，增加了代码的模块化和可重用性。</li>
+                    <li><span class="highlight">简化单元测试：</span>依赖注入使得在单元测试时可以轻松地替换实际的依赖项。</li>
+                    <li><span class="highlight">提高代码的可维护性和可扩展性：</span>由于耦合度的降低，使得代码更易于维护和扩展。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>15、解释什么是Java虚拟机（JVM）的方法区</h2>
+                <ul>
+                    <li><span class="highlight">存储类信息：</span>包括类的名称、访问修饰符、常量池、字段描述、方法描述等。</li>
+                    <li><span class="highlight">存储运行时常量池：</span>包含所有被加载类和接口的常量。</li>
+                    <li><span class="highlight">存储静态变量：</span>类中定义的static字段在方法区中分配存储空间。</li>
+                    <li><span class="highlight">代码缓存：</span>存储即时编译器编译后的代码，以提高执行效率。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>16、Java多线程中，synchronized和volatile关键字的区别是什么？</h2>
+                <ul>
+                    <li><span class="highlight">作用范围：</span>synchronized用于同步代码块或方法，volatile用于变量。</li>
+                    <li><span class="highlight">原子性：</span>synchronized保证了方法或代码块的执行具有原子性。volatile不保证原子性。</li>
+                    <li><span class="highlight">性能开销：</span>synchronized性能开销较大，volatile性能开销相对较小。</li>
+                    <li><span class="highlight">应用场景：</span>synchronized适用于多个线程访问同步代码时保证安全性的场景。volatile适用于简单的线程通信场景。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>17、如何在Java中使用反射来调用一个私有方法？</h2>
+                <ul>
+                    <li><span class="highlight">获取目标类的Class对象：</span>通过类名.class或Class.forName()方法。</li>
+                    <li><span class="highlight">获取指定的私有方法：</span>通过Class对象的getDeclaredMethod()方法。</li>
+                    <li><span class="highlight">设置方法可访问性：</span>将Method对象的accessible属性设置为true。</li>
+                    <li><span class="highlight">调用私有方法：</span>使用Method对象的invoke()方法。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>18、讲解Java中的内存泄漏和内存溢出的区别</h2>
+                <ul>
+                    <li><span class="highlight">内存泄漏：</span>指程序中已分配的内存由于某种原因未能释放，导致一部分内存始终无法被利用。</li>
+                    <li><span class="highlight">内存溢出：</span>发生在程序试图使用超过系统分配给它的最大内存时。</li>
+                    <li><span class="highlight">关系：</span>内存泄漏是导致内存溢出的一个原因，但内存溢出不一定由内存泄漏引起。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>19、描述Java中的垃圾收集机制及其类型</h2>
+                <ul>
+                    <li><span class="highlight">串行收集器：</span>单线程执行垃圾收集任务，适用于单核CPU或小内存环境。</li>
+                    <li><span class="highlight">并行收集器：</span>多线程同时进行垃圾收集，减少GC停顿时间。</li>
+                    <li><span class="highlight">CMS收集器：</span>减少应用停顿时间，适用于响应时间要求高的应用。</li>
+                    <li><span class="highlight">G1收集器：</span>面向服务器的垃圾收集器，适合大内存应用。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>20、解释Java中的元空间（Metaspace）</h2>
+                <ul>
+                    <li><span class="highlight">动态扩展：</span>元空间的大小可以根据应用需求动态扩展。</li>
+                    <li><span class="highlight">性能提升：</span>由于使用本地内存，元空间的性能相比永久代有所提升。</li>
+                    <li><span class="highlight">更好的内存管理：</span>简化了内存模型，使得类元数据的管理更加高效。</li>
+                    <li><span class="highlight">垃圾收集影响减小：</span>将类元数据从堆内存中分离出来，减少了垃圾收集器的负担。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>21、解释Java 8中的Stream API及其优势</h2>
+                <ul>
+                    <li><span class="highlight">代码简洁：</span>Stream API使用链式调用，可以用更少的代码实现复杂的数据处理逻辑。</li>
+                    <li><span class="highlight">并行处理：</span>Stream API支持并行处理，可以很容易地进行数据的并行操作。</li>
+                    <li><span class="highlight">增强的可读性：</span>使用Stream API进行数据处理的代码更易读、易维护。</li>
+                    <li><span class="highlight">灵活性和功能性：</span>Stream API提供了大量的操作方法，使得对数据的处理更加灵活和功能丰富。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>22、Java中CompletableFuture的用途是什么？</h2>
+                <ul>
+                    <li><span class="highlight">异步执行任务：</span>允许以异步的方式执行计算密集型任务，不会阻塞主线程。</li>
+                    <li><span class="highlight">结果组合：</span>可以将多个CompletableFuture组合起来，依赖其他Future的计算结果继续执行。</li>
+                    <li><span class="highlight">异常处理：</span>提供了异常处理的能力，可以捕获执行过程中的异常。</li>
+                    <li><span class="highlight">非阻塞操作：</span>CompletableFuture支持非阻塞方式获取结果，提高了程序的响应性。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>23、解释Java中的方法引用及其类型</h2>
+                <ul>
+                    <li><span class="highlight">静态方法引用：</span>使用类名::静态方法名的格式。</li>
+                    <li><span class="highlight">实例方法引用：</span>使用实例对象::实例方法名的格式。</li>
+                    <li><span class="highlight">特定类型的任意对象的实例方法引用：</span>使用类名::实例方法名的格式。</li>
+                    <li><span class="highlight">构造方法引用：</span>使用类名::new的格式。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>24、Java中Optional类的作用是什么？</h2>
+                <ul>
+                    <li><span class="highlight">避免NullPointerException：</span>提供了一种更好的方式来处理可能为null的对象。</li>
+                    <li><span class="highlight">提供更丰富的API：</span>Optional类提供了丰富的API，如isPresent()、ifPresent()、orElse()等。</li>
+                    <li><span class="highlight">代码语义更明确：</span>使用Optional可以使代码更加清晰地表达出值可能存在也可能不存在的意图。</li>
+                    <li><span class="highlight">支持函数式编程：</span>Optional类与Java 8引入的其他函数式编程特性协同工作。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>25、讲解Java 8中的Lambda表达式及其对编程的影响</h2>
+                <ul>
+                    <li><span class="highlight">简化代码：</span>使得编写回调更简洁，减少了冗余的代码。</li>
+                    <li><span class="highlight">增强集合库：</span>与Stream API结合，使得对集合操作更加灵活和强大。</li>
+                    <li><span class="highlight">促进函数式编程：</span>引入了一种函数式编程风格到Java中。</li>
+                    <li><span class="highlight">改善API设计：</span>使得很多传统的接口可以通过函数式接口和Lambda表达式来实现。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>26、解释Java中的接口默认方法及其目的</h2>
+                <ul>
+                    <li><span class="highlight">向后兼容：</span>允许在不破坏现有实现的情况下，向接口添加新的方法。</li>
+                    <li><span class="highlight">代码共享：</span>使得能够在接口中共享方法实现，减少了重复代码。</li>
+                    <li><span class="highlight">多继承的灵活性：</span>提供了一种多继承的实现方式。</li>
+                </ul>
+            </div>
+            <div class="topic">
+                <h2>27、讲述Java中的序列化与反序列化过程</h2>
+                <ul>
+                    <li><span class="highlight">序列化过程：</span>使用ObjectOutputStream将对象转换为字节序列并存储到文件或数据库中。</li>
+                    <li><span class="highlight">反序列化过程：</span>使用ObjectInputStream读取字节序列，将其还原为原来的对象。</li>
+                    <li><span class="highlight">应用场景：</span>序列化与反序列化主要用于持久化存储对象的状态，以及在网络中传输对象。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
