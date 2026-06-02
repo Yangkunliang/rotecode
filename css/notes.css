@@ -1,0 +1,210 @@
+/* Topic notes: shared note and highlight widgets for static topic pages */
+.topic-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.topic-tool-btn {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #475569;
+    border-radius: 999px;
+    padding: 3px 8px;
+    font-size: 12px;
+    line-height: 1.2;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.topic-tool-btn:hover {
+    border-color: #4ade80;
+    color: #15803d;
+    background: #f0fdf4;
+}
+
+.topic-tool-btn.active,
+.topic-tool-btn.has-note {
+    border-color: #4ade80;
+    color: #15803d;
+    background: #dcfce7;
+    font-weight: 600;
+}
+
+.topic-note-panel {
+    margin: 10px 0 18px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-left: 4px solid #4ade80;
+    border-radius: 8px;
+}
+
+.topic-note-panel[hidden] {
+    display: none;
+}
+
+.topic-note-panel textarea {
+    display: block;
+    width: 100%;
+    min-height: 92px;
+    resize: vertical;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #334155;
+    background: #fff;
+    font: inherit;
+    line-height: 1.6;
+    outline: none;
+}
+
+.topic-note-panel textarea:focus {
+    border-color: #4ade80;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.12);
+}
+
+.topic-note-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.topic-note-clear {
+    border: none;
+    background: transparent;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.topic-section-starred {
+    background: linear-gradient(90deg, rgba(250, 204, 21, 0.2), transparent);
+    border-radius: 8px;
+}
+
+.topic-section-starred > h2,
+h2.topic-section-starred {
+    color: #854d0e !important;
+}
+
+.floating-note-widget {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 999;
+    width: min(360px, calc(100vw - 32px));
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.floating-note-toggle {
+    float: right;
+    border: none;
+    background: #16a34a;
+    color: #fff;
+    border-radius: 999px;
+    padding: 10px 14px;
+    box-shadow: 0 10px 24px rgba(22, 163, 74, 0.28);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.floating-note-toggle:hover,
+.floating-note-toggle.active {
+    background: #15803d;
+}
+
+.floating-note-panel {
+    clear: both;
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+    padding: 14px;
+}
+
+.floating-note-panel[hidden] {
+    display: none;
+}
+
+.floating-note-title {
+    color: #1e293b;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.floating-note-panel textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #334155;
+    font: inherit;
+    line-height: 1.6;
+    outline: none;
+}
+
+.floating-note-panel textarea:focus {
+    border-color: #4ade80;
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.12);
+}
+
+.floating-note-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.floating-note-actions span {
+    flex: 1;
+}
+
+.floating-note-actions button {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #475569;
+    border-radius: 999px;
+    padding: 4px 9px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.floating-note-actions button:hover {
+    border-color: #4ade80;
+    color: #15803d;
+    background: #f0fdf4;
+}
+
+@media (max-width: 768px) {
+    .topic-tools {
+        display: flex;
+        margin: 8px 0 0;
+        flex-wrap: wrap;
+    }
+
+    .topic-tool-btn {
+        padding: 4px 9px;
+    }
+
+    .floating-note-widget {
+        right: 12px;
+        bottom: 12px;
+    }
+}

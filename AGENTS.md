@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a static interview-study site. The root `index.html` is the main shell with sidebar navigation, progress UI, and tab-loading logic. Shared site styling lives in `css/style.css`. Topic pages are grouped under `数据库/`, with one standalone HTML file per subject, for example `数据库/MySQL.html`, `数据库/Redis.html`, and `数据库/PostgreSQL.html`.
+This repository is a static interview-study site. The root `index.html` is the main shell with sidebar navigation, progress UI, and tab-loading logic. Shared site styling lives in `css/style.css`. Topic pages are grouped under category folders, with one standalone HTML file per subject, for example `数据库/MySQL.html`, `数据库/Redis.html`, `大厂Java/阿里Java.html`, and `大厂Java/腾讯Java.html`.
 
 When adding a new topic, create the HTML page in the relevant category folder and update the navigation entries in `index.html` so the page can be opened from the sidebar.
 
@@ -30,6 +30,8 @@ Use 4-space indentation in HTML, CSS, and inline JavaScript, matching the existi
 
 Topic filenames should be clear product or technology names, preserving established capitalization patterns such as `MySQL.html`, `SQLServer.html`, and `Mybatis-Plus.html`.
 
+For company interview pages, use the `大厂Java/` category folder and name files as `<公司名>Java.html`, for example `大厂Java/阿里Java.html`, `大厂Java/腾讯Java.html`, and `大厂Java/京东Java.html`. When adding a company page, also add its `pageFiles` mapping, `pageMetadata` entry, and `大厂Java` sidebar/category entry in `index.html`.
+
 ## Testing Guidelines
 
 No automated test framework is configured. Verify changes manually in a browser. For navigation changes, confirm the sidebar item opens the correct tab, the tab title is correct, and the content page loads without console errors. For layout or CSS changes, check desktop width and a narrow mobile viewport.
@@ -56,3 +58,14 @@ Topic page scrolling happens inside `.content-wrapper`, not the window. When add
 - Update the active `.toc-list a` item as sections enter view.
 - Keep the active directory item visually distinct with the existing `active` style.
 - Make TOC clicks and the back-to-top button scroll `.content-wrapper`, with `window` only as a fallback.
+
+## Notes Feature Rules
+
+Topic pages support local browser notes through the shared `css/notes.css` and `js/notes.js` assets. When adding any new topic page, including pages under `大厂Java/`, include these two references:
+
+```html
+<link rel="stylesheet" href="../css/notes.css">
+<script src="../js/notes.js" defer></script>
+```
+
+The notes script automatically injects `⭐ 重点` and `📝 笔记` controls for `h2` sections and stores data in `localStorage`. Do not duplicate note logic inside individual topic pages unless the shared asset cannot support the page structure.

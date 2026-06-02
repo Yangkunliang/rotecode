@@ -241,7 +241,9 @@
         </header>
 
         <div class="tab-strip">
-            <div class="tab-bar" id="tab-bar"></div>
+            <div class="tab-bar" id="tab-bar">
+                <div class="tab-item tab-pinned active" id="tab-dashboard" onclick="showDashboard()">看板</div>
+            </div>
             <div class="tab-actions" id="tab-actions" hidden>
                 <button class="learned-btn" id="learned-btn" onclick="markCurrentPageLearned()" hidden>标记今日已学</button>
                 <button class="tab-action-btn" onclick="closeOtherTabs()">关闭其他</button>
@@ -250,36 +252,40 @@
         </div>
         <div class="content-area" id="content-area">
             <div id="search-results-container" class="search-results-container" style="display: none;"></div>
-            <div class="welcome-section">
-                <h1>📚 面试背题系统</h1>
-                <p class="subtitle">选择左侧菜单中的分类开始学习</p>
-                
-                <div class="stats-cards">
-                    <div class="stat-card">
-                        <div class="stat-number">17</div>
-                        <div class="stat-label">已接入专题</div>
+            <div class="tab-content dashboard-content active" id="content-dashboard">
+                <section class="dashboard-section">
+                    <div class="dashboard-header">
+                        <h1>学习看板</h1>
+                        <p>选择左侧菜单开始刷题，已学页面会记录到日历。</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number">483</div>
-                        <div class="stat-label">面试题目</div>
+                    
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-number">27</div>
+                            <div class="stat-label">已接入专题</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">683</div>
+                            <div class="stat-label">面试题目</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-completed">0</div>
+                            <div class="stat-label">已学完页面</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-completed">0</div>
-                        <div class="stat-label">已学完页面</div>
-                    </div>
-                </div>
 
-                <div class="quick-start">
-                    <h3>🚀 快速开始</h3>
-                    <p>点击左侧菜单，选择想学习的主题即可开始刷题</p>
-                </div>
-
-                <section class="study-calendar">
-                    <div class="section-title">
-                        <h3>📅 学习日历</h3>
-                        <button class="text-btn" onclick="resetLearnedPages()">清空记录</button>
+                    <div class="quick-start">
+                        <h3>🚀 快速开始</h3>
+                        <p>点击左侧菜单，选择想学习的主题即可开始刷题</p>
                     </div>
-                    <div class="calendar-list" id="calendar-list"></div>
+
+                    <section class="study-calendar">
+                        <div class="section-title">
+                            <h3>📅 学习日历</h3>
+                            <button class="text-btn" onclick="resetLearnedPages()">清空记录</button>
+                        </div>
+                        <div class="calendar-list" id="calendar-list"></div>
+                    </section>
                 </section>
             </div>
         </div>
@@ -291,6 +297,16 @@
         const openTabs = {};
         let activePageId = '';
         const pageFiles = {
+            alibaba: '大厂Java/阿里Java.html',
+            baidu: '大厂Java/百度Java.html',
+            didi: '大厂Java/滴滴Java.html',
+            douyin: '大厂Java/抖音Java.html',
+            jingdong: '大厂Java/京东Java.html',
+            kuaishou: '大厂Java/快手Java.html',
+            meituan: '大厂Java/美团Java.html',
+            pinduoduo: '大厂Java/拼多多Java.html',
+            tengxun: '大厂Java/腾讯Java.html',
+            xiaomi: '大厂Java/小米Java.html',
             mysql: '数据库/MySQL.html',
             redis: '数据库/Redis.html',
             mongodb: '数据库/MongoDB.html',
@@ -337,16 +353,27 @@
         };
 
         const categories = [
-            { name: 'Java', icon: '☕', order: 1 },
-            { name: '数据库', icon: '🗄️', order: 2 },
-            { name: 'Spring全家桶', icon: '🌱', order: 3 },
-            { name: 'Alibaba全家桶', icon: '🟠', order: 4 },
-            { name: '服务器开发', icon: '🖥️', order: 5 },
-            { name: '分布式中间件', icon: '🔗', order: 6 },
-            { name: '搜索引擎', icon: '🔍', order: 7 }
+            { name: '大厂Java', icon: '🏢', order: 1 },
+            { name: 'Java', icon: '☕', order: 2 },
+            { name: '数据库', icon: '🗄️', order: 3 },
+            { name: 'Spring全家桶', icon: '🌱', order: 4 },
+            { name: 'Alibaba全家桶', icon: '🟠', order: 5 },
+            { name: '服务器开发', icon: '🖥️', order: 6 },
+            { name: '分布式中间件', icon: '🔗', order: 7 },
+            { name: '搜索引擎', icon: '🔍', order: 8 }
         ];
 
         const pageMetadata = [
+            { id: 'alibaba', title: '阿里Java', category: '大厂Java', count: 20 },
+            { id: 'baidu', title: '百度Java', category: '大厂Java', count: 20 },
+            { id: 'didi', title: '滴滴Java', category: '大厂Java', count: 20 },
+            { id: 'douyin', title: '抖音Java', category: '大厂Java', count: 20 },
+            { id: 'jingdong', title: '京东Java', category: '大厂Java', count: 20 },
+            { id: 'kuaishou', title: '快手Java', category: '大厂Java', count: 20 },
+            { id: 'meituan', title: '美团Java', category: '大厂Java', count: 20 },
+            { id: 'pinduoduo', title: '拼多多Java', category: '大厂Java', count: 20 },
+            { id: 'tengxun', title: '腾讯Java', category: '大厂Java', count: 20 },
+            { id: 'xiaomi', title: '小米Java', category: '大厂Java', count: 20 },
             { id: 'java-basic', title: '基础知识', category: 'Java', count: 35 },
             { id: 'jvm', title: 'JVM', category: 'Java', count: 35 },
             { id: 'javajuc', title: '并发编程', category: 'Java', count: 35 },
@@ -399,7 +426,6 @@
 
         function handleSearch(query) {
             const container = document.getElementById('search-results-container');
-            const welcomeSection = document.querySelector('.welcome-section');
             const tabContents = document.querySelectorAll('.tab-content');
 
             if (!query.trim()) {
@@ -408,9 +434,8 @@
                     tabContents.forEach(content => {
                         content.style.display = content.id === 'content-' + activePageId ? 'block' : 'none';
                     });
-                    if (welcomeSection) welcomeSection.style.display = 'none';
-                } else if (welcomeSection) {
-                    welcomeSection.style.display = 'block';
+                } else {
+                    showDashboard();
                 }
                 return;
             }
@@ -479,7 +504,6 @@
 
             container.appendChild(resultsDiv);
             container.style.display = 'block';
-            if (welcomeSection) welcomeSection.style.display = 'none';
             tabContents.forEach(content => {
                 content.style.display = 'none';
             });
@@ -579,11 +603,6 @@
         function createTab(pageId, pageName, questionCount) {
             const tabBar = document.getElementById('tab-bar');
             const contentArea = document.getElementById('content-area');
-            const welcomeSection = document.querySelector('.welcome-section');
-            
-            if (welcomeSection) {
-                welcomeSection.style.display = 'none';
-            }
             
             const tab = document.createElement('div');
             tab.className = 'tab-item';
@@ -645,6 +664,38 @@
             updateLearnedButton(pageId);
         }
 
+        function showDashboard() {
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.background = '#f1f5f9';
+                tab.style.color = '#64748b';
+                tab.style.borderColor = '#e2e8f0';
+            });
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            const dashboardTab = document.getElementById('tab-dashboard');
+            const dashboardContent = document.getElementById('content-dashboard');
+
+            if (dashboardTab) {
+                dashboardTab.classList.add('active');
+                dashboardTab.style.background = '#1e293b';
+                dashboardTab.style.color = '#fff';
+                dashboardTab.style.borderColor = '#1e293b';
+            }
+
+            if (dashboardContent) {
+                dashboardContent.style.display = 'block';
+            }
+
+            activePageId = '';
+            updateBreadcrumb('首页');
+            updateLearnedButton('');
+            renderStudyCalendar();
+        }
+
         function closeTab(pageId, event) {
             event.stopPropagation();
             
@@ -660,7 +711,7 @@
             if (remainingTabs.length > 0) {
                 switchTab(remainingTabs[remainingTabs.length - 1]);
             } else {
-                showWelcome();
+                showDashboard();
             }
 
             updateTabActions();
@@ -691,7 +742,7 @@
                 delete openTabs[pageId];
             });
 
-            showWelcome();
+            showDashboard();
             updateTabActions();
         }
 
@@ -699,17 +750,6 @@
             const tabActions = document.getElementById('tab-actions');
             if (!tabActions) return;
             tabActions.hidden = Object.keys(openTabs).length === 0;
-        }
-
-        function showWelcome() {
-            const welcomeSection = document.querySelector('.welcome-section');
-            if (welcomeSection) {
-                welcomeSection.style.display = 'block';
-            }
-            activePageId = '';
-            updateBreadcrumb('首页');
-            updateLearnedButton('');
-            renderStudyCalendar();
         }
 
         function updateBreadcrumb(name) {
@@ -888,7 +928,7 @@
         }
 
         function initWelcomeGrid() {
-            const container = document.querySelector('.welcome-section');
+            const container = document.querySelector('.dashboard-section');
             if (!container) return;
             
             const dbGrid = document.createElement('div');

@@ -605,46 +605,52 @@ pre code {
     background: rgba(239, 68, 68, 0.2);
 }
 
-/* 欢迎页面样式 */
-.welcome-section {
+/* 固定看板 */
+.dashboard-section {
     background: #fff;
-    border-radius: 12px;
-    padding: 40px;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.welcome-section h1 {
-    font-size: 32px;
-    color: #1e293b;
-    margin-bottom: 10px;
-    text-align: center;
+.dashboard-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
-.welcome-section .subtitle {
-    text-align: center;
+.dashboard-header h1 {
+    font-size: 20px;
+    color: #1e293b;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.dashboard-header p {
     color: #64748b;
-    font-size: 16px;
-    margin-bottom: 40px;
+    font-size: 13px;
+    margin: 0;
 }
 
 .stats-cards {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
 }
 
 .stat-card {
     background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
     color: #fff;
-    padding: 25px 40px;
-    border-radius: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
     text-align: center;
-    min-width: 140px;
 }
 
 .stat-card .stat-number {
-    font-size: 36px;
+    font-size: 26px;
     font-weight: 700;
     color: #4ade80;
 }
@@ -657,9 +663,9 @@ pre code {
 
 .quick-start {
     background: #f0fdf4;
-    padding: 20px 25px;
+    padding: 12px 14px;
     border-radius: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 14px;
 }
 
 .quick-start h3 {
@@ -674,7 +680,7 @@ pre code {
 }
 
 .study-calendar {
-    margin-bottom: 24px;
+    margin-bottom: 6px;
 }
 
 .section-title {
@@ -1011,6 +1017,10 @@ pre code {
     color: #fff;
 }
 
+.tab-pinned {
+    font-weight: 600;
+}
+
 .tab-close {
     font-size: 16px;
     line-height: 1;
@@ -1031,6 +1041,12 @@ pre code {
 
 .tab-content.active {
     display: block;
+}
+
+.dashboard-content {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
 }
 
 .tab-loading {
