@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RabbitMQ 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>RabbitMQ 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. RabbitMQ的基本概念是什么？</h2>
+            <p>RabbitMQ是一个开源的消息代理软件：</p>
+            <div class="highlight">
+                <p><strong>1、消息队列：</strong> 实现AMQP协议的消息代理服务器。</p>
+                <p><strong>2、核心组件：</strong> Producer（生产者）、Consumer（消费者）、Broker（服务器）。</p>
+                <p><strong>3、队列：</strong> 消息存储的容器，先进先出。</p>
+                <p><strong>4、Exchange：</strong> 消息路由器，根据规则分发消息。</p>
+            </div>
+
+            <h2 id="section-2">2. RabbitMQ的架构是怎样的？</h2>
+            <p>RabbitMQ的核心架构：</p>
+            <div class="highlight">
+                <p><strong>1、Broker：</strong> RabbitMQ服务器节点。</p>
+                <p><strong>2、Virtual Host：</strong> 虚拟主机，隔离不同环境。</p>
+                <p><strong>3、Exchange：</strong> 交换机，接收并路由消息。</p>
+                <p><strong>4、Queue：</strong> 队列，存储消息。</p>
+                <p><strong>5、Binding：</strong> 绑定，连接Exchange和Queue的规则。</p>
+            </div>
+
+            <h2 id="section-3">3. RabbitMQ的Exchange类型有哪些？</h2>
+            <p>RabbitMQ Exchange类型：</p>
+            <div class="highlight">
+                <p><strong>1、Direct：</strong> 完全匹配路由键 Routing Key。</p>
+                <p><strong>2、Fanout：</strong> 广播模式，发送给所有绑定的队列。</p>
+                <p><strong>3、Topic：</strong> 通配符匹配，支持*和#。</p>
+                <p><strong>4、Headers：</strong> 根据消息头属性匹配（较少使用）。</p>
+            </div>
+
+            <h2 id="section-4">4. RabbitMQ的消息确认机制是怎样的？</h2>
+            <p>RabbitMQ消息确认机制：</p>
+            <div class="highlight">
+                <p><strong>1、Publisher Confirms：</strong> 生产者确认，消息持久化后返回ACK。</p>
+                <p><strong>2、Consumer Acknowledgements：</strong> 消费者确认，手动ACK或自动ACK。</p>
+                <p><strong>3、手动ACK：</strong> 消费处理完成后调用basic.ack确认。</p>
+                <p><strong>4、拒绝：</strong> basic.nack或basic.reject拒绝消息。</p>
+            </div>
+
+            <h2 id="section-5">5. RabbitMQ如何保证消息不丢失？</h2>
+            <p>RabbitMQ消息可靠性保证：</p>
+            <div class="highlight">
+                <p><strong>1、持久化：</strong> Exchange、Queue、Message都设置为持久化。</p>
+                <p><strong>2、发布确认：</strong> 开启publisher confirms机制。</p>
+                <p><strong>3、消费确认：</strong> 手动ACK确认消息处理完成。</p>
+                <p><strong>4、镜像队列：</strong> 配置镜像队列保证高可用。</p>
+            </div>
+
+            <h2 id="section-6">6. RabbitMQ的队列类型有哪些？</h2>
+            <p>RabbitMQ队列类型：</p>
+            <div class="highlight">
+                <p><strong>1、Classic Queue：</strong> 经典队列，普通队列。</p>
+                <p><strong>2、Quorum Queue：</strong> 镜像队列，基于Raft协议，支持高可用。</p>
+                <p><strong>3、Stream Queue：</strong> 消息流队列，支持消息回溯和大量消费者。</p>
+                <p><strong>4、Lazy Queue：</strong> 惰性队列，消息存储到磁盘减少内存使用。</p>
+            </div>
+
+            <h2 id="section-7">7. RabbitMQ如何实现消息顺序性？</h2>
+            <p>RabbitMQ保证消息顺序的方法：</p>
+            <div class="highlight">
+                <p><strong>1、单队列：</strong> 使用单一队列，消息按顺序消费。</p>
+                <p><strong>2、消费者单线程：</strong> 消费者使用单一线程处理。</p>
+                <p><strong>3、路由键：</strong> 使用相同Routing Key确保消息到同一队列。</p>
+                <p><strong>4、代价：</strong> 会牺牲一定的并发性能。</p>
+            </div>
+
+            <h2 id="section-8">8. RabbitMQ的死信队列是什么？</h2>
+            <p>Dead Letter Queue（死信队列）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 存储无法被消费的消息的队列。</p>
+                <p><strong>2、产生条件：</strong> 消息被拒绝、队列满、超时。</p>
+                <p><strong>3、配置：</strong> x-dead-letter-exchange和x-dead-letter-routing-key。</p>
+                <p><strong>4、用途：</strong> 消息异常处理、延迟队列实现。</p>
+            </div>
+
+            <h2 id="section-9">9. RabbitMQ的延迟队列如何实现？</h2>
+            <p>RabbitMQ延迟队列实现方式：</p>
+            <div class="highlight">
+                <p><strong>1、死信队列：</strong> 利用消息TTL和死信队列实现延迟。</p>
+                <p><strong>2、插件：</strong> 使用rabbitmq-delayed-message-exchange插件。</p>
+                <p><strong>3、TTL：</strong> 为队列设置x-message-ttl。</p>
+                <p><strong>4、限制：</strong> 不支持非常长的延迟时间。</p>
+            </div>
+
+            <h2 id="section-10">10. RabbitMQ的高可用如何实现？</h2>
+            <p>RabbitMQ高可用方案：</p>
+            <div class="highlight">
+                <p><strong>1、镜像队列：</strong> 主从复制，队列内容同步到所有节点。</p>
+                <p><strong>2、Quorum队列：</strong> 基于Raft协议的复制队列。</p>
+                <p><strong>3、负载均衡：</strong> 使用HAProxy或Nginx做负载均衡。</p>
+                <p><strong>4、Federation：</strong> 跨机房数据同步。</p>
+            </div>
+
+            <h2 id="section-11">11. RabbitMQ和Kafka的区别是什么？</h2>
+            <p>RabbitMQ与Kafka的区别：</p>
+            <div class="highlight">
+                <p><strong>1、协议：</strong> RabbitMQ使用AMQP，Kafka使用自定义协议。</p>
+                <p><strong>2、模型：</strong> RabbitMQ是队列模型，Kafka是发布订阅模型。</p>
+                <p><strong>3、吞吐量：</strong> Kafka吞吐量更高，适合大数据场景。</p>
+                <p><strong>4、消息顺序：</strong> RabbitMQ队列内有序，Kafka分区有序。</p>
+            </div>
+
+            <h2 id="section-12">12. RabbitMQ的消息预取是什么？</h2>
+            <p>RabbitMQ QoS（Quality of Service）：</p>
+            <div class="highlight">
+                <p><strong>1、prefetch count：</strong> 消费者预取的消息数量。</p>
+                <p><strong>2、作用：</strong> 控制消费者未确认消息的数量。</p>
+                <p><strong>3、设置：</strong> basic.qos方法设置prefetch。</p>
+                <p><strong>4、平衡：</strong> 合理设置可以提高吞吐量又不积压消息。</p>
+            </div>
+
+            <h2 id="section-13">13. RabbitMQ如何实现消息幂等性？</h2>
+            <p>RabbitMQ消息幂等性处理：</p>
+            <div class="highlight">
+                <p><strong>1、业务去重：</strong> 使用唯一消息ID进行业务去重。</p>
+                <p><strong>2、数据库约束：</strong> 利用数据库唯一索引防止重复插入。</p>
+                <p><strong>3、Redis缓存：</strong> 使用Redis缓存已处理的消息ID。</p>
+                <p><strong>4、乐观锁：</strong> 消费时使用版本号或状态机控制。</p>
+            </div>
+
+            <h2 id="section-14">14. RabbitMQ的Virtual Host有什么用？</h2>
+            <p>Virtual Host（虚拟主机）的概念和作用：</p>
+            <div class="highlight">
+                <p><strong>1、隔离：</strong> 提供完全隔离的运行环境。</p>
+                <p><strong>2、权限：</strong> 可以为不同用户设置不同VHost的权限。</p>
+                <p><strong>3、资源：</strong> 每个VHost有独立的Exchange、Queue、Binding。</p>
+                <p><strong>4、用途：</strong> 多环境隔离，不同业务线隔离。</p>
+            </div>
+
+            <h2 id="section-15">15. RabbitMQ的集群节点类型有哪些？</h2>
+            <p>RabbitMQ集群节点类型：</p>
+            <div class="highlight">
+                <p><strong>1、磁盘节点：</strong> 将元数据存储到磁盘，默认类型。</p>
+                <p><strong>2、内存节点：</strong> 将元数据存储到内存，性能更好。</p>
+                <p><strong>3、推荐配置：</strong> 至少一个磁盘节点保证数据持久性。</p>
+                <p><strong>4、集群要求：</strong> 集群中至少有一个磁盘节点。</p>
+            </div>
+
+            <h2 id="section-16">16. RabbitMQ的消息重试机制是怎样的？</h2>
+            <p>RabbitMQ消息重试策略：</p>
+            <div class="highlight">
+                <p><strong>1、拒绝重试：</strong> 消息被拒绝后进入死信队列。</p>
+                <p><strong>2、延迟重试：</strong> 使用延迟队列实现延迟重试。</p>
+                <p><strong>3、最大重试次数：</strong> 记录重试次数，超过阈值进入死信队列。</p>
+                <p><strong>4、业务实现：</strong> 通常在应用层实现重试逻辑。</p>
+            </div>
+
+            <h2 id="section-17">17. RabbitMQ的插件机制有哪些常用插件？</h2>
+            <p>RabbitMQ常用插件：</p>
+            <div class="highlight">
+                <p><strong>1、Management：</strong> Web管理界面和监控。</p>
+                <p><strong>2、Delayed Message：</strong> 延迟消息插件。</p>
+                <p><strong>3、Shovel：</strong> 消息转发插件。</p>
+                <p><strong>4、Federation：</strong> 跨集群消息同步。</p>
+                <p><strong>5、STOMP：</strong> STOMP协议支持。</p>
+            </div>
+
+            <h2 id="section-18">18. RabbitMQ如何处理消息积压？</h2>
+            <p>RabbitMQ消息积压的处理方法：</p>
+            <div class="highlight">
+                <p><strong>1、增加消费者：</strong> 增加并发消费者数量。</p>
+                <p><strong>2、预取值优化：</strong> 调整prefetch count平衡负载。</p>
+                <p><strong>3、消费者优化：</strong> 优化消费者处理逻辑，减少处理时间。</p>
+                <p><strong>4、惰性队列：</strong> 使用惰性队列将消息存储到磁盘。</p>
+            </div>
+
+            <h2 id="section-19">19. RabbitMQ的事务消息如何实现？</h2>
+            <p>RabbitMQ事务消息机制：</p>
+            <div class="highlight">
+                <p><strong>1、事务模式：</strong> 使用channel.txSelect开启事务。</p>
+                <p><strong>2、提交：</strong> channel.txCommit提交事务。</p>
+                <p><strong>3、回滚：</strong> channel.txRollback回滚事务。</p>
+                <p><strong>4、性能：</strong> 事务模式性能较差，生产中慎用。</p>
+            </div>
+
+            <h2 id="section-20">20. RabbitMQ的消息TTL是什么？如何设置？</h2>
+            <p>RabbitMQ消息TTL（Time To Live）：</p>
+            <div class="highlight">
+                <p><strong>1、队列TTL：</strong> x-message-ttl设置队列中所有消息的TTL。</p>
+                <p><strong>2、消息TTL：</strong> 为单条消息设置expiration字段。</p>
+                <p><strong>3、过期处理：</strong> 过期消息进入死信队列。</p>
+                <p><strong>4、注意：</strong> 消息TTL不能设置为0。</p>
+            </div>
+
+            <h2 id="section-21">21. RabbitMQ如何实现负载均衡？</h2>
+            <p>RabbitMQ负载均衡方案：</p>
+            <div class="highlight">
+                <p><strong>1、多个消费者：</strong> 同一队列部署多个消费者。</p>
+                <p><strong>2、镜像队列：</strong> 客户端直连多个节点。</p>
+                <p><strong>3、负载均衡器：</strong> 使用HAProxy或Nginx做负载均衡。</p>
+                <p><strong>4、客户端负载均衡：</strong> 客户端SDK内置负载均衡策略。</p>
+            </div>
+
+            <h2 id="section-22">22. RabbitMQ的消息优先级如何实现？</h2>
+            <p>RabbitMQ消息优先级配置：</p>
+            <div class="highlight">
+                <p><strong>1、队列最大优先级：</strong> x-max-priority设置队列支持的最大优先级。</p>
+                <p><strong>2、消息优先级：</strong> 消息的priority字段设置优先级。</p>
+                <p><strong>3、消费顺序：</strong> 高优先级消息优先被消费。</p>
+                <p><strong>4、限制：</strong> 优先级队列消耗更多内存。</p>
+            </div>
+
+            <h2 id="section-23">23. RabbitMQ的Shovel插件有什么用？</h2>
+            <p>RabbitMQ Shovel插件：</p>
+            <div class="highlight">
+                <p><strong>1、消息转发：</strong> 将一个Broker的消息转发到另一个Broker。</p>
+                <p><strong>2、跨集群：</strong> 支持跨RabbitMQ集群的消息传递。</p>
+                <p><strong>3、故障转移：</strong> 可用于实现简单的故障转移。</p>
+                <p><strong>4、配置方式：</strong> 可以通过管理界面或命令行配置。</p>
+            </div>
+
+            <h2 id="section-24">24. RabbitMQ如何保证消息不被重复消费？</h2>
+            <p>避免重复消费的策略：</p>
+            <div class="highlight">
+                <p><strong>1、幂等消费：</strong> 消费逻辑设计为幂等操作。</p>
+                <p><strong>2、唯一标识：</strong> 使用消息的唯一ID作为业务去重键。</p>
+                <p><strong>3、状态检查：</strong> 消费前检查是否已处理过。</p>
+                <p><strong>4、数据库约束：</strong> 利用数据库唯一索引防止重复。</p>
+            </div>
+
+            <h2 id="section-25">25. RabbitMQ的内存告警和磁盘告警是什么？</h2>
+            <p>RabbitMQ资源告警机制：</p>
+            <div class="highlight">
+                <p><strong>1、内存告警：</strong> 内存使用超过阈值时触发告警。</p>
+                <p><strong>2、磁盘告警：</strong> 磁盘空间低于阈值时触发告警。</p>
+                <p><strong>3、配置：</strong> vm_memory_high_watermark、disk_free_limit。</p>
+                <p><strong>4、影响：</strong> 触发告警后会阻止生产者发送消息。</p>
+            </div>
+
+            <h2 id="section-26">26. RabbitMQ和ActiveMQ的区别是什么？</h2>
+            <p>RabbitMQ与ActiveMQ对比：</p>
+            <div class="highlight">
+                <p><strong>1、协议：</strong> RabbitMQ使用AMQP，ActiveMQ支持多协议。</p>
+                <p><strong>2、性能：</strong> RabbitMQ性能更优。</p>
+                <p><strong>3、功能：</strong> ActiveMQ支持更多协议和功能。</p>
+                <p><strong>4、趋势：</strong> RabbitMQ社区更活跃。</p>
+            </div>
+
+            <h2 id="section-27">27. RabbitMQ的消息持久化策略有哪些？</h2>
+            <p>RabbitMQ消息持久化配置：</p>
+            <div class="highlight">
+                <p><strong>1、Exchange持久化：</strong> durable=true。</p>
+                <p><strong>2、Queue持久化：</strong> durable=true。</p>
+                <p><strong>3、Message持久化：</strong> delivery_mode=2。</p>
+                <p><strong>4、集群配置：</strong> 配合镜像队列保证高可用。</p>
+            </div>
+
+            <h2 id="section-28">28. RabbitMQ的Federation插件有什么用？</h2>
+            <p>RabbitMQ Federation插件：</p>
+            <div class="highlight">
+                <p><strong>1、跨集群：</strong> 连接多个RabbitMQ集群。</p>
+                <p><strong>2、消息同步：</strong> 将指定Exchange/Queue的消息同步到远程集群。</p>
+                <p><strong>3、延迟：</strong> 适合跨地域的分布式部署。</p>
+                <p><strong>4、配置：</strong> 通过Federation Plugin配置。</p>
+            </div>
+
+            <h2 id="section-29">29. RabbitMQ的性能调优有哪些方法？</h2>
+            <p>RabbitMQ性能优化建议：</p>
+            <div class="highlight">
+                <p><strong>1、预取值：</strong> 合理设置prefetch count。</p>
+                <p><strong>2、批量确认：</strong> 使用批量确认减少网络开销。</p>
+                <p><strong>3、连接池：</strong> 使用连接池复用连接。</p>
+                <p><strong>4、内存配置：</strong> 合理配置内存和磁盘告警阈值。</p>
+            </div>
+
+            <h2 id="section-30">30. RabbitMQ的消息消费模式有哪些？</h2>
+            <p>RabbitMQ消息消费模式：</p>
+            <div class="highlight">
+                <p><strong>1、推（Push）：</strong> Broker主动推送消息给消费者。</p>
+                <p><strong>2、拉（Pull）：</strong> 消费者主动从队列拉取消息。</p>
+                <p><strong>3、推拉结合：</strong> 使用basic.get实现拉取模式。</p>
+                <p><strong>4、选择：</strong> 推模式实时性更好，拉模式可控性更强。</p>
+            </div>
+
+            <h2 id="section-31">31. RabbitMQ 3.9有哪些新特性？</h2>
+            <p>RabbitMQ 3.9新特性：</p>
+            <div class="highlight">
+                <p><strong>1、Stream队列：</strong> 新的Stream队列类型。</p>
+                <p><strong>2、消息追踪：</strong> 改进的消息追踪功能。</p>
+                <p><strong>3、插件改进：</strong> 插件系统改进。</p>
+                <p><strong>4、性能优化：</strong> 内存使用和性能优化。</p>
+            </div>
+
+            <h2 id="section-32">32. RabbitMQ如何实现请求响应模式？</h2>
+            <p>RabbitMQ RPC实现方式：</p>
+            <div class="highlight">
+                <p><strong>1、临时队列：</strong> 为每个请求创建临时响应队列。</p>
+                <p><strong>2、correlation_id：</strong> 关联ID匹配请求和响应。</p>
+                <p><strong>3、reply_to：</strong> 指定响应发送到的队列。</p>
+                <p><strong>4、现有方案：</strong> 可以使用rabbitmq-cli-consumer插件。</p>
+            </div>
+
+            <h2 id="section-33">33. RabbitMQ队列监控系统有哪些？</h2>
+            <p>RabbitMQ监控工具：</p>
+            <div class="highlight">
+                <p><strong>1、Management UI：</strong> 自带Web管理界面。</p>
+                <p><strong>2、Prometheus插件：</strong> 导出Prometheus指标。</p>
+                <p><strong>3、Grafana：</strong> 可视化监控面板。</p>
+                <p><strong>4、第三方工具：</strong> Datadog、New Relic等。</p>
+            </div>
+
+            <h2 id="section-34">34. RabbitMQ的消息过期是如何处理的？</h2>
+            <p>RabbitMQ消息过期处理：</p>
+            <div class="highlight">
+                <p><strong>1、检查时机：</strong> 消息在投递给消费者时检查。</p>
+                <p><strong>2、死信队列：</strong> 过期消息进入死信队列。</p>
+                <p><strong>3、TTL过期：</strong> 单条消息TTL过期后进入死信队列。</p>
+                <p><strong>4、队列过期：</strong> 队列头部的消息会先被检查过期。</p>
+            </div>
+
+            <h2 id="section-35">35. RabbitMQ的最佳实践有哪些？</h2>
+            <p>RabbitMQ使用最佳实践：</p>
+            <div class="highlight">
+                <p><strong>1、持久化：</strong> 生产环境开启消息持久化。</p>
+                <p><strong>2、手动ACK：</strong> 使用手动确认而非自动ACK。</p>
+                <p><strong>3、幂等处理：</strong> 消费者实现幂等消费逻辑。</p>
+                <p><strong>4、资源隔离：</strong> 使用Virtual Host隔离不同环境。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

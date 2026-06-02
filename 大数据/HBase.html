@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBase 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>HBase 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. HBase的基本架构是怎样的？</h2>
+            <p>HBase是一个分布式的列式存储数据库，其基本架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、RegionServer：</strong> 负责管理Regions，响应读写请求。</p>
+                <p><strong>2、HMaster：</strong> 负责表的DDL操作和RegionServer的负载均衡。</p>
+                <p><strong>3、ZooKeeper：</strong> 协调服务，维护集群状态。</p>
+                <p><strong>4、HDFS：</strong> HBase的数据最终存储在HDFS上。</p>
+            </div>
+
+            <h2 id="section-2">2. HBase的数据模型是怎样的？</h2>
+            <p>HBase的数据模型基于列族：</p>
+            <div class="highlight">
+                <p><strong>1、RowKey：</strong> 行键，唯一标识一行，类似主键。</p>
+                <p><strong>2、Column Family：</strong> 列族，相关列的集合。</p>
+                <p><strong>3、Column Qualifier：</strong> 列修饰符，列族下的具体列。</p>
+                <p><strong>4、Timestamp：</strong> 时间戳，支持多版本。</p>
+                <p><strong>5、Cell：</strong> {row, column, version} 构成的数据单元。</p>
+            </div>
+
+            <h2 id="section-3">3. HBase的读写流程是怎样的？</h2>
+            <p>HBase的读写流程如下：</p>
+            <div class="highlight">
+                <p><strong>1、写流程：</strong> 客户端→ZooKeeper→RegionServer→MemStore→HFile。</p>
+                <p><strong>2、读流程：</strong> 客户端→ZooKeeper→RegionServer→MemStore+BlockCache+HFile。</p>
+                <p><strong>3、MemStore：</strong> 写缓存，满了flush成HFile。</p>
+                <p><strong>4、BlockCache：</strong> 读缓存热点数据。</p>
+            </div>
+
+            <h2 id="section-4">4. HBase的flush机制是什么？</h2>
+            <p>HBase的MemStore Flush机制：</p>
+            <div class="highlight">
+                <p><strong>1、触发条件：</strong> MemStore大小达到阈值或超时。</p>
+                <p><strong>2、Flush策略：</strong> 默认每个MemStore达到128MB时flush。</p>
+                <p><strong>3、阻塞：</strong> 全局内存压力导致阻塞写操作。</p>
+                <p><strong>4、合并：</strong> HFile过多时触发Compaction。</p>
+            </div>
+
+            <h2 id="section-5">5. HBase的Compact机制是什么？</h2>
+            <p>HBase的Compaction机制用于合并HFile：</p>
+            <div class="highlight">
+                <p><strong>1、Minor Compaction：</strong> 合并部分HFile，去除过期版本。</p>
+                <p><strong>2、Major Compaction：</strong> 合并一个Region的所有HFile，删除过期数据。</p>
+                <p><strong>3、触发时机：</strong> HFile数量过多或定时触发。</p>
+                <p><strong>4、影响：</strong> Compaction过程消耗IO，需要合理安排。</p>
+            </div>
+
+            <h2 id="section-6">6. HBase的RowKey设计原则有哪些？</h2>
+            <p>HBase的RowKey设计原则：</p>
+            <div class="highlight">
+                <p><strong>1、长度控制：</strong> RowKey不宜过长，建议不超过16字节。</p>
+                <p><strong>2、散列原则：</strong> 避免热点，使用hash或加盐。</p>
+                <p><strong>3、唯一性：</strong> 必须唯一标识一行。</p>
+                <p><strong>4、业务相关性：</strong> 考虑查询模式设计RowKey。</p>
+            </div>
+
+            <h2 id="section-7">7. HBase的协处理器是什么？</h2>
+            <p>HBase协处理器扩展了服务器功能：</p>
+            <div class="highlight">
+                <p><strong>1、Observer：</strong> 类似触发器，在特定事件前后执行。</p>
+                <p><strong>2、Endpoint：</strong> 类似存储过程，在RegionServer上执行计算。</p>
+                <p><strong>3、使用场景：</strong> 二级索引、数据验证、聚合计算。</p>
+                <p><strong>4、加载方式：</strong> 继承TableDescriptor或配置xml。</p>
+            </div>
+
+            <h2 id="section-8">8. HBase如何实现高可用？</h2>
+            <p>HBase的高可用机制：</p>
+            <div class="highlight">
+                <p><strong>1、Region复制：</strong> 数据自动在多个RegionServer上复制。</p>
+                <p><strong>2、WAL复制：</strong> Write-Ahead Log复制保证数据不丢失。</p>
+                <p><strong>3、META表：</strong> 元数据表记录Region位置信息。</p>
+                <p><strong>4、故障恢复：</strong> Master自动进行Region迁移和负载均衡。</p>
+            </div>
+
+            <h2 id="section-9">9. HBase和Hive的区别是什么？</h2>
+            <p>HBase和Hive的主要区别：</p>
+            <div class="highlight">
+                <p><strong>1、数据模型：</strong> HBase是KV存储，Hive是数据仓库。</p>
+                <p><strong>2、实时性：</strong> HBase适合实时读写，Hive适合离线分析。</p>
+                <p><strong>3、查询方式：</strong> HBase使用API，Hive使用SQL。</p>
+                <p><strong>4、底层：</strong> HBase基于HDFS，Hive也基于HDFS。</p>
+            </div>
+
+            <h2 id="section-10">10. HBase的预分区有什么作用？</h2>
+            <p>预分区的作用：</p>
+            <div class="highlight">
+                <p><strong>1、避免热点：</strong> 避免所有数据写入单个Region。</p>
+                <p><strong>2、负载均衡：</strong> 提前分散数据，提高并行度。</p>
+                <p><strong>3、提升性能：</strong> 避免Region分裂带来的开销。</p>
+                <p><strong>4、设置方法：</strong> 创建表时指定split keys。</p>
+            </div>
+
+            <h2 id="section-11">11. HBase的HFile结构是怎样的？</h2>
+            <p>HFile是HBase的数据存储格式：</p>
+            <div class="highlight">
+                <p><strong>1、Scanned block section：</strong> 存储数据，包括Leaf index和Bloom filter。</p>
+                <p><strong>2、Non-scanned block section：</strong> 存储Meta信息。</p>
+                <p><strong>3、Load-on-open-data：</strong> 存储根索引和元数据。</p>
+                <p><strong>4、Trailer：</strong> 存储文件偏移量等元信息。</p>
+            </div>
+
+            <h2 id="section-12">12. HBase如何处理热点问题？</h2>
+            <p>HBase热点问题的处理方法：</p>
+            <div class="highlight">
+                <p><strong>1、加盐：</strong> 在RowKey前加随机前缀。</p>
+                <p><strong>2、Hash：</strong> 对RowKey进行hash后作为前缀。</p>
+                <p><strong>3、反转：</strong> 反转固定长度的RowKey。</p>
+                <p><strong>4、预分区：</strong> 提前创建多个Region。</p>
+            </div>
+
+            <h2 id="section-13">13. HBase的Scan操作如何使用？</h2>
+            <p>HBase的Scan操作：</p>
+            <div class="highlight">
+                <p><strong>1、全表扫描：</strong> 创建不带起止key的Scan。</p>
+                <p><strong>2、范围扫描：</strong> 设置startRow和stopRow。</p>
+                <p><strong>3、列过滤：</strong> 使用ColumnRangeFilter或FamilyFilter。</p>
+                <p><strong>4、缓存：</strong> 设置caching提高扫描性能。</p>
+            </div>
+
+            <h2 id="section-14">14. HBase的过滤器有哪些？</h2>
+            <p>HBase支持多种过滤器：</p>
+            <div class="highlight">
+                <p><strong>1、行过滤器：</strong> RowFilter按行键过滤。</p>
+                <p><strong>2、列族过滤器：</strong> FamilyFilter按列族过滤。</p>
+                <p><strong>3、列过滤器：</strong> QualifierFilter按列名过滤。</p>
+                <p><strong>4、值过滤器：</strong> ValueFilter按值过滤。</p>
+                <p><strong>5、依赖刷新：</strong> DependentColumnFilter指定参考列过滤。</p>
+            </div>
+
+            <h2 id="section-15">15. HBase的WAL机制是什么？</h2>
+            <p>HBase的WAL（Write-Ahead Log）机制：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 保证数据在MemStore flush前不丢失。</p>
+                <p><strong>2、写入：</strong> 数据先写入WAL再写入MemStore。</p>
+                <p><strong>3、复制：</strong> WAL可以复制到多个副本。</p>
+                <p><strong>4、恢复：</strong> 故障后通过WAL恢复数据。</p>
+            </div>
+
+            <h2 id="section-16">16. HBase的Region分裂过程是怎样的？</h2>
+            <p>Region分裂过程：</p>
+            <div class="highlight">
+                <p><strong>1、触发：</strong> Region大小超过阈值触发分裂。</p>
+                <p><strong>2、创建：</strong> 在ZooKeeper创建分裂节点。</p>
+                <p><strong>3、关闭：</strong> 关闭父Region，停止写入。</p>
+                <p><strong>4、创建子Region：</strong> 创建两个子Region，更新META表。</p>
+            </div>
+
+            <h2 id="section-17">17. HBase如何实现二级索引？</h2>
+            <p>HBase实现二级索引的方法：</p>
+            <div class="highlight">
+                <p><strong>1、协处理器：</strong> 使用Observer协处理器维护索引表。</p>
+                <p><strong>2、索引表：</strong> 创建单独的索引表存储索引数据。</p>
+                <p><strong>3、异步更新：</strong> 异步维护索引，保证性能。</p>
+                <p><strong>4、第三方方案：</strong> 使用Phoenix、Solr等实现二级索引。</p>
+            </div>
+
+            <h2 id="section-18">18. HBase的BloomFilter作用是什么？</h2>
+            <p>BloomFilter的作用：</p>
+            <div class="highlight">
+                <p><strong>1、快速查找：</strong> 快速判断HFile中是否可能包含某行。</p>
+                <p><strong>2、减少IO：</strong> 避免不必要的IO操作。</p>
+                <p><strong>3、空间效率：</strong> 使用位数组存储，占用空间小。</p>
+                <p><strong>4、配置：</strong> 在列族级别配置BloomFilter类型。</p>
+            </div>
+
+            <h2 id="section-19">19. HBase的MemStore为什么需要排序？</h2>
+            <p>MemStore排序的原因：</p>
+            <div class="highlight">
+                <p><strong>1、写入优化：</strong> 有序写入HFile效率更高。</p>
+                <p><strong>2、合并优化：</strong> 有序的HFile更容易合并。</p>
+                <p><strong>3、读取优化：</strong> 有序存储便于范围查询。</p>
+                <p><strong>4、LSM-Tree：</strong> 符合LSM-Tree的设计思想。</p>
+            </div>
+
+            <h2 id="section-20">20. HBase和HDFS的关系是什么？</h2>
+            <p>HBase与HDFS的关系：</p>
+            <div class="highlight">
+                <p><strong>1、存储：</strong> HBase数据最终存储在HDFS上。</p>
+                <p><strong>2、访问：</strong> HBase通过RegionServer访问HDFS。</p>
+                <p><strong>3、优势：</strong> HDFS提供可靠性和持久性。</p>
+                <p><strong>4、区别：</strong> HBase提供随机读写，HDFS适合顺序访问。</p>
+            </div>
+
+            <h2 id="section-21">21. HBase的ZooKeeper作用是什么？</h2>
+            <p>ZooKeeper在HBase中的作用：</p>
+            <div class="highlight">
+                <p><strong>1、选举：</strong> Master选举和故障转移。</p>
+                <p><strong>2、协调：</strong> 协调RegionServer之间的操作。</p>
+                <p><strong>3、元数据：</strong> 存储META表位置等元信息。</p>
+                <p><strong>4、租约：</strong> 管理RegionServer的心跳和租约。</p>
+            </div>
+
+            <h2 id="section-22">22. HBase如何进行性能调优？</h2>
+            <p>HBase性能调优的方向：</p>
+            <div class="highlight">
+                <p><strong>1、RowKey设计：</strong> 避免热点，合理设计RowKey。</p>
+                <p><strong>2、列族设计：</strong> 控制列族数量，避免过多。</p>
+                <p><strong>3、缓存：</strong> 合理配置BlockCache大小。</p>
+                <p><strong>4、压缩：</strong> 使用合适的压缩算法。</p>
+                <p><strong>5、Compact：</strong> 合理配置Compaction策略。</p>
+            </div>
+
+            <h2 id="section-23">23. HBase的列族越多越好吗？</h2>
+            <p>列族设计建议：</p>
+            <div class="highlight">
+                <p><strong>1、不建议过多：</strong> 每个列族有独立的MemStore和HFile。</p>
+                <p><strong>2、内存压力：</strong> 过多列族增加内存压力。</p>
+                <p><strong>3、查询模式：</strong> 根据查询模式决定列族数量。</p>
+                <p><strong>4、建议：</strong> 通常不超过3个列族。</p>
+            </div>
+
+            <h2 id="section-24">24. HBase的批量写入如何使用？</h2>
+            <p>HBase批量写入的方法：</p>
+            <div class="highlight">
+                <p><strong>1、BufferedMutator：</strong> 异步批量写入。</p>
+                <p><strong>2、batch：</strong> 使用HTable.batch()同步批量写入。</p>
+                <p><strong>3、注意事项：</strong> 批量写入数据量不宜过大。</p>
+                <p><strong>4、异常处理：</strong> 批量操作可能部分失败。</p>
+            </div>
+
+            <h2 id="section-25">25. HBase支持SQL查询吗？</h2>
+            <p>HBase的SQL查询方式：</p>
+            <div class="highlight">
+                <p><strong>1、Phoenix：</strong> 提供SQL引擎支持HBase。</p>
+                <p><strong>2、SQL标准：</strong> Phoenix支持标准SQL语法。</p>
+                <p><strong>3、二级索引：</strong> Phoenix支持二级索引。</p>
+                <p><strong>4、JDBC：</strong> 提供JDBC驱动访问HBase。</p>
+            </div>
+
+            <h2 id="section-26">26. HBase的数据版本管理是怎样的？</h2>
+            <p>HBase多版本管理：</p>
+            <div class="highlight">
+                <p><strong>1、版本数量：</strong> 可配置每个列族的最大版本数。</p>
+                <p><strong>2、版本查询：</strong> 使用Timestamp获取历史版本。</p>
+                <p><strong>3、TTL：</strong> 可配置数据过期时间。</p>
+                <p><strong>4、删除：</strong> 删除操作只删除最新版本。</p>
+            </div>
+
+            <h2 id="section-27">27. HBase的Master的作用是什么？</h2>
+            <p>HMaster的职责：</p>
+            <div class="highlight">
+                <p><strong>1、表管理：</strong> 创建、删除表等DDL操作。</p>
+                <p><strong>2、Region管理：</strong> 负责Region的分配和负载均衡。</p>
+                <p><strong>3、监控：</strong> 监控RegionServer状态。</p>
+                <p><strong>4、故障恢复：</strong> 处理RegionServer故障。</p>
+            </div>
+
+            <h2 id="section-28">28. HBase适合存储哪些类型的数据？</h2>
+            <p>HBase适合存储的数据类型：</p>
+            <div class="highlight">
+                <p><strong>1、半结构化数据：</strong> 灵活schema的数据。</p>
+                <p><strong>2、时序数据：</strong> 时间序列数据，如监控数据。</p>
+                <p><strong>3、消息数据：</strong> 消息记录、聊天记录等。</p>
+                <p><strong>4、推荐数据：</strong> 用户行为数据、推荐特征。</p>
+            </div>
+
+            <h2 id="section-29">29. HBase的Region是什么？</h2>
+            <p>Region是HBase的基本数据管理单元：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Region是表中一段连续RowKey的数据。</p>
+                <p><strong>2、分布：</strong> 一个表可以有多个Region分布到不同RegionServer。</p>
+                <p><strong>3、分裂：</strong> Region过大会分裂成两个子Region。</p>
+                <p><strong>4、存储：</strong> 每个Region包含多个HFile。</p>
+            </div>
+
+            <h2 id="section-30">30. HBase和传统关系型数据库的区别？</h2>
+            <p>HBase与传统数据库的区别：</p>
+            <div class="highlight">
+                <p><strong>1、模式：</strong> HBase是schemaless，传统数据库有固定schema。</p>
+                <p><strong>2、事务：</strong> HBase只支持行级事务，传统数据库支持复杂事务。</p>
+                <p><strong>3、索引：</strong> HBase只有RowKey索引，传统数据库支持多种索引。</p>
+                <p><strong>4、扩展性：</strong> HBase水平扩展，传统数据库垂直扩展为主。</p>
+            </div>
+
+            <h2 id="section-31">31. HBase如何进行故障恢复？</h2>
+            <p>HBase故障恢复机制：</p>
+            <div class="highlight">
+                <p><strong>1、WAL恢复：</strong> 通过WAL恢复未flush的数据。</p>
+                <p><strong>2、Region迁移：</strong> Master将失效Region迁移到其他Server。</p>
+                <p><strong>3、副本：</strong> 如果开启了Region复制，副本可以接管。</p>
+                <p><strong>4、元数据恢复：</strong> 更新META表记录新位置。</p>
+            </div>
+
+            <h2 id="section-32">32. HBase的BlockCache有哪些类型？</h2>
+            <p>HBase BlockCache类型：</p>
+            <div class="highlight">
+                <p><strong>1、LruBlockCache：</strong> 基于LRU的BlockCache。</p>
+                <p><strong>2、SlabCache：</strong> 固定大小的BlockCache（已废弃）。</p>
+                <p><strong>3、BucketCache：</strong> 可配置存储介质（内存/SSD）。</p>
+                <p><strong>4、CombinedBlockCache：</strong> L1+L2组合缓存。</p>
+            </div>
+
+            <h2 id="section-33">33. HBase的Scan如何提升性能？</h2>
+            <p>Scan性能提升方法：</p>
+            <div class="highlight">
+                <p><strong>1、设置缓存：</strong> 使用setCaching减少RPC次数。</p>
+                <p><strong>2、列过滤：</strong> 减少不必要的列读取。</p>
+                <p><strong>3、Batch：</strong> 使用setBatch控制每次返回的列数。</p>
+                <p><strong>4、并行扫描：</strong> 使用ParallelScanner并行扫描。</p>
+            </div>
+
+            <h2 id="section-34">34. HBase的HMaster高可用如何实现？</h2>
+            <p>HMaster HA配置：</p>
+            <div class="highlight">
+                <p><strong>1、ZooKeeper选举：</strong> 通过ZooKeeper选举active master。</p>
+                <p><strong>2、备份Master：</strong> 配置多个Master节点。</p>
+                <p><strong>3、元数据备份：</strong> 备份META表和命名空间。</p>
+                <p><strong>4、故障切换：</strong> Master故障后自动切换。</p>
+            </div>
+
+            <h2 id="section-35">35. HBase 3.0有哪些新特性？</h2>
+            <p>HBase 3.0的新特性：</p>
+            <div class="highlight">
+                <p><strong>1、Procedure V2：</strong> 改进的分布式 Procedure框架。</p>
+                <p><strong>2、跨地域复制：</strong> 支持跨集群异步复制。</p>
+                <p><strong>3、读写链路优化：</strong> 优化读写路径提升性能。</p>
+                <p><strong>4、Java 11+支持：</strong> 更好的Java版本支持。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

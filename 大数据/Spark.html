@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spark 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Spark 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Spark的基本架构是怎样的？</h2>
+            <p>Spark是一个分布式计算框架，其基本架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、Cluster Manager：</strong> 集群管理器，负责资源管理，如Standalone、YARN、Mesos。</p>
+                <p><strong>2、Worker Node：</strong> 工作节点，负责运行Executor进程。</p>
+                <p><strong>3、Driver：</strong> 驱动器程序，运行应用程序的main()方法，创建SparkContext。</p>
+                <p><strong>4、Executor：</strong> 执行器，运行在Worker节点上，负责执行Task。</p>
+            </div>
+
+            <h2 id="section-2">2. Spark的shuffle过程是怎样的？</h2>
+            <p>Spark的shuffle是数据重新分布的过程：</p>
+            <div class="highlight">
+                <p><strong>1、Shuffle Write：</strong> Map端将数据写入本地磁盘，生成文件。</p>
+                <p><strong>2、Shuffle Read：</strong> Reduce端从各Map端拉取数据。</p>
+                <p><strong>3、Hash Shuffle：</strong> 每个Map任务为每个Reduce任务创建文件。</p>
+                <p><strong>4、Sort-based Shuffle：</strong> 先排序再写入，减少文件数量。</p>
+            </div>
+
+            <h2 id="section-3">3. RDD是什么？有哪些特性？</h2>
+            <p>RDD（Resilient Distributed Dataset）是Spark的基本抽象：</p>
+            <div class="highlight">
+                <p><strong>1、分区列表：</strong> RDD由多个分区组成，每个分区是数据的一个片段。</p>
+                <p><strong>2、计算函数：</strong> 每个分区都有计算函数（Iterator[T]）。</p>
+                <p><strong>3、RDD依赖：</strong> RDD之间存在依赖关系，形成DAG。</p>
+                <p><strong>4、分区器：</strong> 可选的分区器，决定数据如何分区。</p>
+                <p><strong>5、位置优先：</strong> 可选的preferredLocations，减少数据移动。</p>
+            </div>
+
+            <h2 id="section-4">4. Spark的Transformation和Action有什么区别？</h2>
+            <p>Spark的操作分为两类：</p>
+            <div class="highlight">
+                <p><strong>1、Transformation：</strong> 转换操作，延迟执行，如map、filter、reduceByKey。</p>
+                <p><strong>2、Action：</strong> 动作操作，触发计算，如collect、count、save。</p>
+                <p><strong>3、Lazy evaluation：</strong> Transformation使用惰性求值，只有遇到Action才真正执行。</p>
+                <p><strong>4、Lineage：</strong> RDD通过Lineage记录转换过程，用于容错。</p>
+            </div>
+
+            <h2 id="section-5">5. Spark的容错机制是怎样的？</h2>
+            <p>Spark通过多种机制保证容错：</p>
+            <div class="highlight">
+                <p><strong>1、RDD Lineage：</strong> 记录RDD的转换过程，失败时重计算。</p>
+                <p><strong>2、Checkpoint：</strong> 将RDD持久化到磁盘，支持恢复。</p>
+                <p><strong>3、Executor失败：</strong> Driver会重新调度任务到其他Executor。</p>
+                <p><strong>4、数据备份：</strong> 可以配置RDD数据的备份数量。</p>
+            </div>
+
+            <h2 id="section-6">6. Spark的部署模式有哪些？</h2>
+            <p>Spark支持多种部署模式：</p>
+            <div class="highlight">
+                <p><strong>1、Local模式：</strong> 本地运行，用于开发和测试。</p>
+                <p><strong>2、Standalone模式：</strong> 使用Spark自带的集群管理器。</p>
+                <p><strong>3、YARN模式：</strong> 在Hadoop YARN上运行，支持Mesos。</p>
+                <p><strong>4、Kubernetes模式：</strong> 在K8S上运行，实现容器化部署。</p>
+            </div>
+
+            <h2 id="section-7">7. Spark SQL相比Hive有哪些优势？</h2>
+            <p>Spark SQL相比Hive的优势包括：</p>
+            <div class="highlight">
+                <p><strong>1、性能：</strong> Spark SQL基于内存计算，性能优于Hive。</p>
+                <p><strong>2、兼容性：</strong> 兼容Hive的元数据和SQL语法。</p>
+                <p><strong>3、DataFrame/DataSet API：</strong> 提供更高级的抽象和优化。</p>
+                <p><strong>4、 Catalyst优化器：</strong> 自动优化SQL执行计划。</p>
+            </div>
+
+            <h2 id="section-8">8. DataFrame和RDD有什么区别？</h2>
+            <p>DataFrame和RDD的主要区别：</p>
+            <div class="highlight">
+                <p><strong>1、Schema：</strong> DataFrame有明确的Schema，RDD没有。</p>
+                <p><strong>2、类型安全：</strong> RDD是强类型的，DataFrame类型检查在运行时。</p>
+                <p><strong>3、优化：</strong> DataFrame可以通过Catalyst和Tungsten优化。</p>
+                <p><strong>4、API：</strong> DataFrame提供类似SQL的操作，RDD更底层。</p>
+            </div>
+
+            <h2 id="section-9">9. Spark的广播变量是什么？如何使用？</h2>
+            <p>广播变量用于高效分发大变量：</p>
+            <div class="highlight">
+                <p><strong>1、广播变量：</strong> 将只读变量广播到所有节点。</p>
+                <p><strong>2、使用：</strong> 通过spark.sparkContext.broadcast(v)创建。</p>
+                <p><strong>3、访问：</strong> 调用.value获取变量值。</p>
+                <p><strong>4、优势：</strong> 避免每个task都拷贝一份，减少网络传输。</p>
+            </div>
+
+            <h2 id="section-10">10. Spark的累加器是什么？如何使用？</h2>
+            <p>累加器用于聚合操作：</p>
+            <div class="highlight">
+                <p><strong>1、累加器：</strong> 支持计数器和求和，分布式环境下汇总结果。</p>
+                <p><strong>2、创建：</strong> 通过spark.sparkContext.accumulator(v)创建。</p>
+                <p><strong>3、写入：</strong> 在executor中使用+=操作累加。</p>
+                <p><strong>4、读取：</strong> 只在driver端读取，确保最终一致性。</p>
+            </div>
+
+            <h2 id="section-11">11. Spark的Join操作有哪些类型？</h2>
+            <p>Spark支持多种Join类型：</p>
+            <div class="highlight">
+                <p><strong>1、Broadcast Join：</strong> 小表广播到所有节点，避免shuffle。</p>
+                <p><strong>2、Shuffle Hash Join：</strong> 基于hash的join，需要shuffle。</p>
+                <p><strong>3、Sort Merge Join：</strong> 先排序再合并，适合大表join。</p>
+                <p><strong>4、Cartesian Join：</strong> 笛卡尔积，慎用。</p>
+            </div>
+
+            <h2 id="section-12">12. Spark的内存模型是怎样的？</h2>
+            <p>Spark的内存管理包括：</p>
+            <div class="highlight">
+                <p><strong>1、Execution内存：</strong> 用于shuffle、排序等操作。</p>
+                <p><strong>2、Storage内存：</strong> 用于缓存RDD和广播变量。</p>
+                <p><strong>3、用户内存：</strong> 用于用户代码和数据结构。</p>
+                <p><strong>4、系统内存：</strong> 用于Spark内部元数据。</p>
+            </div>
+
+            <h2 id="section-13">13. Spark如何处理数据倾斜？</h2>
+            <p>数据倾斜是大数据处理中的常见问题，解决方案包括：</p>
+            <div class="highlight">
+                <p><strong>1、加盐：</strong> 给热点key添加随机前缀。</p>
+                <p><strong>2、两阶段聚合：</strong> 先局部聚合再全局聚合。</p>
+                <p><strong>3、Broadcast Join：</strong> 将小表广播，避免大表shuffle。</p>
+                <p><strong>4、过滤倾斜key：</strong> 单独处理倾斜key。</p>
+            </div>
+
+            <h2 id="section-14">14. Spark的Stage是如何划分的？</h2>
+            <p>Stage的划分基于Shuffle：</p>
+            <div class="highlight">
+                <p><strong>1、窄依赖：</strong> 一对一或范围依赖，不需要shuffle。</p>
+                <p><strong>2、宽依赖：</strong> 需要shuffle的依赖，如groupByKey。</p>
+                <p><strong>3、Stage划分：</strong> 从后往前，遇到宽依赖则划分新Stage。</p>
+                <p><strong>4、Task数量：</strong> 每个Stage的分区数决定Task数量。</p>
+            </div>
+
+            <h2 id="section-15">15. Spark的Checkpoint机制是什么？</h2>
+            <p>Checkpoint用于持久化RDD：</p>
+            <div class="highlight">
+                <p><strong>1、用途：</strong> 切断RDD的Lineage，支持快速恢复。</p>
+                <p><strong>2、使用：</strong> 调用rdd.checkpoint()设置。</p>
+                <p><strong>3、存储：</strong> 将RDD写入HDFS或本地文件系统。</p>
+                <p><strong>4、时机：</strong> 在action触发后计算并存储。</p>
+            </div>
+
+            <h2 id="section-16">16. Spark Streaming的窗口操作有哪些？</h2>
+            <p>Spark Streaming支持窗口计算：</p>
+            <div class="highlight">
+                <p><strong>1、window()：</strong> 滑动窗口，计算指定窗口内的数据。</p>
+                <p><strong>2、countByWindow()：</strong> 窗口内的计数。</p>
+                <p><strong>3、reduceByKeyAndWindow()：</strong> 窗口内的聚合。</p>
+                <p><strong>4、sessionWindow()：</strong> 会话窗口，基于活动间隙划分。</p>
+            </div>
+
+            <h2 id="section-17">17. Spark Streaming的背压机制是什么？</h2>
+            <p>背压机制用于动态调整处理速率：</p>
+            <div class="highlight">
+                <p><strong>1、Backpressure：</strong> 当处理速度跟不上摄入速度时限流。</p>
+                <p><strong>2、配置：</strong> 设置spark.streaming.backpressure.enabled=true。</p>
+                <p><strong>3、PID控制器：</strong> 使用PID控制速率调整。</p>
+                <p><strong>4、动态感知：</strong> 根据实际处理情况动态调整。</p>
+            </div>
+
+            <h2 id="section-18">18. Spark SQL的Catalyst优化器是如何工作的？</h2>
+            <p> Catalyst是Spark SQL的核心优化器：</p>
+            <div class="highlight">
+                <p><strong>1、解析：</strong> 将SQL解析为抽象语法树（AST）。</p>
+                <p><strong>2、逻辑计划：</strong> 生成未解析的逻辑计划。</p>
+                <p><strong>3、优化：</strong> 应用规则优化，如谓词下推、列裁剪。</p>
+                <p><strong>4、物理计划：</strong> 生成多个物理计划，选择最优执行。</p>
+            </div>
+
+            <h2 id="section-19">19. Spark的DataSet和DataFrame有什么区别？</h2>
+            <p>DataSet和DataFrame的区别：</p>
+            <div class="highlight">
+                <p><strong>1、类型安全：</strong> DataSet是强类型的，DataFrame类型检查在运行时。</p>
+                <p><strong>2、Encoder：</strong> DataSet使用Encoder进行序列化。</p>
+                <p><strong>3、API：</strong> DataSet提供函数式API，DataFrame支持DSL和SQL。</p>
+                <p><strong>4、相互转换：</strong> DataFrame = DataSet[Row]，可相互转换。</p>
+            </div>
+
+            <h2 id="section-20">20. Spark的任务调度流程是怎样的？</h2>
+            <p>Spark的任务调度流程：</p>
+            <div class="highlight">
+                <p><strong>1、DAGScheduler：</strong> 将job划分为多个stage，构建DAG。</p>
+                <p><strong>2、TaskScheduler：</strong> 提交taskset到集群。</p>
+                <p><strong>3、SchedulerBackend：</strong> 管理Executor资源。</p>
+                <p><strong>4、Task执行：</strong> Task在Executor上执行，结果返回Driver。</p>
+            </div>
+
+            <h2 id="section-21">21. Spark如何实现持久化？</h2>
+            <p>Spark的持久化策略包括：</p>
+            <div class="highlight">
+                <p><strong>1、cache()：</strong> 将RDD缓存在内存中。</p>
+                <p><strong>2、persist()：</strong> 指定存储级别，如MEMORY_AND_DISK。</p>
+                <p><strong>3、存储级别：</strong> 内存、磁盘、Tachyon等，以及是否副本。</p>
+                <p><strong>4、unpersist()：</strong> 手动释放缓存。</p>
+            </div>
+
+            <h2 id="section-22">22. Spark的ShuffleManager有哪些？</h2>
+            <p>Spark支持不同的Shuffle管理器：</p>
+            <div class="highlight">
+                <p><strong>1、SortShuffleManager：</strong> 默认的shuffle管理器。</p>
+                <p><strong>2、TungSortShuffleManager：</strong> 优化后的排序shuffle。</p>
+                <p><strong>3、BypassShuffleManager：</strong> 适用于Reducer数量不多的场景。</p>
+                <p><strong>4、配置：</strong> 通过spark.shuffle.manager配置。</p>
+            </div>
+
+            <h2 id="section-23">23. Spark的广播变量和累加器的区别？</h2>
+            <p>广播变量和累加器的对比：</p>
+            <div class="highlight">
+                <p><strong>1、用途：</strong> 广播变量是只读共享，累加器用于聚合。</p>
+                <p><strong>2、访问：</strong> 广播变量在每个节点有一份，累加器全局共享。</p>
+                <p><strong>3、更新：</strong> 广播变量不可更新，累加器只能增加。</p>
+                <p><strong>4、读取：</strong> 广播变量可在driver和executor读取，累加器只在driver读取。</p>
+            </div>
+
+            <h2 id="section-24">24. Spark SQL的UDF是什么？如何使用？</h2>
+            <p>UDF允许自定义函数：</p>
+            <div class="highlight">
+                <p><strong>1、定义UDF：</strong> 使用spark.udf.register("name", func)注册。</p>
+                <p><strong>2、弱类型UDF：</strong> 输入Row，返回指定类型。</p>
+                <p><strong>3、强类型UDF：</strong> 使用TypedColumn进行类型安全调用。</p>
+                <p><strong>4、UDAF：</strong> 用户自定义聚合函数，实现UserDefinedAggregateFunction。</p>
+            </div>
+
+            <h2 id="section-25">25. Spark的Master节点宕机后集群会怎样？</h2>
+            <p>Master节点的高可用处理：</p>
+            <div class="highlight">
+                <p><strong>1、单点故障：</strong> Master是集群的单点故障点。</p>
+                <p><strong>2、HA配置：</strong> 可以配置ZooKeeper进行Leader选举。</p>
+                <p><strong>3、恢复：</strong> 新的Master会恢复之前的状态。</p>
+                <p><strong>4、Driver：</strong> Driver重启后需要重新调度任务。</p>
+            </div>
+
+            <h2 id="section-26">26. Spark如何处理小文件问题？</h2>
+            <p>小文件是数据处理中的常见问题：</p>
+            <div class="highlight">
+                <p><strong>1、Coalesce：</strong> 合并小文件，减少分区数。</p>
+                <p><strong>2、Repartition：</strong> 重新分区，可增加或减少分区。</p>
+                <p><strong>3、CombineFileInputFormat：</strong> 在输入端合并小文件。</p>
+                <p><strong>4、输出策略：</strong> 合理设置分区数和文件大小。</p>
+            </div>
+
+            <h2 id="section-27">27. Spark的BlockManager是什么？</h2>
+            <p>BlockManager是Spark的存储管理组件：</p>
+            <div class="highlight">
+                <p><strong>1、管理：</strong> 管理Spark各节点上的数据块。</p>
+                <p><strong>2、存储：</strong> 支持内存、磁盘、Tachyon等多种存储。</p>
+                <p><strong>3、读写：</strong> 提供Block数据的读写接口。</p>
+                <p><strong>4、通信：</strong> 使用BlockTransferService进行节点间数据拉取。</p>
+            </div>
+
+            <h2 id="section-28">28. Spark和Hadoop的关系是什么？</h2>
+            <p>Spark与Hadoop的关系：</p>
+            <div class="highlight">
+                <p><strong>1、依赖：</strong> Spark可以运行在HDFS上，使用Hadoop的存储。</p>
+                <p><strong>2、YARN支持：</strong> Spark可以在YARN集群上运行。</p>
+                <p><strong>3、互补：</strong> Hadoop适合存储和批处理，Spark适合迭代计算。</p>
+                <p><strong>4、内存依赖：</strong> Spark依赖Hadoop的某些库（如protobuf）。</p>
+            </div>
+
+            <h2 id="section-29">29. Spark的伪分布式模式是什么？</h2>
+            <p>伪分布式模式配置：</p>
+            <div class="highlight">
+                <p><strong>1、单节点：</strong> 在单机上模拟集群环境。</p>
+                <p><strong>2、多进程：</strong> Master、Worker、Driver运行在不同进程。</p>
+                <p><strong>3、配置：</strong> 设置localhost作为master地址。</p>
+                <p><strong>4、用途：</strong> 开发和测试环境。</p>
+            </div>
+
+            <h2 id="section-30">30. Spark的Task失败如何处理？</h2>
+            <p>Task失败的处理机制：</p>
+            <div class="highlight">
+                <p><strong>1、重试：</strong> Task失败后会重试，默认4次。</p>
+                <p><strong>2、Stage重试：</strong> 如果某个Stage的Task失败率高，整个Stage会重试。</p>
+                <p><strong>3、Job重试：</strong> Stage失败后整个Job会重新提交。</p>
+                <p><strong>4、Executor丢失：</strong> Executor丢失后，其上的Task会在其他Executor上重新执行。</p>
+            </div>
+
+            <h2 id="section-31">31. Spark的内存溢出（OOM）有哪些原因？</h2>
+            <p>Spark OOM的常见原因：</p>
+            <div class="highlight">
+                <p><strong>1、内存分配不合理：</strong> Execution和Storage内存分配不均。</p>
+                <p><strong>2、数据倾斜：</strong> 某些分区数据量过大。</p>
+                <p><strong>3、笛卡尔积：</strong> 大表join产生笛卡尔积。</p>
+                <p><strong>4、collect操作：</strong> 使用collect将大量数据拉到driver端。</p>
+            </div>
+
+            <h2 id="section-32">32. Spark的数据倾斜如何定位？</h2>
+            <p>定位数据倾斜的方法：</p>
+            <div class="highlight">
+                <p><strong>1、Stage日志：</strong> 查看Stage各Task的执行时间。</p>
+                <p><strong>2、Spark UI：</strong> 分析各Task处理的数据量。</p>
+                <p><strong>3、采样分析：</strong> 对key进行采样，找出热点key。</p>
+                <p><strong>4、日志分析：</strong> 查看Executor日志，找出异常。</p>
+            </div>
+
+            <h2 id="section-33">33. Spark SQL的执行计划如何查看？</h2>
+            <p>查看执行计划的方法：</p>
+            <div class="highlight">
+                <p><strong>1、explain()：</strong> 调用df.explain(true)查看逻辑和物理计划。</p>
+                <p><strong>2、Spark UI：</strong> 在SQL标签页查看详细信息。</p>
+                <p><strong>3、Web UI：</strong> 查看DAG和Stage划分。</p>
+                <p><strong>4、代码：</strong> 使用QueryExecution获取计划。</p>
+            </div>
+
+            <h2 id="section-34">34. Spark如何进行性能调优？</h2>
+            <p>Spark性能调优的方向：</p>
+            <div class="highlight">
+                <p><strong>1、并行度：</strong> 合理设置分区数，避免过大或过小。</p>
+                <p><strong>2、内存：</strong> 优化Execution和Storage内存比例。</p>
+                <p><strong>3、序列化：</strong> 使用Kryo序列化替代Java序列化。</p>
+                <p><strong>4、缓存：</strong> 合理使用persist和cache。</p>
+                <p><strong>5、Shuffle：</strong> 选择合适的Shuffle管理器。</p>
+            </div>
+
+            <h2 id="section-35">35. Spark Structured Streaming的特点是什么？</h2>
+            <p>Structured Streaming是新一代流处理API：</p>
+            <div class="highlight">
+                <p><strong>1、API统一：</strong> 使用DataFrame/DataSet API处理流和批。</p>
+                <p><strong>2、事件时间：</strong> 原生支持事件时间和水印。</p>
+                <p><strong>3、状态管理：</strong> 自动管理状态，支持精确一次语义。</p>
+                <p><strong>4、输出模式：</strong> 支持Append、Complete、Update模式。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

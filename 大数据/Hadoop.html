@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadoop 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Hadoop 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Hadoop的基本架构是怎样的？</h2>
+            <p>Hadoop是一个分布式存储和计算的框架，其核心架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、HDFS：</strong> 分布式文件系统，负责数据存储。</p>
+                <p><strong>2、MapReduce：</strong> 分布式计算框架，负责数据计算。</p>
+                <p><strong>3、YARN：</strong> 资源管理器，负责集群资源管理。</p>
+                <p><strong>4、Common：</strong> 工具模块，提供公共功能。</p>
+            </div>
+
+            <h2 id="section-2">2. HDFS的架构是怎样的？</h2>
+            <p>HDFS采用主从架构：</p>
+            <div class="highlight">
+                <p><strong>1、NameNode：</strong> 主节点，管理文件系统的命名空间和块映射信息。</p>
+                <p><strong>2、DataNode：</strong> 从节点，负责存储实际的数据块。</p>
+                <p><strong>3、Secondary NameNode：</strong> 辅助节点，用于合并fsimage和edits。</p>
+                <p><strong>4、Block：</strong> HDFS的基本存储单元，默认128MB。</p>
+            </div>
+
+            <h2 id="section-3">3. HDFS的读写流程是怎样的？</h2>
+            <p>HDFS的读写流程如下：</p>
+            <div class="highlight">
+                <p><strong>1、写流程：</strong> 客户端请求NameNode获取DataNode列表，然后按顺序写入各DataNode。</p>
+                <p><strong>2、读流程：</strong> 客户端请求NameNode获取块位置，直接从DataNode读取数据。</p>
+                <p><strong>3、副本策略：</strong> 第一副本在本地节点，第二副本在不同机架，第三副本在同一机架。</p>
+                <p><strong>4、心跳机制：</strong> DataNode定期向NameNode发送心跳报告状态。</p>
+            </div>
+
+            <h2 id="section-4">4. MapReduce的工作流程是怎样的？</h2>
+            <p>MapReduce的工作流程包括：</p>
+            <div class="highlight">
+                <p><strong>1、Input：</strong> 输入数据，分片（Split）处理。</p>
+                <p><strong>2、Map阶段：</strong> 并行处理数据，输出key-value对。</p>
+                <p><strong>3、Shuffle阶段：</strong> Map输出根据key进行分区、排序、合并。</p>
+                <p><strong>4、Reduce阶段：</strong> 合并相同key的数据，输出最终结果。</p>
+            </div>
+
+            <h2 id="section-5">5. YARN的架构是怎样的？</h2>
+            <p>YARN（Yet Another Resource Negotiator）的架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、ResourceManager：</strong> 集群资源管理器，负责资源调度。</p>
+                <p><strong>2、NodeManager：</strong> 单节点资源管理器，负责容器管理。</p>
+                <p><strong>3、ApplicationMaster：</strong> 单个应用的主管，负责向RM申请资源。</p>
+                <p><strong>4、Container：</strong> 资源抽象，封装CPU、内存等资源。</p>
+            </div>
+
+            <h2 id="section-6">6. Hadoop的优点有哪些？</h2>
+            <p>Hadoop的主要优点包括：</p>
+            <div class="highlight">
+                <p><strong>1、高可靠性：</strong> 数据多副本，节点故障自动恢复。</p>
+                <p><strong>2、高扩展性：</strong> 可以通过增加节点轻松扩展集群。</p>
+                <p><strong>3、高效性：</strong> 数据处理分布在各节点，并行处理效率高。</p>
+                <p><strong>4、低成本：</strong> 可以运行在普通硬件上。</p>
+            </div>
+
+            <h2 id="section-7">7. HDFS的容错机制是怎样的？</h2>
+            <p>HDFS通过多种机制保证容错：</p>
+            <div class="highlight">
+                <p><strong>1、数据副本：</strong> 数据块默认3副本存储，节点故障自动恢复。</p>
+                <p><strong>2、心跳检测：</strong> DataNode定期发送心跳，NameNode检测节点状态。</p>
+                <p><strong>3、Secondary NameNode：</strong> 定期合并fsimage和edits，防止edits过大。</p>
+                <p><strong>4、Checkpoint：</strong> 保存元数据的检查点。</p>
+            </div>
+
+            <h2 id="section-8">8. 什么是Shuffle过程？</h2>
+            <p>Shuffle是MapReduce的核心过程：</p>
+            <div class="highlight">
+                <p><strong>1、分区：</strong> 根据key的hash值决定数据属于哪个Reduce。</p>
+                <p><strong>2、排序：</strong> 对分区内的数据按key排序。</p>
+                <p><strong>3、合并：</strong> 相同key的数据合并，减少数据传输。</p>
+                <p><strong>4、压缩：</strong> 可以对数据进行压缩，减少网络传输。</p>
+            </div>
+
+            <h2 id="section-9">9. Hadoop NameNode的HA如何实现？</h2>
+            <p>NameNode HA的实现方式：</p>
+            <div class="highlight">
+                <p><strong>1、QJM：</strong> 使用ZooKeeper管理edit log的提交。</p>
+                <p><strong>2、共享存储：</strong> 使用NFS或QJM共享edits文件。</p>
+                <p><strong>3、ZKFC：</strong> ZooKeeper故障切换控制器，监控NameNode状态。</p>
+                <p><strong>4、自动切换：</strong> 主节点故障时自动切换到备节点。</p>
+            </div>
+
+            <h2 id="section-10">10. HDFS的小文件问题如何解决？</h2>
+            <p>小文件问题是HDFS的常见挑战：</p>
+            <div class="highlight">
+                <p><strong>1、SequenceFile：</strong> 将小文件合并为SequenceFile。</p>
+                <p><strong>2、Har归档：</strong> 使用Hadoop Archive将小文件归档。</p>
+                <p><strong>3、CombineFileInputFormat：</strong> 在MapReduce输入时合并小文件。</p>
+                <p><strong>4、预合并：</strong> 定期合并小文件为大文件。</p>
+            </div>
+
+            <h2 id="section-11">11. MapReduce的优化策略有哪些？</h2>
+            <p>MapReduce的优化方向：</p>
+            <div class="highlight">
+                <p><strong>1、减少数据倾斜：</strong> 合理设计key，使用加盐技术。</p>
+                <p><strong>2、减少Shuffle数据量：</strong> 使用Combiner、压缩、选择合适的数据类型。</p>
+                <p><strong>3、合理设置分区数：</strong> 避免过多或过少的Reduce任务。</p>
+                <p><strong>4、缓存复用：</strong> 使用DistributedCache缓存公共数据。</p>
+            </div>
+
+            <h2 id="section-12">12. Hadoop的安全机制是怎样的？</h2>
+            <p>Hadoop的安全机制包括：</p>
+            <div class="highlight">
+                <p><strong>1、认证：</strong> 支持Kerberos认证。</p>
+                <p><strong>2、授权：</strong> 基于ACL的权限控制。</p>
+                <p><strong>3、数据加密：</strong> 支持传输加密和存储加密。</p>
+                <p><strong>4、审计日志：</strong> 记录操作日志。</p>
+            </div>
+
+            <h2 id="section-13">13. Hadoop的版本演进是怎样的？</h2>
+            <p>Hadoop的主要版本演进：</p>
+            <div class="highlight">
+                <p><strong>1、1.x版本：</strong> 包含HDFS和MapReduce，MapReduce兼顾资源管理和数据处理。</p>
+                <p><strong>2、2.x版本：</strong> 引入YARN，将资源管理和数据处理分离。</p>
+                <p><strong>3、3.x版本：</strong> 支持 erasure coding、容器化、GPU调度等。</p>
+            </div>
+
+            <h2 id="section-14">14. HDFS的数据均衡如何实现？</h2>
+            <p>HDFS数据均衡的方法：</p>
+            <div class="highlight">
+                <p><strong>1、Balancer：</strong> 使用hdfs balancer命令进行均衡。</p>
+                <p><strong>2、阈值设置：</strong> 设置均衡的阈值百分比。</p>
+                <p><strong>3、机架感知：</strong> 考虑机架信息的均衡策略。</p>
+                <p><strong>4、动态均衡：</strong> 节点上线后自动进行数据迁移。</p>
+            </div>
+
+            <h2 id="section-15">15. MapReduce的分区器有哪些？</h2>
+            <p>MapReduce的分区器类型：</p>
+            <div class="highlight">
+                <p><strong>1、HashPartitioner：</strong> 默认分区器，基于key的hash值。</p>
+                <p><strong>2、TotalOrderPartitioner：</strong> 全局排序分区器。</p>
+                <p><strong>3、自定义分区器：</strong> 根据业务需求实现Partitioner接口。</p>
+            </div>
+
+            <h2 id="section-16">16. Hadoop的压缩格式有哪些？</h2>
+            <p>Hadoop支持的压缩格式：</p>
+            <div class="highlight">
+                <p><strong>1、Gzip：</strong> 压缩比高，速度快，支持切片。</p>
+                <p><strong>2、Bzip2：</strong> 压缩比最高，支持切片。</p>
+                <p><strong>3、Lzo：</strong> 压缩解压速度快，支持切片。</p>
+                <p><strong>4、Snappy：</strong> 压缩解压速度最快，不支持切片。</p>
+            </div>
+
+            <h2 id="section-17">17. Hadoop的垃圾回收如何优化？</h2>
+            <p>Hadoop JVM优化的方法：</p>
+            <div class="highlight">
+                <p><strong>1、内存配置：</strong> 合理设置map/reduce任务的内存大小。</p>
+                <p><strong>2、GC策略：</strong> 使用G1或CMS垃圾收集器。</p>
+                <p><strong>3、对象重用：</strong> 在Map阶段重用对象，减少GC压力。</p>
+                <p><strong>4、监控：</strong> 通过日志监控GC情况。</p>
+            </div>
+
+            <h2 id="section-18">18. HDFS的快照功能是什么？</h2>
+            <p>HDFS快照功能：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 快照是文件系统的只读副本。</p>
+                <p><strong>2、用途：</strong> 用于数据备份和恢复。</p>
+                <p><strong>3、创建：</strong> 使用hdfs dfsadmin -createSnapshot命令。</p>
+                <p><strong>4、优势：</strong> 创建快照是即时操作，不影响性能。</p>
+            </div>
+
+            <h2 id="section-19">19. MapReduce中的Combiner的作用是什么？</h2>
+            <p>Combiner是Map端的本地聚合：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 减少Shuffle传输的数据量。</p>
+                <p><strong>2、使用场景：</strong> 适合sum、count等满足结合律的操作。</p>
+                <p><strong>3、实现：</strong> 实现Reducer接口，作为Map端的聚合。</p>
+                <p><strong>4、注意事项：</strong> 不能影响最终结果，如求平均值就不能使用。</p>
+            </div>
+
+            <h2 id="section-20">20. Hadoop的数据倾斜问题如何解决？</h2>
+            <p>数据倾斜的解决方案：</p>
+            <div class="highlight">
+                <p><strong>1、加盐：</strong> 给热点key添加随机前缀或后缀。</p>
+                <p><strong>2、两阶段聚合：</strong> 先局部聚合再全局聚合。</p>
+                <p><strong>3、过滤倾斜key：</strong> 将倾斜key单独处理。</p>
+                <p><strong>4、Broadcast Join：</strong> 将小表广播，避免大表shuffle。</p>
+            </div>
+
+            <h2 id="section-21">21. HDFS的权限管理是怎样的？</h2>
+            <p>HDFS的权限管理机制：</p>
+            <div class="highlight">
+                <p><strong>1、POSIX风格：</strong> 支持所有者、组、其他用户的权限模型。</p>
+                <p><strong>2、权限位：</strong> 读（r）、写（w）、执行（x）权限。</p>
+                <p><strong>3、超级用户：</strong> NameNode启动的用户是超级用户。</p>
+                <p><strong>4、ACL：</strong> 支持扩展ACL进行细粒度控制。</p>
+            </div>
+
+            <h2 id="section-22">22. MapReduce的job调优参数有哪些？</h2>
+            <p>MapReduce主要的调优参数：</p>
+            <div class="highlight">
+                <p><strong>1、map数：</strong> 通过输入切片数控制。</p>
+                <p><strong>2、reduce数：</strong> mapreduce.job.reduces参数设置。</p>
+                <p><strong>3、内存：</strong> mapreduce.map.memory.mb、reduce.memory.mb。</p>
+                <p><strong>4、Shuffle参数：</strong> io.sort.mb、mapreduce.reduce.shuffle.parallelcopies等。</p>
+            </div>
+
+            <h2 id="section-23">23. Hadoop的联邦机制是什么？</h2>
+            <p>HDFS Federation机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 多个NameNode共享DataNode的存储。</p>
+                <p><strong>2、优势：</strong> 解决单NameNode的内存瓶颈，支持多个命名空间。</p>
+                <p><strong>3、架构：</strong> 每个NameNode有自己的命名空间和块池。</p>
+                <p><strong>4、隔离：</strong> 不同应用的 NameNode隔离。</p>
+            </div>
+
+            <h2 id="section-24">24. MapReduce中的排序发生在哪些阶段？</h2>
+            <p>MapReduce中的排序：</p>
+            <div class="highlight">
+                <p><strong>1、Map端排序：</strong> Map输出时根据key排序。</p>
+                <p><strong>2、Shuffle排序：</strong> 分区内部按key排序。</p>
+                <p><strong>3、Reduce端排序：</strong> Reduce输入前会再次排序。</p>
+                <p><strong>4、全局排序：</strong> 使用TotalOrderPartitioner实现全局排序。</p>
+            </div>
+
+            <h2 id="section-25">25. HDFS的Block副本放置策略是怎样的？</h2>
+            <p>Block副本放置策略：</p>
+            <div class="highlight">
+                <p><strong>1、第一副本：</strong> 放置在发起写入的节点。</p>
+                <p><strong>2、第二副本：</strong> 放置在不同于第一副本的机架节点。</p>
+                <p><strong>3、第三副本：</strong> 放置在与第二副本相同机架的不同节点。</p>
+                <p><strong>4、更多副本：</strong> 随机放置，但会尽量均匀分布。</p>
+            </div>
+
+            <h2 id="section-26">26. Hadoop的推测执行是什么？</h2>
+            <p>推测执行机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 当某个任务执行过慢时，启动备份任务。</p>
+                <p><strong>2、目的：</strong> 减少Job整体执行时间。</p>
+                <p><strong>3、触发条件：</strong> 任务执行时间超过平均时间的1.2倍。</p>
+                <p><strong>4、注意事项：</strong> 对于有副作用的任务不适用。</p>
+            </div>
+
+            <h2 id="section-27">27. HDFS的短路读是什么？</h2>
+            <p>短路读（Short-Circuit Read）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 客户端直接读取DataNode上的数据，不经过DataNode。</p>
+                <p><strong>2、优势：</strong> 减少网络传输，提升读性能。</p>
+                <p><strong>3、配置：</strong> 需要启用短路读并配置domain socket。</p>
+                <p><strong>4、安全性：</strong> 需要客户端有访问DataNode数据的权限。</p>
+            </div>
+
+            <h2 id="section-28">28. MapReduce的Task失败如何处理？</h2>
+            <p>Task失败的处理机制：</p>
+            <div class="highlight">
+                <p><strong>1、重试：</strong> 任务失败后会重试，默认重试4次。</p>
+                <p><strong>2、推测执行：</strong> 慢任务会被标记并启动备份任务。</p>
+                <p><strong>3、黑名单：</strong> 多次失败的任务会被加入黑名单。</p>
+                <p><strong>4、Job失败：</strong> 超过失败率阈值，整个Job会失败。</p>
+            </div>
+
+            <h2 id="section-29">29. Hadoop的机架感知是什么？</h2>
+            <p>机架感知（Rack Awareness）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Hadoop感知节点所在的机架位置。</p>
+                <p><strong>2、脚本：</strong> 通过脚本获取机架信息。</p>
+                <p><strong>3、作用：</strong> 优化Block副本放置，提高数据可靠性和网络效率。</p>
+                <p><strong>4、配置：</strong> 在topology.script.file.name中配置。</p>
+            </div>
+
+            <h2 id="section-30">30. HDFS的append和truncate操作？</h2>
+            <p>HDFS的文件操作：</p>
+            <div class="highlight">
+                <p><strong>1、append：</strong> 支持在文件末尾追加数据，需开启dfs.support.append。</p>
+                <p><strong>2、truncate：</strong> 截断文件到指定长度，需开启dfs.support.truncate。</p>
+                <p><strong>3、hflush：</strong> 刷新缓冲区，将数据刷到DataNode。</p>
+                <p><strong>4、hsync：</strong> 同步数据到磁盘。</p>
+            </div>
+
+            <h2 id="section-31">31. MapReduce中的RecordReader做什么？</h2>
+            <p>RecordReader的作用：</p>
+            <div class="highlight">
+                <p><strong>1、读取数据：</strong> 从InputSplit中读取数据。</p>
+                <p><strong>2、解析记录：</strong> 将字节流解析为key-value对。</p>
+                <p><strong>3、进度汇报：</strong> 汇报任务进度。</p>
+                <p><strong>4、复用：</strong> 在任务失败后可以恢复读取位置。</p>
+            </div>
+
+            <h2 id="section-32">32. Hadoop的SequenceFile格式是什么？</h2>
+            <p>SequenceFile是一种二进制文件格式：</p>
+            <div class="highlight">
+                <p><strong>1、结构：</strong> 由Header和多个Record组成。</p>
+                <p><strong>2、压缩：</strong> 支持无压缩、record压缩、block压缩。</p>
+                <p><strong>3、同步点：</strong> 包含同步点，可被多个map切割。</p>
+                <p><strong>4、用途：</strong> 常用于小文件合并和MapReduce中间数据。</p>
+            </div>
+
+            <h2 id="section-33">33. Hadoop的DistCp是什么？</h2>
+            <p>DistCp（Distributed Copy）用于大规模数据复制：</p>
+            <div class="highlight">
+                <p><strong>1、功能：</strong> 并行复制大规模数据。</p>
+                <p><strong>2、源目标：</strong> 支持HDFS之间、HDFS到S3等。</p>
+                <p><strong>3、更新：</strong> 支持基于update和append的增量复制。</p>
+                <p><strong>4、选项：</strong> -update、-overwrite、-skipHistory等。</p>
+            </div>
+
+            <h2 id="section-34">34. Hadoop的MRAppMaster是什么？</h2>
+            <p>MRAppMaster是MapReduce的ApplicationMaster：</p>
+            <div class="highlight">
+                <p><strong>1、职责：</strong> 协调MapReduce job的执行。</p>
+                <p><strong>2、资源申请：</strong> 向YARN申请Task运行的Container。</p>
+                <p><strong>3、任务监控：</strong> 监控Task的执行状态和进度。</p>
+                <p><strong>4、容错：</strong> 失败后YARN会重启MRAppMaster。</p>
+            </div>
+
+            <h2 id="section-35">35. HDFS的异构存储是什么？</h2>
+            <p>HDFS异构存储支持不同类型的存储介质：</p>
+            <div class="highlight">
+                <p><strong>1、存储类型：</strong> RAM_DISK、SSD、DISK、ARCHIVE。</p>
+                <p><strong>2、热数据：</strong> 存储在SSD或DISK上。</p>
+                <p><strong>3、冷数据：</strong> 存储在ARCHIVE或DISK上。</p>
+                <p><strong>4、策略：</strong> 可以为目录或文件设置存储策略。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Docker 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Docker的基本概念是什么？</h2>
+            <p>Docker是一个开源的容器化平台：</p>
+            <div class="highlight">
+                <p><strong>1、容器：</strong> Docker容器是轻量级的虚拟化技术，可以在其中运行应用程序。</p>
+                <p><strong>2、镜像：</strong> Docker镜像是只读模板，用于创建容器。</p>
+                <p><strong>3、仓库：</strong> Docker仓库存储和分发镜像，如Docker Hub。</p>
+                <p><strong>4、特点：</strong> 轻量、快速、可移植、易于管理。</p>
+            </div>
+
+            <h2 id="section-2">2. Docker和虚拟机的区别是什么？</h2>
+            <p>Docker容器和虚拟机的主要区别：</p>
+            <div class="highlight">
+                <p><strong>1、架构：</strong> 虚拟机包含完整的操作系统，Docker共享宿主机内核。</p>
+                <p><strong>2、启动速度：</strong> Docker秒级启动，虚拟机需要分钟级。</p>
+                <p><strong>3、资源消耗：</strong> Docker更轻量，资源利用率更高。</p>
+                <p><strong>4、隔离性：</strong> 虚拟机隔离级别更高，Docker隔离级别相对较弱。</p>
+            </div>
+
+            <h2 id="section-3">3. Docker镜像的结构是怎样的？</h2>
+            <p>Docker镜像是分层结构：</p>
+            <div class="highlight">
+                <p><strong>1、层叠：</strong> 多个镜像层叠加组成最终镜像。</p>
+                <p><strong>2、只读：</strong> 镜像层是只读的，不可修改。</p>
+                <p><strong>3、容器层：</strong> 容器运行时在镜像层上创建可写层。</p>
+                <p><strong>4、共享：</strong> 多个镜像可以共享底层层，节省空间。</p>
+            </div>
+
+            <h2 id="section-4">4. Docker的常用命令有哪些？</h2>
+            <p>Docker常用命令包括：</p>
+            <div class="highlight">
+                <p><strong>1、镜像命令：</strong> docker pull、docker build、docker images、docker rmi。</p>
+                <p><strong>2、容器命令：</strong> docker run、docker ps、docker start、docker stop、docker rm。</p>
+                <p><strong>3、日志命令：</strong> docker logs、docker exec、docker inspect。</p>
+                <p><strong>4、网络命令：</strong> docker network create、docker network ls。</p>
+            </div>
+
+            <h2 id="section-5">5. Docker容器的生命周期是怎样的？</h2>
+            <p>Docker容器生命周期：</p>
+            <div class="highlight">
+                <p><strong>1、创建：</strong> docker create 创建容器。</p>
+                <p><strong>2、启动：</strong> docker start 启动容器。</p>
+                <p><strong>3、运行：</strong> docker run 创建并启动容器。</p>
+                <p><strong>4、暂停：</strong> docker pause 暂停容器。</p>
+                <p><strong>5、停止：</strong> docker stop 停止容器。</p>
+                <p><strong>6、删除：</strong> docker rm 删除容器。</p>
+            </div>
+
+            <h2 id="section-6">6. Dockerfile的作用是什么？如何使用？</h2>
+            <p>Dockerfile用于构建镜像：</p>
+            <div class="highlight">
+                <p><strong>1、指令：</strong> FROM、RUN、COPY、CMD、EXPOSE等。</p>
+                <p><strong>2、构建：</strong> docker build -t name:tag .</p>
+                <p><strong>3、多阶段构建：</strong> 使用多个FROM语句优化镜像大小。</p>
+                <p><strong>4、最佳实践：</strong> 减少层数、使用.dockerignore。</p>
+            </div>
+
+            <h2 id="section-7">7. Docker的数据持久化如何实现？</h2>
+            <p>Docker数据持久化的方式：</p>
+            <div class="highlight">
+                <p><strong>1、卷（Volumes）：</strong> Docker管理的存储，持久化数据。</p>
+                <p><strong>2、绑定挂载：</strong> 挂载宿主机目录到容器。</p>
+                <p><strong>3、tmpfs挂载：</strong> 存储在内存中，不持久化。</p>
+                <p><strong>4、使用场景：</strong> 数据库、文件存储等需要持久化的数据。</p>
+            </div>
+
+            <h2 id="section-8">8. Docker网络模式有哪些？</h2>
+            <p>Docker网络模式：</p>
+            <div class="highlight">
+                <p><strong>1、bridge：</strong> 默认模式，容器连接到docker0网桥。</p>
+                <p><strong>2、host：</strong> 容器共享宿主机网络命名空间。</p>
+                <p><strong>3、overlay：</strong> 跨主机网络，用于Docker Swarm。</p>
+                <p><strong>4、none：</strong> 禁用网络功能。</p>
+                <p><strong>5、container：</strong> 共享另一个容器的网络命名空间。</p>
+            </div>
+
+            <h2 id="section-9">9. Docker Compose的作用是什么？</h2>
+            <p>Docker Compose用于多容器应用：</p>
+            <div class="highlight">
+                <p><strong>1、定义：</strong> 使用YAML文件定义多容器应用。</p>
+                <p><strong>2、命令：</strong> docker-compose up、down、ps、logs。</p>
+                <p><strong>3、服务：</strong> 定义多个相互关联的服务。</p>
+                <p><strong>4、网络：</strong> 自动创建共享网络。</p>
+            </div>
+
+            <h2 id="section-10">10. Docker的优缺点是什么？</h2>
+            <p>Docker的优点和缺点：</p>
+            <div class="highlight">
+                <p><strong>1、优点：</strong> 轻量、快速、可移植、环境一致性。</p>
+                <p><strong>2、隔离：</strong> 应用程序间隔离性好。</p>
+                <p><strong>3、缺点：</strong> 隔离性弱于虚拟机，存储驱动有性能开销。</p>
+                <p><strong>4、安全：</strong> 共享内核存在安全风险。</p>
+            </div>
+
+            <h2 id="section-11">11. Docker如何实现容器间通信？</h2>
+            <p>Docker容器间通信方式：</p>
+            <div class="highlight">
+                <p><strong>1、bridge网络：</strong> 同一网络的容器通过IP互相访问。</p>
+                <p><strong>2、容器命名：</strong> 可以通过容器名互相访问。</p>
+                <p><strong>3、links：</strong> 使用--link建立连接（已废弃）。</p>
+                <p><strong>4、自定义网络：</strong> 创建自定义bridge网络。</p>
+            </div>
+
+            <h2 id="section-12">12. Docker镜像的构建优化有哪些方法？</h2>
+            <p>Docker镜像构建优化方法：</p>
+            <div class="highlight">
+                <p><strong>1、多阶段构建：</strong> 分离构建和运行环境。</p>
+                <p><strong>2、减少层数：</strong> 合并RUN指令。</p>
+                <p><strong>3、使用较小基础镜像：</strong> 如alpine。</p>
+                <p><strong>4、.dockerignore：</strong> 排除不需要的文件。</p>
+                <p><strong>5、顺序优化：</strong> 将不常变化的指令放前面。</p>
+            </div>
+
+            <h2 id="section-13">13. Docker的存储驱动有哪些？</h2>
+            <p>Docker存储驱动类型：</p>
+            <div class="highlight">
+                <p><strong>1、overlay2：</strong> 推荐的存储驱动，性能好。</p>
+                <p><strong>2、aufs：</strong> 早期使用的驱动，已废弃。</p>
+                <p><strong>3、devicemapper：</strong> 早期CentOS使用的驱动。</p>
+                <p><strong>4、btrfs、zfs：</strong> 文件系统级别的驱动。</p>
+            </div>
+
+            <h2 id="section-14">14. Docker如何实现资源限制？</h2>
+            <p>Docker资源限制方法：</p>
+            <div class="highlight">
+                <p><strong>1、内存限制：</strong> --memory、--memory-swap。</p>
+                <p><strong>2、CPU限制：</strong> --cpus、--cpuset-cpus。</p>
+                <p><strong>3、IO限制：</strong> --device-read-bps、--device-write-bps。</p>
+                <p><strong>4、网络限制：</strong> docker network qos。</p>
+            </div>
+
+            <h2 id="section-15">15. Docker的守护进程如何配置？</h2>
+            <p>Docker守护进程配置：</p>
+            <div class="highlight">
+                <p><strong>1、配置文件：</strong> /etc/docker/daemon.json。</p>
+                <p><strong>2、仓库配置：</strong> registry-mirrors加速镜像下载。</p>
+                <p><strong>3、存储驱动：</strong> storage-driver配置存储驱动。</p>
+                <p><strong>4、日志：</strong> log-driver、log-opts配置日志。</p>
+            </div>
+
+            <h2 id="section-16">16. Docker如何实现日志管理？</h2>
+            <p>Docker日志管理：</p>
+            <div class="highlight">
+                <p><strong>1、驱动：</strong> json-file、syslog、fluentd等。</p>
+                <p><strong>2、查看：</strong> docker logs -f container。</p>
+                <p><strong>3、限制：</strong> max-size、max-file限制日志大小。</p>
+                <p><strong>4、集中管理：</strong> 配置日志收集系统。</p>
+            </div>
+
+            <h2 id="section-17">17. Docker的安全最佳实践有哪些？</h2>
+            <p>Docker安全最佳实践：</p>
+            <div class="highlight">
+                <p><strong>1、镜像安全：</strong> 使用官方镜像，定期扫描漏洞。</p>
+                <p><strong>2、权限：</strong> 不要使用特权容器，避免root运行。</p>
+                <p><strong>3、网络：</strong> 限制网络暴露，最小化端口映射。</p>
+                <p><strong>4、资源：</strong> 设置资源限制，防止资源耗尽攻击。</p>
+            </div>
+
+            <h2 id="section-18">18. Docker Registry的作用是什么？</h2>
+            <p>Docker Registry用于存储和分发镜像：</p>
+            <div class="highlight">
+                <p><strong>1、官方仓库：</strong> Docker Hub是官方公共仓库。</p>
+                <p><strong>2、私有仓库：</strong> 部署私有Registry存储内部镜像。</p>
+                <p><strong>3、命令：</strong> docker pull、push操作镜像。</p>
+                <p><strong>4、认证：</strong> 支持用户名密码认证。</p>
+            </div>
+
+            <h2 id="section-19">19. Docker的COPY和ADD指令有什么区别？</h2>
+            <p>COPY和ADD指令的区别：</p>
+            <div class="highlight">
+                <p><strong>1、COPY：</strong> 复制文件或目录到容器。</p>
+                <p><strong>2、ADD：</strong> 复制并可解压tar文件，复制URL。</p>
+                <p><strong>3、建议：</strong> 优先使用COPY，语义更清晰。</p>
+                <p><strong>4、场景：</strong> 需要自动解压时使用ADD。</p>
+            </div>
+
+            <h2 id="section-20">20. Docker的CMD和ENTRYPOINT有什么区别？</h2>
+            <p>CMD和ENTRYPOINT的区别：</p>
+            <div class="highlight">
+                <p><strong>1、CMD：</strong> 提供容器默认命令，可被docker run参数覆盖。</p>
+                <p><strong>2、ENTRYPOINT：</strong> 配置容器启动命令，不易被覆盖。</p>
+                <p><strong>3、结合使用：</strong> ENTRYPOINT + CMD组合使用。</p>
+                <p><strong>4、shell形式：</strong> CMD command param无法传递信号。</p>
+            </div>
+
+            <h2 id="section-21">21. Docker如何实现健康检查？</h2>
+            <p>Docker健康检查配置：</p>
+            <div class="highlight">
+                <p><strong>1、HEALTHCHECK：</strong> Dockerfile中定义健康检查。</p>
+                <p><strong>2、命令：</strong> 检查容器是否健康的命令。</p>
+                <p><strong>3、状态：</strong> docker ps显示容器健康状态。</p>
+                <p><strong>4、自修复：</strong> 可配合restart策略实现自修复。</p>
+            </div>
+
+            <h2 id="section-22">22. Docker Swarm和Kubernetes的区别是什么？</h2>
+            <p>Docker Swarm和Kubernetes的区别：</p>
+            <div class="highlight">
+                <p><strong>1、学习曲线：</strong> Swarm更简单，K8S更复杂。</p>
+                <p><strong>2、功能：</strong> K8S功能更全面，生态更丰富。</p>
+                <p><strong>3、部署：</strong> Swarm与Docker集成更紧密。</p>
+                <p><strong>4、选择：</strong> 根据需求和团队能力选择。</p>
+            </div>
+
+            <h2 id="section-23">23. Docker如何实现多阶段构建？</h2>
+            <p>Docker多阶段构建：</p>
+            <div class="highlight">
+                <p><strong>1、语法：</strong> 使用多个FROM语句。</p>
+                <p><strong>2、阶段：</strong> 第一个阶段用于构建，第二个阶段用于运行。</p>
+                <p><strong>3、COPY：</strong> 从上一阶段复制文件。</p>
+                <p><strong>4、优势：</strong> 减小最终镜像大小。</p>
+            </div>
+
+            <h2 id="section-24">24. Docker的USER指令如何使用？</h2>
+            <p>Docker USER指令使用：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 设置后续指令执行的用户。</p>
+                <p><strong>2、格式：</strong> USER username:group或USER UID:GID。</p>
+                <p><strong>3、安全：</strong> 以非root用户运行容器更安全。</p>
+                <p><strong>4、权限：</strong> 确保用户有必要的文件权限。</p>
+            </div>
+
+            <h2 id="section-25">25. Docker的EXPOSE指令有什么作用？</h2>
+            <p>EXPOSE指令的作用：</p>
+            <div class="highlight">
+                <p><strong>1、声明：</strong> 声明容器运行时监听的端口。</p>
+                <p><strong>2、文档：</strong> 相当于提供文档作用。</p>
+                <p><strong>3、映射：</strong> -p参数会映射EXPOSE的端口。</p>
+                <p><strong>4、协议：</strong> 可以指定TCP或UDP。</p>
+            </div>
+
+            <h2 id="section-26">26. Docker的ONBUILD指令如何使用？</h2>
+            <p>ONBUILD指令使用：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 当镜像作为基础镜像时触发。</p>
+                <p><strong>2、场景：</strong> 用于创建可复用的基础镜像。</p>
+                <p><strong>3、语法：</strong> ONBUILD RUN/COPY等指令。</p>
+                <p><strong>4、执行时机：</strong> 在子镜像构建时执行。</p>
+            </div>
+
+            <h2 id="section-27">27. Docker如何实现私有仓库认证？</h2>
+            <p>Docker私有仓库认证：</p>
+            <div class="highlight">
+                <p><strong>1、登录：</strong> docker login registry-url。</p>
+                <p><strong>2、证书：</strong> 配置TLS证书。</p>
+                <p><strong>3、用户：</strong> registry支持basic认证。</p>
+                <p><strong>4、token：</strong> 支持token认证。</p>
+            </div>
+
+            <h2 id="section-28">28. Docker的Volume生命周期如何管理？</h2>
+            <p>Docker Volume生命周期管理：</p>
+            <div class="highlight">
+                <p><strong>1、创建：</strong> docker volume create。</p>
+                <p><strong>2、挂载：</strong> -v或--mount挂载到容器。</p>
+                <p><strong>3、查看：</strong> docker volume ls/inspect。</p>
+                <p><strong>4、清理：</strong> docker volume prune删除未使用的卷。</p>
+            </div>
+
+            <h2 id="section-29">29. Docker BuildKit是什么？有什么优势？</h2>
+            <p>Docker BuildKit的特性：</p>
+            <div class="highlight">
+                <p><strong>1、并行构建：</strong> 支持并行构建多个层。</p>
+                <p><strong>2、缓存：</strong> 更智能的构建缓存。</p>
+                <p><strong>3、输出：</strong> 支持更多输出格式。</p>
+                <p><strong>4、启用：</strong> DOCKER_BUILDKIT=1环境变量启用。</p>
+            </div>
+
+            <h2 id="section-30">30. Docker的调试技巧有哪些？</h2>
+            <p>Docker调试技巧：</p>
+            <div class="highlight">
+                <p><strong>1、logs：</strong> docker logs查看日志。</p>
+                <p><strong>2、exec：</strong> docker exec -it进入容器。</p>
+                <p><strong>3、inspect：</strong> docker inspect查看详细信息。</p>
+                <p><strong>4、stats：</strong> docker stats查看资源使用。</p>
+            </div>
+
+            <h2 id="section-31">31. Docker如何实现CI/CD集成？</h2>
+            <p>Docker在CI/CD中的应用：</p>
+            <div class="highlight">
+                <p><strong>1、构建：</strong> 在CI流水线中构建Docker镜像。</p>
+                <p><strong>2、测试：</strong> 使用容器运行测试。</p>
+                <p><strong>3、推送：</strong> 推送镜像到仓库。</p>
+                <p><strong>4、部署：</strong> 在CD阶段部署容器。</p>
+            </div>
+
+            <h2 id="section-32">32. Docker的rootless模式是什么？</h2>
+            <p>Docker rootless模式：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 以非root用户运行Docker守护进程。</p>
+                <p><strong>2、安全：</strong> 提高安全性，减少攻击面。</p>
+                <p><strong>3、限制：</strong> 部分功能受限，如端口映射。</p>
+                <p><strong>4、配置：</strong> 需要使用usermapconv插件。</p>
+            </div>
+
+            <h2 id="section-33">33. Docker的清理命令有哪些？</h2>
+            <p>Docker清理命令：</p>
+            <div class="highlight">
+                <p><strong>1、容器：</strong> docker container prune。</p>
+                <p><strong>2、镜像：</strong> docker image prune。</p>
+                <p><strong>3、卷：</strong> docker volume prune。</p>
+                <p><strong>4、网络：</strong> docker network prune。</p>
+                <p><strong>5、一键清理：</strong> docker system prune。</p>
+            </div>
+
+            <h2 id="section-34">34. Docker和容器编排的关系是什么？</h2>
+            <p>Docker与容器编排的关系：</p>
+            <div class="highlight">
+                <p><strong>1、Docker：</strong> 容器化技术，运行单个容器。</p>
+                <p><strong>2、编排：</strong> 管理多个容器，协调它们的工作。</p>
+                <p><strong>3、工具：</strong> Docker Swarm、K8S是编排工具。</p>
+                <p><strong>4、场景：</strong> 微服务需要容器编排。</p>
+            </div>
+
+            <h2 id="section-35">35. Docker的未来发展趋势是什么？</h2>
+            <p>Docker的发展方向：</p>
+            <div class="highlight">
+                <p><strong>1、安全：</strong> 持续加强安全特性。</p>
+                <p><strong>2、构建：</strong> BuildKit成为默认构建器。</p>
+                <p><strong>3、Compose：</strong> Compose规范成为行业标准。</p>
+                <p><strong>4、轻量：</strong> 镜像更小，启动更快。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

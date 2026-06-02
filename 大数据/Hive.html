@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hive 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Hive 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Hive的基本架构是怎样的？</h2>
+            <p>Hive是一个数据仓库基础设施，其基本架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、用户接口：</strong> CLI、WebUI、JDBC/ODBC。</p>
+                <p><strong>2、Thrift服务：</strong> 提供跨语言支持。</p>
+                <p><strong>3、Compiler：</strong> 解析SQL，生成执行计划。</p>
+                <p><strong>4、Optimizer：</strong> 优化执行计划。</p>
+                <p><strong>5、Execution Engine：</strong> 执行MapReduce/Tez/Spark任务。</p>
+            </div>
+
+            <h2 id="section-2">2. Hive的数据存储模型是怎样的？</h2>
+            <p>Hive的数据存储结构：</p>
+            <div class="highlight">
+                <p><strong>1、Database：</strong> 命名空间，类似关系型数据库。</p>
+                <p><strong>2、Table：</strong> 表，分为内部表和外部表。</p>
+                <p><strong>3、Partition：</strong> 分区，提高查询效率。</p>
+                <p><strong>4、Bucket：</strong> 分桶，进一步细化数据。</p>
+            </div>
+
+            <h2 id="section-3">3. Hive的内部表和外部表的区别？</h2>
+            <p>内部表和外部表的区别：</p>
+            <div class="highlight">
+                <p><strong>1、存储位置：</strong> 内部表数据存储在Hive仓库，外部表指定位置。</p>
+                <p><strong>2、删除行为：</strong> 删除内部表时数据一并删除，外部表只删除元数据。</p>
+                <p><strong>3、使用场景：</strong> 内部表用于临时数据，外部表用于共享数据。</p>
+                <p><strong>4、创建语法：</strong> 外部表使用EXTERNAL关键字。</p>
+            </div>
+
+            <h2 id="section-4">4. Hive的分区和分桶有什么区别？</h2>
+            <p>分区和分桶的区别：</p>
+            <div class="highlight">
+                <p><strong>1、分区：</strong> 按列值划分目录，提高查询效率。</p>
+                <p><strong>2、分桶：</strong> 按hash值划分文件，支持采样和JOIN优化。</p>
+                <p><strong>3、粒度：</strong> 分区粒度较粗，分桶粒度更细。</p>
+                <p><strong>4、创建：</strong> 分区在INSERT时自动创建，分桶需要先创建表结构。</p>
+            </div>
+
+            <h2 id="section-5">5. Hive的SQL执行流程是怎样的？</h2>
+            <p>Hive的SQL执行流程：</p>
+            <div class="highlight">
+                <p><strong>1、解析：</strong> ANTLR解析SQL生成AST。</p>
+                <p><strong>2、语义分析：</strong> 验证表、列是否存在。</p>
+                <p><strong>3、生成执行计划：</strong> 生成逻辑执行计划和物理执行计划。</p>
+                <p><strong>4、优化：</strong> Predicate pushdown、Partition pruning等优化。</p>
+                <p><strong>5、执行：</strong> 提交到MapReduce/Tez/Spark执行。</p>
+            </div>
+
+            <h2 id="section-6">6. Hive的UDF有哪几种类型？</h2>
+            <p>Hive的UDF类型：</p>
+            <div class="highlight">
+                <p><strong>1、UDF：</strong> 一对一输入输出，如UPPER、LOWER。</p>
+                <p><strong>2、UDAF：</strong> 多对一输入输出，如SUM、COUNT。</p>
+                <p><strong>3、UDTF：</strong> 一对多输入输出，如EXPLODE。</p>
+                <p><strong>4 GenericUDF：</strong> 泛型UDF，支持复杂类型。</p>
+            </div>
+
+            <h2 id="section-7">7. Hive如何进行优化？</h2>
+            <p>Hive优化的主要方向：</p>
+            <div class="highlight">
+                <p><strong>1、SQL优化：</strong> 避免SELECT *、合理使用WHERE。</p>
+                <p><strong>2、分区裁剪：</strong> 开启分区裁剪减少数据量。</p>
+                <p><strong>3、JOIN优化：</strong> 大表放右边、使用MAP JOIN。</p>
+                <p><strong>4、数据倾斜：</strong> 处理数据倾斜问题。</p>
+                <p><strong>5、并行执行：</strong> 开启并行执行。</p>
+            </div>
+
+            <h2 id="section-8">8. Hive的数据倾斜如何解决？</h2>
+            <p>Hive数据倾斜的解决方案：</p>
+            <div class="highlight">
+                <p><strong>1、JOIN倾斜：</strong> 大表JOIN小表，使用MAP JOIN。</p>
+                <p><strong>2、GROUP BY倾斜：</strong> 开启倾斜处理参数。</p>
+                <p><strong>3、加盐：</strong> 给热点key加随机前缀。</p>
+                <p><strong>4、单独处理：</strong> 将倾斜的key单独处理。</p>
+            </div>
+
+            <h2 id="section-9">9. Hive的MapJoin原理是什么？</h2>
+            <p>MapJoin的原理：</p>
+            <div class="highlight">
+                <p><strong>1、原理：</strong> 将小表加载到内存，在Map端完成JOIN。</p>
+                <p><strong>2、优势：</strong> 避免Shuffle和Reduce阶段。</p>
+                <p><strong>3、触发条件：</strong> 小表大小不超过阈值。</p>
+                <p><strong>4、配置：</strong> 设置hive.auto.convert.join为true。</p>
+            </div>
+
+            <h2 id="section-10">10. Hive的窗口函数有哪些？</h2>
+            <p>Hive支持的窗口函数：</p>
+            <div class="highlight">
+                <p><strong>1、聚合窗口函数：</strong> SUM、AVG、COUNT、MAX、MIN。</p>
+                <p><strong>2、排名函数：</strong> ROW_NUMBER、RANK、DENSE_RANK、CUME_DIST。</p>
+                <p><strong>3、分析函数：</strong> LEAD、LAG、FIRST_VALUE、LAST_VALUE。</p>
+                <p><strong>4、窗口子句：</strong> OVER()、PARTITION BY、ORDER BY。</p>
+            </div>
+
+            <h2 id="section-11">11. Hive的SerDe是什么？</h2>
+            <p>Hive的SerDe机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Serializer/Deserializer，序列化/反序列化。</p>
+                <p><strong>2、作用：</strong> 读取数据时反序列化，写数据时序列化。</p>
+                <p><strong>3、内置：</strong> LazySimpleSerDe、ORCSerDe、ParquetSerDe。</p>
+                <p><strong>4、自定义：</strong> 可以实现Custom SerDe。</p>
+            </div>
+
+            <h2 id="section-12">12. Hive支持哪些文件格式？</h2>
+            <p>Hive支持的文件格式：</p>
+            <div class="highlight">
+                <p><strong>1、TextFile：</strong> 文本格式，默认格式。</p>
+                <p><strong>2、SequenceFile：</strong> 二进制序列文件。</p>
+                <p><strong>3、RCFile：</strong> 列式存储文件。</p>
+                <p><strong>4、ORC：</strong> 优化的列式存储，性能更好。</p>
+                <p><strong>5、Parquet：</strong> 列式存储，跨语言支持好。</p>
+            </div>
+
+            <h2 id="section-13">13. Hive的元数据存储在哪里？</h2>
+            <p>Hive元数据存储：</p>
+            <div class="highlight">
+                <p><strong>1、默认：</strong> 内置Derby数据库，单用户。</p>
+                <p><strong>2、生产：</strong> 使用MySQL、PostgreSQL存储元数据。</p>
+                <p><strong>3、远程模式：</strong> Metastore服务独立部署。</p>
+                <p><strong>4、配置：</strong> 通过hive.metastore.uris配置。</p>
+            </div>
+
+            <h2 id="section-14">14. Hive的动态分区和静态分区有什么区别？</h2>
+            <p>动态分区和静态分区的区别：</p>
+            <div class="highlight">
+                <p><strong>1、静态分区：</strong> 分区值在SQL中指定。</p>
+                <p><strong>2、动态分区：</strong> 分区值从数据中获取。</p>
+                <p><strong>3、配置：</strong> 需要开启hive.exec.dynamic.partition。</p>
+                <p><strong>4、效率：</strong> 动态分区更灵活，静态分区更高效。</p>
+            </div>
+
+            <h2 id="section-15">15. Hive的COUNT(DISTINCT)有什么问题？</h2>
+            <p>COUNT(DISTINCT)的问题：</p>
+            <div class="highlight">
+                <p><strong>1、问题：</strong> 所有数据会经过一个Reduce处理。</p>
+                <p><strong>2、优化：</strong> 先用GROUP BY去重，再COUNT。</p>
+                <p><strong>3、示例：</strong> SELECT COUNT(DISTINCT key) FROM t → SELECT COUNT(*) FROM (SELECT key FROM t GROUP BY key) t。</p>
+                <p><strong>4、原因：</strong> DISTINCT需要全局排序。</p>
+            </div>
+
+            <h2 id="section-16">16. Hive如何处理NULL值？</h2>
+            <p>Hive处理NULL值的方式：</p>
+            <div class="highlight">
+                <p><strong>1、存储：</strong> NULL存储为空字符串或特定值。</p>
+                <p><strong>2、查询：</strong> 使用IS NULL和IS NOT NULL判断。</p>
+                <p><strong>3、函数：</strong> 使用NVL、COALESCE处理NULL。</p>
+                <p><strong>4、空字符串：</strong> 使用''表示空字符串。</p>
+            </div>
+
+            <h2 id="section-17">17. Hive的Lateral View是什么？</h2>
+            <p>Lateral View用于和UDTF配合：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 将UDTF的结果展开为多行。</p>
+                <p><strong>2、示例：</strong> 与EXPLODE配合拆分数组。</p>
+                <p><strong>3、语法：</strong> LATERAL VIEW udtf(expr) tableAlias AS colAlias。</p>
+                <p><strong>4、多视图：</strong> 可以有多个Lateral View。</p>
+            </div>
+
+            <h2 id="section-18">18. Hive的SORT BY、ORDER BY、DISTRIBUTE BY有什么区别？</h2>
+            <p>这三种排序的区别：</p>
+            <div class="highlight">
+                <p><strong>1、ORDER BY：</strong> 全局排序，只有一个Reducer。</p>
+                <p><strong>2、SORT BY：</strong> 每个Reducer内排序，不保证全局顺序。</p>
+                <p><strong>3、DISTRIBUTE BY：</strong> 控制数据分发到哪个Reducer。</p>
+                <p><strong>4、CLUSTER BY：</strong> DISTRIBUTE BY + SORT BY的简写。</p>
+            </div>
+
+            <h2 id="section-19">19. Hive支持事务吗？</h2>
+            <p>Hive事务支持情况：</p>
+            <div class="highlight">
+                <p><strong>1、支持情况：</strong> Hive从0.14开始支持ACID事务。</p>
+                <p><strong>2、限制：</strong> 需要使用ORC格式，支持UPDATE和DELETE。</p>
+                <p><strong>3、配置：</strong> 开启hive.txn.manager。</p>
+                <p><strong>4、场景：</strong> 适用于小批量数据更新。</p>
+            </div>
+
+            <h2 id="section-20">20. Hive如何进行权限管理？</h2>
+            <p>Hive的权限管理：</p>
+            <div class="highlight">
+                <p><strong>1、存储授权：</strong> 基于HDFS的存储权限。</p>
+                <p><strong>2、SQL标准授权：</strong> GRANT、REVOKE、CREATE ROLE。</p>
+                <p><strong>3、配置：</strong> 开启hive.security.authorization.enabled。</p>
+                <p><strong>4、粒度：</strong> 支持库、表、列级别的权限控制。</p>
+            </div>
+
+            <h2 id="section-21">21. Hive的JOIN优化有哪些？</h2>
+            <p>Hive JOIN优化的方法：</p>
+            <div class="highlight">
+                <p><strong>1、MAP JOIN：</strong> 小表放内存，Map端完成JOIN。</p>
+                <p><strong>2、BUCKET MAP JOIN：</strong> 分桶表的MAP JOIN优化。</p>
+                <p><strong>3、SMB JOIN：</strong> 分桶大表间的Sort Merge Bucket JOIN。</p>
+                <p><strong>4、JOIN顺序：</strong> 大表放最后，右边放大表。</p>
+            </div>
+
+            <h2 id="section-22">22. Hive的数据压缩格式有哪些？</h2>
+            <p>Hive支持的数据压缩格式：</p>
+            <div class="highlight">
+                <p><strong>1、Gzip：</strong> 压缩比高，不支持切片。</p>
+                <p><strong>2、Bzip2：</strong> 压缩比最高，支持切片。</p>
+                <p><strong>3、Snappy：</strong> 压缩速度快，不支持切片。</p>
+                <p><strong>4、Lzo：</strong> 压缩速度块，支持切片。</p>
+            </div>
+
+            <h2 id="section-23">23. Hive的执行引擎有哪些？</h2>
+            <p>Hive的执行引擎：</p>
+            <div class="highlight">
+                <p><strong>1、MapReduce：</strong> 传统引擎，较慢。</p>
+                <p><strong>2、Tez：</strong> 基于DAG，消除了中间结果写磁盘。</p>
+                <p><strong>3、Spark：</strong> 基于内存计算，性能最好。</p>
+                <p><strong>4、配置：</strong> 通过hive.execution.engine设置。</p>
+            </div>
+
+            <h2 id="section-24">24. Hive的倾斜join优化参数有哪些？</h2>
+            <p>Hive倾斜JOIN优化参数：</p>
+            <div class="highlight">
+                <p><strong>1、hive.optimize.skewjoin：</strong> 开启倾斜JOIN优化。</p>
+                <p><strong>2、hive.skewjoin.key：</strong> 设定倾斜key的阈值。</p>
+                <p><strong>3、hive.skewjoin.mapjoin.map.tasks：</strong> 倾斜key的Map Join任务数。</p>
+                <p><strong>4、hive.skewjoin.mapjoin.min.split：</strong> 最小Split大小。</p>
+            </div>
+
+            <h2 id="section-25">25. Hive如何处理小文件问题？</h2>
+            <p>Hive小文件问题处理方法：</p>
+            <div class="highlight">
+                <p><strong>1、合并输入：</strong> 设置hive.merge.mapfiles和hive.merge.mapredfiles。</p>
+                <p><strong>2、合并输出：</strong> 设置hive.merge.size.per.task。</p>
+                <p><strong>3、Bucket：</strong> 使用分桶减少小文件。</p>
+                <p><strong>4、SequenceFile：</strong> 使用SequenceFile格式。</p>
+            </div>
+
+            <h2 id="section-26">26. Hive的虚拟列是什么？</h2>
+            <p>Hive虚拟列：</p>
+            <div class="highlight">
+                <p><strong>1、INPUT__FILE__NAME：</strong> 输入文件名。</p>
+                <p><strong>2、BLOCK__FILE__OFFSET：</strong> 行在文件中的偏移量。</p>
+                <p><strong>3、ROW__OFFSET：</strong> 行在块中的偏移量。</p>
+                <p><strong>4、使用：</strong> 用于数据质量检查和调试。</p>
+            </div>
+
+            <h2 id="section-27">27. Hive的Fetch Task是什么？</h2>
+            <p>Fetch Task机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 简单的查询直接读取数据，不启动MR。</p>
+                <p><strong>2、配置：</strong> hive.fetch.task.conversion参数控制。</p>
+                <p><strong>3、阈值：</strong> 可以设置阈值决定是否启用。</p>
+                <p><strong>4、场景：</strong> SELECT、WHERE、LIMIT等简单查询。</p>
+            </div>
+
+            <h2 id="section-28">28. Hive的列式存储有哪些优势？</h2>
+            <p>列式存储的优势：</p>
+            <div class="highlight">
+                <p><strong>1、查询效率：</strong> 只读取需要的列，减少IO。</p>
+                <p><strong>2、压缩效率：</strong> 同列数据类型一致，压缩率高。</p>
+                <p><strong>3、代表格式：</strong> ORC、Parquet是常用列式格式。</p>
+                <p><strong>4、适用场景：</strong> OLAP场景，复杂分析查询。</p>
+            </div>
+
+            <h2 id="section-29">29. Hive的严格模式是什么？</h2>
+            <p>Hive严格模式：</p>
+            <div class="highlight">
+                <p><strong>1、配置：</strong> hive.mapred.mode=strict。</p>
+                <p><strong>2、限制：</strong> 禁止全表扫描、ORDER BY需要LIMIT。</p>
+                <p><strong>3、分区表：</strong> 禁止对分区分区表执行静态分区。</p>
+                <p><strong>4、目的：</strong> 防止消耗过多资源的查询。</p>
+            </div>
+
+            <h2 id="section-30">30. Hive如何进行性能监控？</h2>
+            <p>Hive性能监控方式：</p>
+            <div class="highlight">
+                <p><strong>1、Web UI：</strong> 查看Job执行情况。</p>
+                <p><strong>2、EXPLAIN：</strong> 查看SQL执行计划。</p>
+                <p><strong>3、History Server：</strong> 查看历史Job。</p>
+                <p><strong>4、Metrics：</strong> Hadoop Metrics收集性能指标。</p>
+            </div>
+
+            <h2 id="section-31">31. Hive的CTE（公共表表达式）如何使用？</h2>
+            <p>CTE（Common Table Expression）：</p>
+            <div class="highlight">
+                <p><strong>1、语法：</strong> WITH cte AS (SELECT ...) SELECT ... FROM cte。</p>
+                <p><strong>2、递归：</strong> 支持递归CTE用于树形结构。</p>
+                <p><strong>3、多次引用：</strong> CTE结果可在主查询中多次引用。</p>
+                <p><strong>4、替代：</strong> 可以替代子查询，使SQL更易读。</p>
+            </div>
+
+            <h2 id="section-32">32. Hive的索引有哪些类型？</h2>
+            <p>Hive索引类型：</p>
+            <div class="highlight">
+                <p><strong>1、compact索引：</strong> 存储相同值的row IDs。</p>
+                <p><strong>2、bitmap索引：</strong> 使用bitmap存储，适用于低基数字段。</p>
+                <p><strong>3、创建索引：</strong> CREATE INDEX idx ON TABLE col。</p>
+                <p><strong>4、自动使用：</strong> 索引需要手动重建和启用。</p>
+            </div>
+
+            <h2 id="section-33">33. Hive的空值处理函数有哪些？</h2>
+            <p>Hive的空值处理函数：</p>
+            <div class="highlight">
+                <p><strong>1、NVL：</strong> NVL(expr1, expr2)，expr1为NULL时返回expr2。</p>
+                <p><strong>2、COALESCE：</strong> 返回第一个非NULL值。</p>
+                <p><strong>3、IFNULL：</strong> MySQL兼容的NULL处理。</p>
+                <p><strong>4、CASE WHEN：</strong> 使用条件表达式处理NULL。</p>
+            </div>
+
+            <h2 id="section-34">34. Hive的桶式采样和块采样有什么区别？</h2>
+            <p>两种采样方式的区别：</p>
+            <div class="highlight">
+                <p><strong>1、Bucket Sample：</strong> 按桶采样，基于hash。</p>
+                <p><strong>2、Block Sample：</strong> 按数据块采样，按行数百分比。</p>
+                <p><strong>3、语法：</strong> TABLESAMPLE(BUCKET x OUT OF y)。</p>
+                <p><strong>4、用途：</strong> 用于数据探索和测试。</p>
+            </div>
+
+            <h2 id="section-35">35. Hive 3.0有哪些新特性？</h2>
+            <p>Hive 3.0的新特性：</p>
+            <div class="highlight">
+                <p><strong>1、LLAP：</strong> Long Live Process and Cache，提升查询性能。</p>
+                <p><strong>2、ACID 2.0：</strong> 改进的事务支持。</p>
+                <p><strong>3、视图物化：</strong> 支持物化视图。</p>
+                <p><strong>4、优化器改进：</strong> Cost-based Optimizer改进。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

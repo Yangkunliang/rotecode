@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storm 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Storm 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Storm的基本架构是怎样的？</h2>
+            <p>Storm是一个分布式实时计算系统，其基本架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、Nimbus：</strong> 主节点，负责资源分配和任务调度。</p>
+                <p><strong>2、Supervisor：</strong> 从节点，负责管理Worker进程。</p>
+                <p><strong>3、Worker：</strong> 工作进程，执行具体的Topology任务。</p>
+                <p><strong>4、Executor：</strong> 执行线程，一个Worker可以有多个Executor。</p>
+                <p><strong>5、Task：</strong> 任务实例，Spout或Bolt的具体执行单元。</p>
+            </div>
+
+            <h2 id="section-2">2. Storm的Topology是什么？</h2>
+            <p>Topology是Storm的计算拓扑：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Topology定义了数据处理的DAG图。</p>
+                <p><strong>2、组成：</strong> 由Spout和Bolt组成的数据流图。</p>
+                <p><strong>3、提交：</strong> Topology提交后一直运行直到被杀死。</p>
+                <p><strong>4、DAG：</strong> 数据流从Spout经过Bolt流向最终的Bolt。</p>
+            </div>
+
+            <h2 id="section-3">3. Storm的Spout和Bolt有什么区别？</h2>
+            <p>Spout和Bolt是Storm的核心组件：</p>
+            <div class="highlight">
+                <p><strong>1、Spout：</strong> 数据的源头，负责读取数据源并发射元组。</p>
+                <p><strong>2、Bolt：</strong> 数据处理单元，负责接收数据、处理逻辑、发射结果。</p>
+                <p><strong>3、关系：</strong> Spout发射数据给Bolt，Bolt可以发射给其他Bolt。</p>
+                <p><strong>4、并行度：</strong> 都可以设置并行度。</p>
+            </div>
+
+            <h2 id="section-4">4. Storm的消息可靠性机制是怎样的？</h2>
+            <p>Storm保证消息处理的可靠性：</p>
+            <div class="highlight">
+                <p><strong>1、锚定：</strong> 使用anchoring将消息锚定到emit的元组。</p>
+                <p><strong>2、确认：</strong> 处理完成后调用ack()确认。</p>
+                <p><strong>3、失败：</strong> 失败时调用fail()，消息会被重放。</p>
+                <p><strong>4、超时：</strong> 超过超时时间未确认的消息会被认为失败。</p>
+            </div>
+
+            <h2 id="section-5">5. Storm的分组方式有哪些？</h2>
+            <p>Storm支持多种数据分组方式：</p>
+            <div class="highlight">
+                <p><strong>1、Shuffle Grouping：</strong> 随机分发，保证负载均衡。</p>
+                <p><strong>2、Fields Grouping：</strong> 按字段值分组，相同值发送到同一任务。</p>
+                <p><strong>3、All Grouping：</strong> 广播发送，每个订阅者都收到。</p>
+                <p><strong>4、Global Grouping：</strong> 所有元组发送到单一任务。</p>
+                <p><strong>5、Direct Grouping：</strong> 生产者指定消费者任务。</p>
+            </div>
+
+            <h2 id="section-6">6. Storm如何保证高可用？</h2>
+            <p>Storm的高可用机制：</p>
+            <div class="highlight">
+                <p><strong>1、Nimbus HA：</strong> 使用ZooKeeper选举实现Nimbus高可用。</p>
+                <p><strong>2、Supervisor：</strong> Supervisor是无状态的，失败后自动重启Worker。</p>
+                <p><strong>3、Worker故障：</strong> Worker失败后Supervisor会重新启动。</p>
+                <p><strong>4、任务分配：</strong> Nimbus重启后重新分配任务。</p>
+            </div>
+
+            <h2 id="section-7">7. Storm和Spark Streaming的区别是什么？</h2>
+            <p>Storm和Spark Streaming的区别：</p>
+            <div class="highlight">
+                <p><strong>1、模型：</strong> Storm是记录级别的真正流处理，Spark是微批处理。</p>
+                <p><strong>2、延迟：</strong> Storm延迟更低，毫秒级；Spark秒级。</p>
+                <p><strong>3、容错：</strong> Storm逐条确认，Spark基于RDD批量处理。</p>
+                <p><strong>4、资源：</strong> Storm资源需求更少。</p>
+            </div>
+
+            <h2 id="section-8">8. Storm的Trident是什么？</h2>
+            <p>Trident是Storm的高级抽象：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Trident提供了状态处理和精确一次语义。</p>
+                <p><strong>2、批处理：</strong> 将流分成小批量处理。</p>
+                <p><strong>3、状态：</strong> 支持有状态的状态计算。</p>
+                <p><strong>4、函数：</strong> 提供join、aggregation、 grouping等操作。</p>
+            </div>
+
+            <h2 id="section-9">9. Storm的acker机制是什么？</h2>
+            <p>Storm的acker用于跟踪消息树：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 跟踪Spout发射的消息树，确认是否处理完成。</p>
+                <p><strong>2、原理：</strong> 使用位运算的ack-val跟踪所有ack。</p>
+                <p><strong>3、配置：</strong> 通过config.setNumAckers设置acker数量。</p>
+                <p><strong>4、优化：</strong> 对于不需要可靠性的Topology可以关闭。</p>
+            </div>
+
+            <h2 id="section-10">10. Storm如何进行任务分配？</h2>
+            <p>Storm的任务分配机制：</p>
+            <div class="highlight">
+                <p><strong>1、Scheduler：</strong> Nimbus使用Scheduler进行任务分配。</p>
+                <p><strong>2、默认分配：</strong> 平均分配到所有Supervisor节点。</p>
+                <p><strong>3、自定义分配：</strong> 可以实现自定义Scheduler。</p>
+                <p><strong>4、负载均衡：</strong> Supervisor管理Worker的负载。</p>
+            </div>
+
+            <h2 id="section-11">11. Storm的反压机制是什么？</h2>
+            <p>Storm的反压机制：</p>
+            <div class="highlight">
+                <p><strong>1、启用：</strong> 从Storm 1.0开始支持反压。</p>
+                <p><strong>2、监控：</strong> 监控Worker的接收队列满的情况。</p>
+                <p><strong>3、反馈：</strong> 向上游发送反压信号。</p>
+                <p><strong>4、降速：</strong> Spout降低发送速率。</p>
+            </div>
+
+            <h2 id="section-12">12. Storm的动态改动是什么？</h2>
+            <p>Storm的动态改动特性：</p>
+            <div class="highlight">
+                <p><strong>1、Rebalance：</strong> 运行时动态调整Topology的并行度。</p>
+                <p><strong>2、命令：</strong> 使用storm rebalance命令。</p>
+                <p><strong>3、停机时间：</strong> 重分配过程中会有短暂停机。</p>
+                <p><strong>4、场景：</strong> 用于负载高峰期扩容。</p>
+            </div>
+
+            <h2 id="section-13">13. Storm支持哪些语言？</h2>
+            <p>Storm的多语言支持：</p>
+            <div class="highlight">
+                <p><strong>1、Java：</strong> Storm主要使用Java开发。</p>
+                <p><strong>2、Python：</strong> 通过ShellBolt支持Python。</p>
+                <p><strong>3、Ruby：</strong> 通过ShellBolt支持Ruby。</p>
+                <p><strong>4、JavaScript：</strong> 通过ShellBolt支持JavaScript。</p>
+            </div>
+
+            <h2 id="section-14">14. Storm的Tick Tuple是什么？</h2>
+            <p>Tick Tuple用于定时任务：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 系统级别的定时元组。</p>
+                <p><strong>2、配置：</strong> 通过__system目录下设置。</p>
+                <p><strong>3、用途：</strong> 定时执行清理、监控等任务。</p>
+                <p><strong>4、频率：</strong> 可以设置Tick的频率。</p>
+            </div>
+
+            <h2 id="section-15">15. Storm的窗口机制如何实现？</h2>
+            <p>Storm窗口的实现：</p>
+            <div class="highlight">
+                <p><strong>1、滑动窗口：</strong> 按时间或数量滑动。</p>
+                <p><strong>2、滚动窗口：</strong> 按固定大小翻滚。</p>
+                <p><strong>3、窗口存储：</strong> 在内存中存储窗口内的元组。</p>
+                <p><strong>4、窗口撤销：</strong> 元组过期后从窗口移除并撤销。</p>
+            </div>
+
+            <h2 id="section-16">16. Storm的DRPC是什么？</h2>
+            <p>DRPC（Distributed RPC）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 分布式RPC调用Storm进行处理。</p>
+                <p><strong>2、LinearDRPC：</strong> 简单的DRPC实现。</p>
+                <p><strong>3、返回：</strong> DRPC结果返回给客户端。</p>
+                <p><strong>4、用途：</strong> 实时请求-响应场景。</p>
+            </div>
+
+            <h2 id="section-17">17. Storm的消息处理模式有哪些？</h2>
+            <p>Storm的消息处理模式：</p>
+            <div class="highlight">
+                <p><strong>1、可靠消息：</strong> 使用锚定和确认机制。</p>
+                <p><strong>2、不可靠消息：</strong> 不进行锚定和确认，性能更好。</p>
+                <p><strong>3、批量确认：</strong> Trident的批量处理模式。</p>
+                <p><strong>4、事务拓扑：</strong> 保证精确一次处理。</p>
+            </div>
+
+            <h2 id="section-18">18. Storm如何进行性能调优？</h2>
+            <p>Storm性能调优的方向：</p>
+            <div class="highlight">
+                <p><strong>1、并行度：</strong> 合理设置Spout和Bolt的并行度。</p>
+                <p><strong>2、批次大小：</strong> 调整spout.pending、batch.size等参数。</p>
+                <p><strong>3、缓冲区：</strong> 调整transfer buffer大小。</p>
+                <p><strong>4、反压：</strong> 启用反压机制防止数据丢失。</p>
+            </div>
+
+            <h2 id="section-19">19. Storm和Flink的区别是什么？</h2>
+            <p>Storm和Flink的区别：</p>
+            <div class="highlight">
+                <p><strong>1、模型：</strong> 两者都是真正的流处理，Flink更现代。</p>
+                <p><strong>2、API：</strong> Flink提供更高级的DataStream API。</p>
+                <p><strong>3、状态管理：</strong> Flink有完善的状态管理机制。</p>
+                <p><strong>4、生态：</strong> Flink生态更丰富，包括SQL、ML等。</p>
+            </div>
+
+            <h2 id="section-20">20. Storm的Worker数量和Executor数量如何设置？</h2>
+            <p>Worker和Executor配置建议：</p>
+            <div class="highlight">
+                <p><strong>1、Worker数：</strong> 通常等于Supervisor的slot数。</p>
+                <p><strong>2、Executor数：</strong> 一个Executor只能属于一个Component。</p>
+                <p><strong>3、并行度：</strong> Executor数决定了Component的并行度。</p>
+                <p><strong>4、资源：</strong> 根据CPU和内存配置合理分配。</p>
+            </div>
+
+            <h2 id="section-21">21. Storm的本地模式是什么？</h2>
+            <p>Storm本地模式用于开发测试：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 在单个JVM中模拟Storm集群。</p>
+                <p><strong>2、用途：</strong> 开发调试，无需搭建集群。</p>
+                <p><strong>3、配置：</strong> 使用LocalCluster提交Topology。</p>
+                <p><strong>4、局限性：</strong> 无法模拟大规模分布式场景。</p>
+            </div>
+
+            <h2 id="section-22">22. Storm的组件生命周期是怎样的？</h2>
+            <p>Storm组件的生命周期：</p>
+            <div class="highlight">
+                <p><strong>1、prepare：</strong> Bolt初始化，准备资源。</p>
+                <p><strong>2、execute：</strong> 处理接收到的元组。</p>
+                <p><strong>3、declareOutputFields：</strong> 声明输出的字段。</p>
+                <p><strong>4、cleanup：</strong> Bolt关闭时清理资源。</p>
+            </div>
+
+            <h2 id="section-23">23. Storm如何实现状态管理？</h2>
+            <p>Storm状态管理的实现：</p>
+            <div class="highlight">
+                <p><strong>1、内存状态：</strong> Bolt内部维护内存状态。</p>
+                <p><strong>2、Trident状态：</strong> Trident提供完整的状态API。</p>
+                <p><strong>3、Redis：</strong> 使用Redis存储状态。</p>
+                <p><strong>4、DB：</strong> 使用数据库存储持久状态。</p>
+            </div>
+
+            <h2 id="section-24">24. Storm的Kafka集成如何实现？</h2>
+            <p>Storm与Kafka集成：</p>
+            <div class="highlight">
+                <p><strong>1、KafkaSpout：</strong> 使用KafkaSpout读取Kafka数据。</p>
+                <p><strong>2、配置：</strong> 配置Kafka集群地址和topic。</p>
+                <p><strong>3、offset管理：</strong> Kafka管理offset，Spout追踪。</p>
+                <p><strong>4、可靠性：</strong> 支持消息可靠性配置。</p>
+            </div>
+
+            <h2 id="section-25">25. Storm如何处理数据倾斜？</h2>
+            <p>Storm数据倾斜的处理：</p>
+            <div class="highlight">
+                <p><strong>1、Fields Grouping：</strong> 相同key会发送到同一Bolt。</p>
+                <p><strong>2、加盐：</strong> 给key添加随机前缀再分组。</p>
+                <p><strong>3、随机分组：</strong> 使用Shuffle Grouping打散数据。</p>
+                <p><strong>4、局部聚合：</strong> 先在Bolt内聚合再全局聚合。</p>
+            </div>
+
+            <h2 id="section-26">26. Storm的消息超时设置是多少？</h2>
+            <p>Storm消息超时配置：</p>
+            <div class="highlight">
+                <p><strong>1、默认超时：</strong> 默认30秒超时。</p>
+                <p><strong>2、配置：</strong> 通过Config.TOPOLOGY_MESSAGE_TIMEOUT_SECS设置。</p>
+                <p><strong>3、过长影响：</strong> 超时时间过长会导致失败消息处理延迟。</p>
+                <p><strong>4、过短影响：</strong> 超时时间过短可能导致正常消息被误判。</p>
+            </div>
+
+            <h2 id="section-27">27. Storm的ShellBolt如何使用？</h2>
+            <p>ShellBolt用于多语言支持：</p>
+            <div class="highlight">
+                <p><strong>1、用途：</strong> 允许使用非JVM语言实现Bolt。</p>
+                <p><strong>2、工作进程：</strong> ShellBolt启动子进程执行脚本。</p>
+                <p><strong>3、通信：</strong> 通过stdin/stdout与子进程通信。</p>
+                <p><strong>4、示例：</strong> Python、Ruby、JavaScript等。</p>
+            </div>
+
+            <h2 id="section-28">28. Storm和Kafka的关系是什么？</h2>
+            <p>Storm与Kafka的关系：</p>
+            <div class="highlight">
+                <p><strong>1、数据源：</strong> Kafka常作为Storm的输入源。</p>
+                <p><strong>2、消息队列：</strong> Kafka作为消息队列解耦生产者和消费者。</p>
+                <p><strong>3、整合：</strong> KafkaSpout读取Kafka数据输入Storm。</p>
+                <p><strong>4、输出：</strong> Storm处理完成后可以输出到Kafka。</p>
+            </div>
+
+            <h2 id="section-29">29. Storm的事务拓扑是什么？</h2>
+            <p>Storm事务拓扑保证精确一次：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> TransactionalTopology保证每个元组处理一次。</p>
+                <p><strong>2、批处理：</strong> 事务以批次为单位处理。</p>
+                <p><strong>3、Coordinator：</strong> 协调器决定批次处理顺序。</p>
+                <p><strong>4、Committer：</strong> 提交器确保批次状态正确。</p>
+            </div>
+
+            <h2 id="section-30">30. Storm如何监控？</h2>
+            <p>Storm监控方式：</p>
+            <div class="highlight">
+                <p><strong>1、UI：</strong> Storm UI查看集群和Topology状态。</p>
+                <p><strong>2、Metrics：</strong> Storm提供Metrics API。</p>
+                <p><strong>3、Log：</strong> 查看Worker日志定位问题。</p>
+                <p><strong>4、External：</strong> 集成Prometheus、Grafana等监控工具。</p>
+            </div>
+
+            <h2 id="section-31">31. Storm的消息丢失场景有哪些？</h2>
+            <p>Storm消息丢失的场景：</p>
+            <div class="highlight">
+                <p><strong>1、未锚定：</strong> emit时不锚定，失败不会重试。</p>
+                <p><strong>2、超时：</strong> 消息超时未确认被当作失败。</p>
+                <p><strong>3、Acker关闭：</strong> 关闭acker后不跟踪消息。</p>
+                <p><strong>4、Bolt失败：</strong> Bolt处理失败且未重试。</p>
+            </div>
+
+            <h2 id="section-32">32. Storm的资源调度如何实现？</h2>
+            <p>Storm资源调度机制：</p>
+            <div class="highlight">
+                <p><strong>1、Slot：</strong> Supervisor上的资源分配单位。</p>
+                <p><strong>2、CPU：</strong> 通过scheduling.slots.port配置端口。</p>
+                <p><strong>3、内存：</strong> 每个Worker有独立的内存限制。</p>
+                <p><strong>4、公平调度：</strong> 支持公平调度策略。</p>
+            </div>
+
+            <h2 id="section-33">33. Storm的Kryo序列化是什么？</h2>
+            <p>Storm使用Kryo进行序列化：</p>
+            <div class="highlight">
+                <p><strong>1、序列化：</strong> Storm使用Kryo序列化元组。</p>
+                <p><strong>2、注册：</strong> 可以注册自定义序列化器。</p>
+                <p><strong>3、配置：</strong> 通过Config.TOPOLOGY_KRYO_REGISTER配置。</p>
+                <p><strong>4、性能：</strong> 注册后序列化性能更好。</p>
+            </div>
+
+            <h2 id="section-34">34. Storm的Storm DRPC是什么原理？</h2>
+            <p>Storm DRPC原理：</p>
+            <div class="highlight">
+                <p><strong>1、客户端：</strong> DRPC客户端发送RPC请求。</p>
+                <p><strong>2、DRPC Server：</strong> 接收请求并分配request id。</p>
+                <p><strong>3、Topology：</strong> DRPCSpout接收请求并处理。</p>
+                <p><strong>4、返回：</strong> 结果通过DRPC Server返回客户端。</p>
+            </div>
+
+            <h2 id="section-35">35. Storm Trident的状态更新如何实现？</h2>
+            <p>Trident状态更新机制：</p>
+            <div class="highlight">
+                <p><strong>1、State接口：</strong> 实现State接口定义状态更新逻辑。</p>
+                <p><strong>2、Commit：</strong> 每个batch处理完成后commit状态。</p>
+                <p><strong>3、批量更新：</strong> 状态更新也是批量进行的。</p>
+                <p><strong>4、容错：</strong> 失败时会回滚到之前的状态。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flink 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Flink 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Flink的基本架构是怎样的？</h2>
+            <p>Flink是一个分布式流处理框架，其基本架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、JobManager：</strong> 负责整个集群的协调工作，包括任务调度、checkpoint协调等。</p>
+                <p><strong>2、TaskManager：</strong> 负责执行具体的任务，每个TaskManager可以运行多个TaskSlot。</p>
+                <p><strong>3、ResourceManager：</strong> 管理TaskManager的资源，如slot的分配和释放。</p>
+                <p><strong>4、Dispatcher：</strong> 接收提交的任务，为每个任务启动一个JobMaster。</p>
+            </div>
+
+            <h2 id="section-2">2. Flink的checkpoint机制是如何工作的？</h2>
+            <p>Flink的checkpoint机制是其容错性的核心，基于Chandy-Lamport分布式快照算法：</p>
+            <div class="highlight">
+                <p><strong>1、Barrier对齐：</strong> Checkpoint barrier从source端向下游广播，数据流被分为快照前和快照后两部分。</p>
+                <p><strong>2、状态存储：</strong> 算子的状态（keyed state、operator state）被存储到配置的状态后端。</p>
+                <p><strong>3、Exactly-once语义：</strong> 通过barrier对齐确保每个数据只被处理一次。</p>
+                <p><strong>4、恢复机制：</strong> 失败时，从最近的checkpoint恢复状态，重新处理数据。</p>
+            </div>
+
+            <h2 id="section-3">3. Flink的窗口函数有哪些类型？</h2>
+            <p>Flink支持多种窗口函数，用于对流式数据进行分析：</p>
+            <div class="highlight">
+                <p><strong>1、Tumbling Window（滚动窗口）：</strong> 固定大小、不重叠的窗口。</p>
+                <p><strong>2、Sliding Window（滑动窗口）：</strong> 固定大小、可重叠的窗口，由窗口大小和滑动步长决定。</p>
+                <p><strong>3、Session Window（会话窗口）：</strong> 基于活动间隙的窗口，当空闲时间超过设定值时关闭。</p>
+                <p><strong>4、Global Window（全局窗口）：</strong> 所有相同key的数据被分到同一个窗口。</p>
+            </div>
+
+            <h2 id="section-4">4. Flink的时间语义有哪几种？</h2>
+            <p>Flink支持两种主要的时间语义：</p>
+            <div class="highlight">
+                <p><strong>1、Event Time（事件时间）：</strong> 数据本身携带的时间戳，即事件实际发生的时间。</p>
+                <p><strong>2、Processing Time（处理时间）：</strong> 数据被Flink处理时所在机器的本地时间。</p>
+                <p><strong>3、Ingestion Time（摄入时间）：</strong> 数据进入Flink source算子时的时间。</p>
+            </div>
+
+            <h2 id="section-5">5. Flink的 watermark 机制是什么？</h2>
+            <p>Watermark是Flink处理乱序事件和实现事件时间语义的关键机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Watermark是一个时间戳，用于告诉下游算子在此时间之前的数据已经全部到达。</p>
+                <p><strong>2、处理乱序：</strong> 当watermark到达某个时间点时，意味着不会再有该时间之前的数据到达。</p>
+                <p><strong>3、Window触发：</strong> 当watermark超过窗口结束时间时，窗口会被触发执行。</p>
+                <p><strong>4、策略选择：</strong> 常用的watermark策略包括周期性 watermark和惩罚性watermark。</p>
+            </div>
+
+            <h2 id="section-6">6. Flink的state状态管理机制是怎样的？</h2>
+            <p>Flink的状态管理是其核心特性之一，支持多种类型的状态：</p>
+            <div class="highlight">
+                <p><strong>1、Keyed State：</strong> 作用于KeyedStream上的状态，按key隔离和管理。</p>
+                <p><strong>2、Operator State：</strong> 作用于算子实例上的状态，所有key共享。</p>
+                <p><strong>3、State Backend：</strong> 状态存储后端，Flink支持多种后端如HashMapStateBackend、RocksDBStateBackend等。</p>
+                <p><strong>4、状态序列化：</strong> Flink使用Kryo或Flink自带的序列化器对状态进行序列化。</p>
+            </div>
+
+            <h2 id="section-7">7. Flink的反压机制是如何工作的？</h2>
+            <p>Flink的反压机制能够自动处理数据流速度不匹配的问题：</p>
+            <div class="highlight">
+                <p><strong>1、本地反压：</strong> 当下游算子处理速度慢于上游时，会向上游发送反压信号。</p>
+                <p><strong>2、TCP反压：</strong> 通过TCP的背压机制实现，Flink使用信用基算法（Credit-based）优化。</p>
+                <p><strong>3、TaskManager级别：</strong> 反压会传播到整个pipeline，影响数据源。</p>
+                <p><strong>4、动态调整：</strong> Flink能够动态调整数据发送速率以适应下游处理能力。</p>
+            </div>
+
+            <h2 id="section-8">8. Flink与Spark Streaming的区别是什么？</h2>
+            <p>Flink和Spark Streaming是两种主流的流处理框架，主要区别包括：</p>
+            <div class="highlight">
+                <p><strong>1、数据模型：</strong> Spark使用微批处理模型，而Flink是真正的流处理，采用记录级别的处理。</p>
+                <p><strong>2、延迟：</strong> Flink的延迟更低，通常在毫秒级；Spark Streaming延迟在秒级。</p>
+                <p><strong>3、容错：</strong> Flink使用Chandy-Lamport算法实现精确一次语义；Spark Streaming使用checkpoint机制。</p>
+                <p><strong>4、窗口支持：</strong> Flink窗口支持更灵活，支持更复杂的窗口类型。</p>
+            </div>
+
+            <h2 id="section-9">9. Flink的并行度是如何设置的？</h2>
+            <p>Flink的并行度设置有多个层次：</p>
+            <div class="highlight">
+                <p><strong>1、算子级别：</strong> 通过parallelism()方法设置单个算子的并行度。</p>
+                <p><strong>2、执行环境级别：</strong> 通过env.setParallelism()设置整个job的默认并行度。</p>
+                <p><strong>3、Slot配置：</strong> TaskManager的slot数量决定了最大并行度。</p>
+                <p><strong>4、配置文件级别：</strong> flink-conf.yaml中可以设置默认并行度。</p>
+            </div>
+
+            <h2 id="section-10">10. Flink的DataSet API和DataStream API有什么区别？</h2>
+            <p>Flink同时提供了批处理和流处理API，主要区别如下：</p>
+            <div class="highlight">
+                <p><strong>1、DataSet API：</strong> 用于批处理，数据集是有界的，处理有限的数据量。</p>
+                <p><strong>2、DataStream API：</strong> 用于流处理，数据流是无界的，持续处理数据。</p>
+                <p><strong>3、状态管理：</strong> DataStream API支持丰富的状态管理；DataSet API状态管理相对简单。</p>
+                <p><strong>4、应用场景：</strong> DataSet适用于离线分析，DataStream适用于实时分析。</p>
+            </div>
+
+            <h2 id="section-11">11. Flink如何保证精确一次（Exactly-Once）语义？</h2>
+            <p>Flink通过多种机制保证精确一次语义：</p>
+            <div class="highlight">
+                <p><strong>1、Checkpoint：</strong> 定期保存状态快照，故障时恢复。</p>
+                <p><strong>2、TwoPhaseCommitSink：</strong> 两阶段提交 sink，用于保证输出端的精确一次。</p>
+                <p><strong>3、Barrier对齐：</strong> 确保在快照时刻，所有数据的位置是明确的。</p>
+                <p><strong>4、Source端支持：</strong> 消息源（如Kafka）支持精确一次消费。</p>
+            </div>
+
+            <h2 id="section-12">12. Flink的Table API和SQL支持情况如何？</h2>
+            <p>Flink提供了强大的Table API和SQL支持：</p>
+            <div class="highlight">
+                <p><strong>1、动态表：</strong> Flink将流数据动态映射为表，支持动态查询。</p>
+                <p><strong>2、SQL支持：</strong> 支持标准SQL语法，包括JOIN、GROUP BY、WINDOW等。</p>
+                <p><strong>3、Blink planner：</strong> 新的查询 planner，性能更好，功能更完善。</p>
+                <p><strong>4、Catalog：</strong> 支持元数据管理，如Hive Catalog。</p>
+            </div>
+
+            <h2 id="section-13">13. Flink的内存管理模型是怎样的？</h2>
+            <p>Flink有自己独特的内存管理模型：</p>
+            <div class="highlight">
+                <p><strong>1、网络缓冲区：</strong> 用于TaskManager之间数据传输的缓冲区。</p>
+                <p><strong>2、Memory Segment：</strong> Flink的基本内存单元，通常为32KB。</p>
+                <p><strong>3、堆内存和堆外内存：</strong> 支持在堆内和堆外分配内存。</p>
+                <p><strong>4、State Backend选择：</strong> RocksDB使用堆外内存，HashMapStateBackend使用堆内存。</p>
+            </div>
+
+            <h2 id="section-14">14. Flink的CEP（复杂事件处理）如何使用？</h2>
+            <p>Flink CEP用于处理模式匹配和复杂事件：</p>
+            <div class="highlight">
+                <p><strong>1、Pattern API：</strong> 定义事件序列的模式，如begin、where、next、followedBy等。</p>
+                <p><strong>2、匹配宽松：</strong> 支持严格连续、宽松连续、非确定性宽松连续等。</p>
+                <p><strong>3、量词：</strong> 支持重复次数，如times()、oneOrMore()、zeroOrMore()等。</p>
+                <p><strong>4、条件：</strong> 支持事件属性条件，如length > 10。</p>
+            </div>
+
+            <h2 id="section-15">15. Flink的广播流是什么？如何使用？</h2>
+            <p>Flink的广播流用于将数据发送到所有并发实例：</p>
+            <div class="highlight">
+                <p><strong>1、广播状态：</strong> 将数据作为状态广播到所有并行实例。</p>
+                <p><strong>2、使用场景：</strong> 适用于规则更新、配置同步等场景。</p>
+                <p><strong>3、BroadcastState：</strong> 特殊的state类型，支持任意类型的key。</p>
+                <p><strong>4、非并行处理：</strong> 广播流默认并行度为1，保证所有实例看到相同数据。</p>
+            </div>
+
+            <h2 id="section-16">16. Flink如何处理背压（Back Pressure）？</h2>
+            <p>Flink通过多种机制处理背压问题：</p>
+            <div class="highlight">
+                <p><strong>1、TaskManager网络栈：</strong> 使用Netty网络栈，支持高效的背压传播。</p>
+                <p><strong>2、Credit-based流控：</strong> 下游向，上游发送信用，告知可用缓冲区。</p>
+                <p><strong>3、缓冲池：</strong> 每个TaskManager有网络缓冲池，管理缓冲区分配。</p>
+                <p><strong>4、自适应：</strong> 系统能够自动适应处理速度的变化。</p>
+            </div>
+
+            <h2 id="section-17">17. Flink的ProcessFunction有什么功能？</h2>
+            <p>ProcessFunction是Flink最底层的API，提供了最大的灵活性：</p>
+            <div class="highlight">
+                <p><strong>1、访问时间：</strong> 可以访问事件时间、处理时间、watermark。</p>
+                <p><strong>2、状态管理：</strong> 支持在ProcessFunction中使用 keyed state。</p>
+                <p><strong>3、定时器：</strong> 支持注册定时器，在特定时间触发回调。</p>
+                <p><strong>4、侧输出：</strong> 支持将数据输出到多个输出标签。</p>
+            </div>
+
+            <h2 id="section-18">18. Flink如何与Kafka集成？</h2>
+            <p>Flink提供了与Kafka深度集成的连接器：</p>
+            <div class="highlight">
+                <p><strong>1、FlinkKafkaConsumer：</strong> 从Kafka消费数据，支持精确一次语义。</p>
+                <p><strong>2、FlinkKafkaProducer：</strong> 向Kafka生产数据，支持精确一次语义。</p>
+                <p><strong>3、offset管理：</strong> 可以选择从checkpoint恢复或手动管理offset。</p>
+                <p><strong>4、Watermark策略：</strong> 支持从Kafka topic中提取时间戳生成watermark。</p>
+            </div>
+
+            <h2 id="section-19">19. Flink的异步IO有什么用？如何使用？</h2>
+            <p>Flink的异步IO用于高效处理外部数据源访问：</p>
+            <div class="highlight">
+                <p><strong>1、AsyncFunction：</strong> 提供异步处理的能力，提高与外部系统交互的效率。</p>
+                <p><strong>2、超时处理：</strong> 支持设置超时时间和超时处理策略。</p>
+                <p><strong>3、顺序保证：</strong> 支持以watermark为基准的顺序输出或无序输出。</p>
+                <p><strong>4、容量控制：</strong> 可以控制并发请求数量，防止外部系统过载。</p>
+            </div>
+
+            <h2 id="section-20">20. Flink的State Backend有哪些选择？</h2>
+            <p>Flink支持多种状态后端，各有特点：</p>
+            <div class="highlight">
+                <p><strong>1、HashMapStateBackend：</strong> 状态存储在TaskManager的JVM堆内存中，适合小状态。</p>
+                <p><strong>2、EmbeddedRocksDBStateBackend：</strong> 状态存储在RocksDB中，适合大状态。</p>
+                <p><strong>3、远程状态：</strong> 可以配置远程持久化存储作为备份。</p>
+                <p><strong>4、选择依据：</strong> 根据状态大小、读写比例、是否增量checkpoint选择。</p>
+            </div>
+
+            <h2 id="section-21">21. Flink的窗口机制如何处理迟到数据？</h2>
+            <p>Flink提供了多种机制处理迟到数据：</p>
+            <div class="highlight">
+                <p><strong>1、Watermark：</strong> 超过watermark的数据被视为迟到。</p>
+                <p><strong>2、allowedLateness：</strong> 设置允许延迟的时间，迟到数据仍可触发窗口计算。</p>
+                <p><strong>3、sideOutputLateData：</strong> 将迟到数据输出到侧输出流。</p>
+                <p><strong>4、窗口API：</strong> 窗口提供处理迟到数据的回调方法。</p>
+            </div>
+
+            <h2 id="section-22">22. Flink的JobManager高可用是如何实现的？</h2>
+            <p>Flink支持JobManager的高可用配置：</p>
+            <div class="highlight">
+                <p><strong>1、ZooKeeper：</strong> 使用ZooKeeper进行Leader选举和故障转移。</p>
+                <p><strong>2、Leader端点：</strong> Leader信息存储在ZooKeeper中。</p>
+                <p><strong>3、状态恢复：</strong> 新Leader从最近的checkpoint恢复状态。</p>
+                <p><strong>4、客户端重试：</strong> 客户端自动尝试连接到新的Leader。</p>
+            </div>
+
+            <h2 id="section-23">23. Flink如何使用广播状态处理动态规则？</h2>
+            <p>广播状态是Flink处理动态规则的利器：</p>
+            <div class="highlight">
+                <p><strong>1、广播流：</strong> 将规则作为广播流发送到所有并发实例。</p>
+                <p><strong>2、BroadcastState：</strong> 在算子中使用BroadcastState存储规则。</p>
+                <p><strong>3、非广播流：</strong> 主流数据与广播状态进行connect后处理。</p>
+                <p><strong>4、规则更新：</strong> 新规则实时生效，无需重启作业。</p>
+            </div>
+
+            <h2 id="section-24">24. Flink的Metrics指标有哪些？</h2>
+            <p>Flink提供了丰富的Metrics指标：</p>
+            <div class="highlight">
+                <p><strong>1、Task指标：</strong> 处理记录数、端到端延迟、背压指标等。</p>
+                <p><strong>2、算子指标：</strong> checkpoint间隔、状态大小、水印延迟等。</p>
+                <p><strong>3、系统指标：</strong> JVM内存、GC时间、线程数等。</p>
+                <p><strong>4、自定义指标：</strong> 可以通过MetricGroup注册自定义指标。</p>
+            </div>
+
+            <h2 id="section-25">25. Flink的Savepoint和Checkpoint有什么区别？</h2>
+            <p>Savepoint和Checkpoint是Flink的两种状态快照机制：</p>
+            <div class="highlight">
+                <p><strong>1、触发方式：</strong> Checkpoint由Flink自动定期执行；Savepoint由用户手动触发。</p>
+                <p><strong>2、保留策略：</strong> Checkpoint在作业取消后自动删除；Savepoint需手动删除。</p>
+                <p><strong>3、兼容性：</strong> Savepoint保持与旧版本的兼容性；Checkpoint可能因优化而不兼容。</p>
+                <p><strong>4、用途：</strong> Checkpoint用于故障恢复；Savepoint用于计划维护和升级。</p>
+            </div>
+
+            <h2 id="section-26">26. Flink如何实现数据分区？</h2>
+            <p>Flink提供了多种数据分区策略：</p>
+            <div class="highlight">
+                <p><strong>1、Random partitioning：</strong> 随机分区，均匀分布数据。</p>
+                <p><strong>2、Round-robin partitioning：</strong> 轮询分区，保证负载均衡。</p>
+                <p><strong>3、Hash partitioning：</strong> 基于hash的分区，相同key的数据到同一分区。</p>
+                <p><strong>4、Custom partitioning：</strong> 用户自定义分区逻辑。</p>
+            </div>
+
+            <h2 id="section-27">27. Flink的DataSink连接器有哪些？</h2>
+            <p>Flink支持多种输出连接器：</p>
+            <div class="highlight">
+                <p><strong>1、File Sink：</strong> 支持Parquet、ORC、CSV等格式写入文件系统。</p>
+                <p><strong>2、Kafka Sink：</strong> 支持向Kafka写入数据。</p>
+                <p><strong>3、JDBC Sink：</strong> 支持批量写入数据库。</p>
+                <p><strong>4、Elasticsearch Sink：</strong> 支持写入Elasticsearch。</p>
+                <p><strong>5、Redis Sink：</strong> 支持写入Redis。</p>
+            </div>
+
+            <h2 id="section-28">28. Flink如何处理数据倾斜问题？</h2>
+            <p>数据倾斜是流处理中的常见问题，Flink提供多种解决方案：</p>
+            <div class="highlight">
+                <p><strong>1、Key的合理设计：</strong> 避免热点key，如加随机数或做key的分割。</p>
+                <p><strong>2、聚合方式的优化：</strong> 使用本地聚合+全局聚合的两阶段聚合。</p>
+                <p><strong>3、并行度调整：</strong> 增加热点key对应算子的并行度。</p>
+                <p><strong>4、广播流：</strong> 对于小表进行广播，避免数据 shuffle。</p>
+            </div>
+
+            <h2 id="section-29">29. Flink的Table API和DataStream API如何互转？</h2>
+            <p>Flink支持Table API和DataStream API之间的转换：</p>
+            <div class="highlight">
+                <p><strong>1、Table转DataStream：</strong> 通过toDataStream()或toAppendStream()方法转换。</p>
+                <p><strong>2、DataStream转Table：</strong> 通过fromDataStream()方法创建表。</p>
+                <p><strong>3、Schema定义：</strong> 转换时可以定义或推断Schema。</p>
+                <p><strong>4、特性差异：</strong> 转换时需要注意Changelog mode的差异。</p>
+            </div>
+
+            <h2 id="section-30">30. Flink的未来发展趋势和生态如何？</h2>
+            <p>Flink作为领先的流处理框架，发展趋势和生态包括：</p>
+            <div class="highlight">
+                <p><strong>1、Flink SQL：</strong> 持续增强SQL能力，降低使用门槛。</p>
+                <p><strong>2、批流一体：</strong> 统一批处理和流处理，简化架构。</p>
+                <p><strong>3、Python支持：</strong> 增强PyFlink功能，支持Python UDF。</p>
+                <p><strong>4、ML生态：</strong> FlinkML项目提供机器学习支持。</p>
+                <p><strong>5、多语言支持：</strong> 增强Go、Rust等语言的API支持。</p>
+            </div>
+
+            <h2 id="section-31">31. Flink的端到端一致性如何实现？</h2>
+            <p>Flink的端到端一致性保证涉及多个组件：</p>
+            <div class="highlight">
+                <p><strong>1、Source端：</strong> 需要Source支持回滚读取，如Kafka的offset管理。</p>
+                <p><strong>2、Flink内部：</strong> 通过Checkpoint机制保证精确一次。</p>
+                <p><strong>3、Sink端：</strong> 需要使用两阶段提交或幂等写入。</p>
+                <p><strong>4、事务写入：</strong> Sink实现TwoPhaseCommitSink接口。</p>
+            </div>
+
+            <h2 id="section-32">32. Flink如何进行性能调优？</h2>
+            <p>Flink性能调优的主要方向包括：</p>
+            <div class="highlight">
+                <p><strong>1、并行度调优：</strong> 根据数据量和集群资源设置合适的并行度。</p>
+                <p><strong>2、State Backend选择：</strong> 根据状态大小和访问模式选择合适的后端。</p>
+                <p><strong>3、网络缓冲调优：</strong> 调整网络缓冲数量和大小。</p>
+                <p><strong>4、内存调优：</strong> 合理分配JVM堆内存和堆外内存。</p>
+                <p><strong>5、Checkpoint调优：</strong> 调整checkpoint间隔和超时时间。</p>
+            </div>
+
+            <h2 id="section-33">33. Flink的watermark策略有哪些？</h2>
+            <p>Flink支持多种watermark生成策略：</p>
+            <div class="highlight">
+                <p><strong>1、固定延迟watermark：</strong> 周期性watermark = 当前时间 - 固定延迟。</p>
+                <p><strong>2、单调递增watermark：</strong> 严格递增的时间戳watermark。</p>
+                <p><strong>3、punctuated watermark：</strong> 根据特定事件触发生成watermark。</p>
+                <p><strong>4、Kafka watermark：</strong> 从Kafka topic的分区中提取时间戳。</p>
+            </div>
+
+            <h2 id="section-34">34. Flink如何处理乱序问题？</h2>
+            <p>乱序是流处理中的常见问题，Flink的处理策略包括：</p>
+            <div class="highlight">
+                <p><strong>1、Watermark机制：</strong> 设定允许延迟，超过watermark的数据单独处理。</p>
+                <p><strong>2、窗口处理：</strong> 使用滚动窗口或滑动窗口对乱序数据聚合。</p>
+                <p><strong>3、allowedLateness：</strong> 允许数据迟到一段时间，仍参与窗口计算。</p>
+                <p><strong>4、侧输出：</strong> 将迟到数据输出到侧输出流进行单独处理。</p>
+            </div>
+
+            <h2 id="section-35">35. Flink的故障恢复机制是怎样的？</h2>
+            <p>Flink的故障恢复机制确保作业持续运行：</p>
+            <div class="highlight">
+                <p><strong>1、Task故障：</strong> 如果task失败，JobManager重启该task。</p>
+                <p><strong>2、Restart策略：</strong> 可以配置固定延迟重启、指数延迟重启等策略。</p>
+                <p><strong>3、Failover策略：</strong> 可以选择全部重启、局部重启或流水线重启。</p>
+                <p><strong>4、状态恢复：</strong> 从最近的checkpoint恢复状态，继续处理。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

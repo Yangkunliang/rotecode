@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlinkSQL 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>FlinkSQL 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. FlinkSQL的基本概念是什么？</h2>
+            <p>FlinkSQL是Flink提供的SQL支持，允许用户使用SQL进行流处理和批处理分析：</p>
+            <div class="highlight">
+                <p><strong>1、批流统一：</strong> 使用同一套SQL语法处理批数据和流数据。</p>
+                <p><strong>2、声明式：</strong> 用户只需声明想要的结果，Flink自动优化执行。</p>
+                <p><strong>3、动态表：</strong> 将流数据动态映射为表，支持持续查询。</p>
+                <p><strong>4、兼容性：</strong> 支持标准SQL语法和窗口函数。</p>
+            </div>
+
+            <h2 id="section-2">2. FlinkSQL的动态表（Dynamic Table）是什么？</h2>
+            <p>动态表是FlinkSQL处理流数据的核心概念：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 动态表是随时间变化的表，类似于传统数据库的视图。</p>
+                <p><strong>2、持续查询：</strong> 对动态表的查询会产生新的动态表。</p>
+                <p><strong>3、Changelog：</strong> 动态表通过changelog stream进行更新。</p>
+                <p><strong>4、对应关系：</strong> Stream ↔ Dynamic Table ↔ SQL。</p>
+            </div>
+
+            <h2 id="section-3">3. FlinkSQL支持的窗口类型有哪些？</h2>
+            <p>FlinkSQL支持多种窗口类型：</p>
+            <div class="highlight">
+                <p><strong>1、Tumble Window：</strong> 滚动窗口，固定大小不重叠。</p>
+                <p><strong>2、Hop Window：</strong> 滑动窗口，固定大小可重叠。</p>
+                <p><strong>3、Cumulative Window：</strong> 累积窗口，逐步扩展窗口大小。</p>
+                <p><strong>4、Session Window：</strong> 会话窗口，基于活动间隙划分。</p>
+            </div>
+
+            <h2 id="section-4">4. FlinkSQL如何实现流式Join？</h2>
+            <p>FlinkSQL支持多种流式Join方式：</p>
+            <div class="highlight">
+                <p><strong>1、Regular Join：</strong> 对两个动态表进行join。</p>
+                <p><strong>2、Interval Join：</strong> 基于时间区间的join。</p>
+                <p><strong>3、Lookup Join：</strong> 与维度表进行join。</p>
+                <p><strong>4、Array Expansion：</strong> 展开数组进行join。</p>
+            </div>
+
+            <h2 id="section-5">5. FlinkSQL的TableEnvironment是什么？</h2>
+            <p>TableEnvironment是FlinkSQL的核心API：</p>
+            <div class="highlight">
+                <p><strong>1、注册功能：</strong> 用于注册表、视图、函数等。</p>
+                <p><strong>2、查询执行：</strong> 执行SQL查询和Table API查询。</p>
+                <p><strong>3、配置：</strong> 设置执行环境和优化器配置。</p>
+                <p><strong>4、类型：</strong> 有StreamTableEnvironment和BatchTableEnvironment两种。</p>
+            </div>
+
+            <h2 id="section-6">6. FlinkSQL支持的Connector有哪些？</h2>
+            <p>FlinkSQL支持丰富的Connector：</p>
+            <div class="highlight">
+                <p><strong>1、Kafka：</strong> 读写Kafka主题。</p>
+                <p><strong>2、Filesystem：</strong> 读写本地或HDFS文件。</p>
+                <p><strong>3、JDBC：</strong> 读写关系型数据库。</p>
+                <p><strong>4、Elasticsearch：</strong> 写入ES。</p>
+                <p><strong>5、Hive：</strong> 读写Hive表。</p>
+            </div>
+
+            <h2 id="section-7">7. FlinkSQL的时间属性有哪些？</h2>
+            <p>FlinkSQL支持两种时间属性：</p>
+            <div class="highlight">
+                <p><strong>1、Processing Time：</strong> 处理时间，基于系统时钟。</p>
+                <p><strong>2、Event Time：</strong> 事件时间，基于数据本身携带的时间戳。</p>
+                <p><strong>3、水印：</strong> 用于处理乱序事件。</p>
+                <p><strong>4、设置：</strong> 在创建表时通过WATERMARK语句定义。</p>
+            </div>
+
+            <h2 id="section-8">8. FlinkSQL的Group Aggregation和Over Aggregation有什么区别？</h2>
+            <p>两种聚合方式的区别：</p>
+            <div class="highlight">
+                <p><strong>1、Group Aggregation：</strong> GROUP BY分组聚合，输出多个结果。</p>
+                <p><strong>2、Over Aggregation：</strong> OVER窗口聚合，每行输出一个结果。</p>
+                <p><strong>3、状态：</strong> Group Aggregation需要保存状态。</p>
+                <p><strong>4、性能：</strong> Over Aggregation通常更高效。</p>
+            </div>
+
+            <h2 id="section-9">9. FlinkSQL如何处理乱序和迟到数据？</h2>
+            <p>FlinkSQL处理乱序和迟到数据的机制：</p>
+            <div class="highlight">
+                <p><strong>1、水印策略：</strong> 定义水印生成策略处理乱序。</p>
+                <p><strong>2、Allowed Lateness：</strong> 设置允许的延迟时间。</p>
+                <p><strong>3、Side Output：</strong> 将迟到数据输出到侧输出流。</p>
+                <p><strong>4、窗口合并：</strong> 迟到数据触发窗口重新计算。</p>
+            </div>
+
+            <h2 id="section-10">10. FlinkSQL的执行计划如何查看？</h2>
+            <p>查看FlinkSQL执行计划的方法：</p>
+            <div class="highlight">
+                <p><strong>1、EXPLAIN：</strong> 使用EXPLAIN命令查看逻辑和物理计划。</p>
+                <p><strong>2、Web UI：</strong> 在Flink Dashboard查看执行计划。</p>
+                <p><strong>3、代码：</strong> 使用table.explain()方法。</p>
+                <p><strong>4、Plan Visualizer：</strong> 使用在线工具可视化执行计划。</p>
+            </div>
+
+            <h2 id="section-11">11. FlinkSQL的UDTF是什么？如何使用？</h2>
+            <p>UDTF（User-Defined Table Function）用于自定义表函数：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 输入一行，输出多行。</p>
+                <p><strong>2、注册：</strong> 使用environment.createTemporary_function注册。</p>
+                <p><strong>3、使用：</strong> 在SQL中像表一样调用。</p>
+                <p><strong>4、示例：</strong> 解析JSON、拆分字符串等。</p>
+            </div>
+
+            <h2 id="section-12">12. FlinkSQL的聚合查询需要注意什么？</h2>
+            <p>FlinkSQL聚合查询的注意事项：</p>
+            <div class="highlight">
+                <p><strong>1、状态管理：</strong> 聚合需要保存状态，需要配置状态后端。</p>
+                <p><strong>2、状态过期：</strong> 需要设置状态TTL防止状态无限增长。</p>
+                <p><strong>3、Retraction：</strong> 某些聚合可能产生回撤消息。</p>
+                <p><strong>4、内存：</strong> 大量key的聚合可能占用大量内存。</p>
+            </div>
+
+            <h2 id="section-13">13. FlinkSQL如何实现去重？</h2>
+            <p>FlinkSQL实现去重的方法：</p>
+            <div class="highlight">
+                <p><strong>1、ROW_NUMBER：</strong> 使用ROW_NUMBER加WHERE实现。</p>
+                <p><strong>2、KEEP LAST：</strong> 使用LAST_VALUE函数保留最后一条。</p>
+                <p><strong>3、JOIN：</strong> 与维度表JOIN去重。</p>
+                <p><strong>4、窗口：</strong> 使用窗口聚合进行去重。</p>
+            </div>
+
+            <h2 id="section-14">14. FlinkSQL支持的SQL语法有哪些？</h2>
+            <p>FlinkSQL支持的SQL语法包括：</p>
+            <div class="highlight">
+                <p><strong>1、SELECT：</strong> 查询数据。</p>
+                <p><strong>2、WHERE：</strong> 条件过滤。</p>
+                <p><strong>3、GROUP BY：</strong> 分组聚合。</p>
+                <p><strong>4、HAVING：</strong> 分组后过滤。</p>
+                <p><strong>5、JOIN：</strong> 表关联。</p>
+                <p><strong>6、UNION：</strong> 合并结果集。</p>
+            </div>
+
+            <h2 id="section-15">15. FlinkSQL的CDC功能是什么？</h2>
+            <p>CDC（Change Data Capture）用于捕获数据变更：</p>
+            <div class="highlight">
+                <p><strong>1、Debezium：</strong> FlinkCDC基于Debezium捕获数据库变更。</p>
+                <p><strong>2、实时同步：</strong> 实时同步数据库的增量变更。</p>
+                <p><strong>3、Schema变更：</strong> 支持Schema变更的同步。</p>
+                <p><strong>4、exactly-once：</strong> 支持Exactly-once语义。</p>
+            </div>
+
+            <h2 id="section-16">16. FlinkSQL如何处理分层数据？</h2>
+            <p>FlinkSQL处理分层数据的特性：</p>
+            <div class="highlight">
+                <p><strong>1、ARRAY：</strong> 支持数组类型和unnest操作。</p>
+                <p><strong>2、MAP：</strong> 支持Map类型和key访问。</p>
+                <p><strong>3、ROW：</strong> 支持嵌套的Row类型。</p>
+                <p><strong>4、JSON：</strong> 支持JSON类型和JSON函数。</p>
+            </div>
+
+            <h2 id="section-17">17. FlinkSQL和DataStream API如何选择？</h2>
+            <p>两种API的选择建议：</p>
+            <div class="highlight">
+                <p><strong>1、SQL优先：</strong> 优先使用SQL，表达更简洁。</p>
+                <p><strong>2、复杂逻辑：</strong> 复杂业务逻辑使用DataStream API。</p>
+                <p><strong>3、迭代计算：</strong> 迭代算法使用DataStream API。</p>
+                <p><strong>4、混合使用：</strong> 可以互相转换，混合使用。</p>
+            </div>
+
+            <h2 id="section-18">18. FlinkSQL的Mini-batch是什么？</h2>
+            <p>Mini-batch优化机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 将多个输入合并为一个批次处理。</p>
+                <p><strong>2、优势：</strong> 减少状态访问次数，提高吞吐量。</p>
+                <p><strong>3、配置：</strong> 通过table.exec.mini-batch.enabled启用。</p>
+                <p><strong>4、延迟：</strong> 会增加一定延迟，需要权衡。</p>
+            </div>
+
+            <h2 id="section-19">19. FlinkSQL支持哪些内置函数？</h2>
+            <p>FlinkSQL支持丰富的内置函数：</p>
+            <div class="highlight">
+                <p><strong>1、聚合函数：</strong> SUM、COUNT、AVG、MAX、MIN等。</p>
+                <p><strong>2、字符串函数：</strong> CONCAT、SUBSTRING、TRIM等。</p>
+                <p><strong>3、时间函数：</strong> CURRENT_TIMESTAMP、DATE_FORMAT等。</p>
+                <p><strong>4、条件函数：</strong> IF、CASE WHEN、COALESCE等。</p>
+                <p><strong>5、JSON函数：</strong> JSON_VALUE、JSON_QUERY等。</p>
+            </div>
+
+            <h2 id="section-20">20. FlinkSQL的状态后端如何选择？</h2>
+            <p>状态后端的选择建议：</p>
+            <div class="highlight">
+                <p><strong>1、HashMapStateBackend：</strong> 状态存储在内存，适合小状态。</p>
+                <p><strong>2、RocksDBStateBackend：</strong> 状态存储在RocksDB，适合大状态。</p>
+                <p><strong>3、选择依据：</strong> 根据状态大小、访问频率选择。</p>
+                <p><strong>4、配置：</strong> 在flink-conf.yaml中配置。</p>
+            </div>
+
+            <h2 id="section-21">21. FlinkSQL如何实现TopN？</h2>
+            <p>TopN查询的实现方式：</p>
+            <div class="highlight">
+                <p><strong>1、ROW_NUMBER：</strong> 使用ROW_NUMBER加WHERE实现。</p>
+                <p><strong>2、Over Window：</strong> 使用OVER窗口计算排名。</p>
+                <p><strong>3、Regular Join：</strong> 与维度表JOIN获取完整信息。</p>
+                <p><strong>4、更新：</strong> 支持持续更新TopN结果。</p>
+            </div>
+
+            <h2 id="section-22">22. FlinkSQL的Changelog Mode是什么？</h2>
+            <p>Changelog Mode定义了输出格式：</p>
+            <div class="highlight">
+                <p><strong>1、Append模式：</strong> 只输出新增记录。</p>
+                <p><strong>2、Retract模式：</strong> 支持更新和删除，发送撤回消息。</p>
+                <p><strong>3、Upsert模式：</strong> 使用Upsert语义，更高效。</p>
+                <p><strong>4、选择：</strong> 根据SinkConnector支持的能力选择。</p>
+            </div>
+
+            <h2 id="section-23">23. FlinkSQL如何处理分区表？</h2>
+            <p>FlinkSQL处理分区表的特性：</p>
+            <div class="highlight">
+                <p><strong>1、分区发现：</strong> 自动发现分区的分区目录。</p>
+                <p><strong>2、分区裁剪：</strong> 只读取需要的分区。</p>
+                <p><strong>3、动态分区插入：</strong> 支持按数据内容写入不同分区。</p>
+                <p><strong>4、分区键：</strong> 在创建表时指定分区键。</p>
+            </div>
+
+            <h2 id="section-24">24. FlinkSQL的Lookup Join是什么？</h2>
+            <p>Lookup Join用于关联维度表：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 左表关联右表，右表是维度表。</p>
+                <p><strong>2、异步查询：</strong> 使用异步IO提高查询效率。</p>
+                <p><strong>3、缓存：</strong> 支持维度表缓存减少查询压力。</p>
+                <p><strong>4、时间属性：</strong> 可以使用处理时间或事件时间。</p>
+            </div>
+
+            <h2 id="section-25">25. FlinkSQL的Planner有哪些？</h2>
+            <p>FlinkSQL支持多种Planner：</p>
+            <div class="highlight">
+                <p><strong>1、Blink Planner：</strong> 功能更完善，性能更好。</p>
+                <p><strong>2、Old Planner：</strong> 传统Planner，兼容性更好。</p>
+                <p><strong>3、选择：</strong> 根据Flink版本和需求选择。</p>
+                <p><strong>4、配置：</strong> 通过table.planner参数配置。</p>
+            </div>
+
+            <h2 id="section-26">26. FlinkSQL如何实现行列转换？</h2>
+            <p>FlinkSQL实现行列转换：</p>
+            <div class="highlight">
+                <p><strong>1、UNPIVOT：</strong> 将列转换为行。</p>
+                <p><strong>2、PIVOT：</strong> 将行转换为列。</p>
+                <p><strong>3、CASE WHEN：</strong> 使用条件表达式手动转换。</p>
+                <p><strong>4、FLATTEN：</strong> 展开嵌套结构。</p>
+            </div>
+
+            <h2 id="section-27">27. FlinkSQL的状态过期（TTL）如何配置？</h2>
+            <p>状态TTL配置：</p>
+            <div class="highlight">
+                <p><strong>1、表级别：</strong> 在DDL中通过STATE TTL配置。</p>
+                <p><strong>2、查询级别：</strong> 在查询中覆盖表级别配置。</p>
+                <p><strong>3、清理策略：</strong> 由状态后端实现TTL清理。</p>
+                <p><strong>4、注意事项：</strong> 过短的TTL可能影响计算准确性。</p>
+            </div>
+
+            <h2 id="section-28">28. FlinkSQL的Table API和SQL如何互转？</h2>
+            <p>Table API和SQL的互转：</p>
+            <div class="highlight">
+                <p><strong>1、SQL转Table：</strong> 使用TableEnvironment.sqlQuery()返回Table。</p>
+                <p><strong>2、Table转SQL：</strong> 使用TableEnvironment.registerTable()注册后可用SQL查询。</p>
+                <p><strong>3、混合使用：</strong> 可以在Table API中使用SQL函数。</p>
+                <p><strong>4、Expression：</strong> 两种方式的表达式可以互相转换。</p>
+            </div>
+
+            <h2 id="section-29">29. FlinkSQL如何处理复杂数据类型？</h2>
+            <p>FlinkSQL处理复杂类型：</p>
+            <div class="highlight">
+                <p><strong>1、ARRAY：</strong> 支持数组字面量和数组函数。</p>
+                <p><strong>2、MAP：</strong> 支持Map类型和key-value访问。</p>
+                <p><strong>3、ROW：</strong> 支持嵌套行结构。</p>
+                <p><strong>4、访问：</strong> 使用列名或索引访问嵌套字段。</p>
+            </div>
+
+            <h2 id="section-30">30. FlinkSQL的性能调优方向有哪些？</h2>
+            <p>FlinkSQL性能调优方法：</p>
+            <div class="highlight">
+                <p><strong>1、Mini-batch：</strong> 启用mini-batch减少状态访问。</p>
+                <p><strong>2、分区裁剪：</strong> 利用分区裁剪减少数据量。</p>
+                <p><strong>3、函数优化：</strong> 使用内置函数替代自定义函数。</p>
+                <p><strong>4、状态后端：</strong> 选择合适的状态后端。</p>
+                <p><strong>5、并行度：</strong> 合理设置并行度。</p>
+            </div>
+
+            <h2 id="section-31">31. FlinkSQL支持哪些Join类型？</h2>
+            <p>FlinkSQL支持的Join类型：</p>
+            <div class="highlight">
+                <p><strong>1、Inner Join：</strong> 内连接。</p>
+                <p><strong>2、Left/Right Join：</strong> 左/右外连接。</p>
+                <p><strong>3、Full Join：</strong> 全外连接。</p>
+                <p><strong>4、Interval Join：</strong> 时间区间Join。</p>
+                <p><strong>5、Lookup Join：</strong> 维度表Join。</p>
+            </div>
+
+            <h2 id="section-32">32. FlinkSQL如何实现增量计算？</h2>
+            <p>增量计算的实现方式：</p>
+            <div class="highlight">
+                <p><strong>1、状态：</strong> 使用状态保存中间结果。</p>
+                <p><strong>2、 retraction：</strong> 支持回撤消息实现增量更新。</p>
+                <p><strong>3、 Watermark：</strong> 使用Watermark处理乱序。</p>
+                <p><strong>4、窗口：</strong> 使用窗口聚合实现增量聚合。</p>
+            </div>
+
+            <h2 id="section-33">33. FlinkSQL的DDL支持哪些语句？</h2>
+            <p>FlinkSQL DDL支持的语句：</p>
+            <div class="highlight">
+                <p><strong>1、CREATE TABLE：</strong> 创建表。</p>
+                <p><strong>2、CREATE DATABASE：</strong> 创建数据库。</p>
+                <p><strong>3、CREATE FUNCTION：</strong> 创建函数。</p>
+                <p><strong>4、ALTER：</strong> 修改表结构。</p>
+                <p><strong>5、DROP：</strong> 删除表/数据库/函数。</p>
+            </div>
+
+            <h2 id="section-34">34. FlinkSQL如何与Hive集成？</h2>
+            <p>FlinkSQL与Hive的集成：</p>
+            <div class="highlight">
+                <p><strong>1、HiveCatalog：</strong> 使用HiveCatalog访问Hive元数据。</p>
+                <p><strong>2、HiveConnector：</strong> 读写Hive表。</p>
+                <p><strong>3、方言：</strong> 支持Hive方言。</p>
+                <p><strong>4、批处理：</strong> 在Flink中执行HiveQL。</p>
+            </div>
+
+            <h2 id="section-35">35. FlinkSQL的未来发展趋势是什么？</h2>
+            <p>FlinkSQL的发展方向：</p>
+            <div class="highlight">
+                <p><strong>1、SQL覆盖：</strong> 持续增强SQL标准覆盖。</p>
+                <p><strong>2、性能优化：</strong> 优化器和执行引擎持续改进。</p>
+                <p><strong>3、生态集成：</strong> 与更多数据源和Sink集成。</p>
+                <p><strong>4、易用性：</strong> 提供更好的开发工具和调试能力。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

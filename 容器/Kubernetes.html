@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Kubernetes 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Kubernetes的基本概念是什么？</h2>
+            <p>Kubernetes（K8S）是一个容器编排平台：</p>
+            <div class="highlight">
+                <p><strong>1、容器编排：</strong> 自动化容器化应用的部署、扩展和管理。</p>
+                <p><strong>2、声明式配置：</strong> 通过YAML文件声明期望状态。</p>
+                <p><strong>3、自愈：</strong> 自动重启失败的容器。</p>
+                <p><strong>4、负载均衡：</strong> 内置负载均衡和DNS服务发现。</p>
+            </div>
+
+            <h2 id="section-2">2. Kubernetes集群的架构是怎样的？</h2>
+            <p>Kubernetes集群架构包括：</p>
+            <div class="highlight">
+                <p><strong>1、Master节点：</strong> 控制平面，运行API Server、Scheduler、Controller Manager等组件。</p>
+                <p><strong>2、Worker节点：</strong> 工作节点，运行Kubelet、Kube-proxy、容器运行时。</p>
+                <p><strong>3、etcd：</strong> 分布式键值存储，保存集群状态。</p>
+                <p><strong>4、组件通信：</strong> 组件间通过API Server协调。</p>
+            </div>
+
+            <h2 id="section-3">3. Kubernetes的核心资源对象有哪些？</h2>
+            <p>Kubernetes核心资源对象：</p>
+            <div class="highlight">
+                <p><strong>1、Pod：</strong> 最小的调度单元，包含一个或多个容器。</p>
+                <p><strong>2、Service：</strong> 抽象的微服务，提供稳定的访问入口。</p>
+                <p><strong>3、Deployment：</strong> 管理Pod副本数和更新策略。</p>
+                <p><strong>4、StatefulSet：</strong> 管理有状态应用。</p>
+                <p><strong>5、ConfigMap/Secret：</strong> 配置管理和敏感信息管理。</p>
+            </div>
+
+            <h2 id="section-4">4. Pod的生命周期是怎样的？</h2>
+            <p>Pod的生命周期阶段：</p>
+            <div class="highlight">
+                <p><strong>1、Pending：</strong> Pod被Kubernetes系统接受，但容器镜像未创建。</p>
+                <p><strong>2、Running：</strong> Pod已绑定到节点，所有容器已创建。</p>
+                <p><strong>3、Succeeded：</strong> Pod中所有容器已成功终止，不会重启。</p>
+                <p><strong>4、Failed：</strong> Pod中所有容器已终止，至少一个容器失败。</p>
+                <p><strong>5、Unknown：</strong> 无法获取Pod状态。</p>
+            </div>
+
+            <h2 id="section-5">5. Kubernetes的Service类型有哪些？</h2>
+            <p>Kubernetes Service类型：</p>
+            <div class="highlight">
+                <p><strong>1、ClusterIP：</strong> 集群内部可访问的虚拟IP。</p>
+                <p><strong>2、NodePort：</strong> 在每个节点IP上开放端口映射到Service。</p>
+                <p><strong>3、LoadBalancer：</strong> 使用云厂商负载均衡器暴露Service。</p>
+                <p><strong>4、ExternalName：</strong> 通过DNS名称访问服务。</p>
+            </div>
+
+            <h2 id="section-6">6. Deployment的滚动更新是如何工作的？</h2>
+            <p>Deployment滚动更新机制：</p>
+            <div class="highlight">
+                <p><strong>1、策略：</strong> RollingUpdate策略逐步替换Pod。</p>
+                <p><strong>2、最大Surge：</strong> 可超过期望副本数的最大数量。</p>
+                <p><strong>3、最大Unavailable：</strong> 不可用Pod的最大数量。</p>
+                <p><strong>4、回滚：</strong> 支持回滚到之前的版本。</p>
+            </div>
+
+            <h2 id="section-7">7. Kubernetes的探针类型有哪些？</h2>
+            <p>Kubernetes探针类型：</p>
+            <div class="highlight">
+                <p><strong>1、livenessProbe：</strong> 检测容器是否存活，失败则重启容器。</p>
+                <p><strong>2、readinessProbe：</strong> 检测容器是否就绪，影响流量分发。</p>
+                <p><strong>3、startupProbe：</strong> 检测容器是否启动完成，失败则重启。</p>
+                <p><strong>4、检测方式：</strong> exec、tcpSocket、httpGet。</p>
+            </div>
+
+            <h2 id="section-8">8. Kubernetes的网络模型是怎样的？</h2>
+            <p>Kubernetes网络模型原则：</p>
+            <div class="highlight">
+                <p><strong>1、Pod网络：</strong> 每个Pod有独立的IP，容器共享网络命名空间。</p>
+                <p><strong>2、Service网络：</strong> Service有虚拟IP，kube-proxy负责转发。</p>
+                <p><strong>3、节点网络：</strong> Pod可通过节点IP访问外部网络。</p>
+                <p><strong>4、CNI：</strong> 使用CNI插件实现网络功能。</p>
+            </div>
+
+            <h2 id="section-9">9. Kubernetes的调度机制是怎样的？</h2>
+            <p>Kubernetes调度器工作原理：</p>
+            <div class="highlight">
+                <p><strong>1、过滤：</strong> Predicates过滤不符合条件的节点。</p>
+                <p><strong>2、评分：</strong> Priorities对符合条件的节点评分。</p>
+                <p><strong>3、绑定：</strong> 选择最高分节点，将Pod绑定到该节点。</p>
+                <p><strong>4、亲和性：</strong> 支持节点亲和性和Pod亲和性调度。</p>
+            </div>
+
+            <h2 id="section-10">10. Kubernetes的存储卷类型有哪些？</h2>
+            <p>Kubernetes存储卷类型：</p>
+            <div class="highlight">
+                <p><strong>1、emptyDir：</strong> 临时存储，Pod删除后数据丢失。</p>
+                <p><strong>2、hostPath：</strong> 挂载节点文件系统到容器。</p>
+                <p><strong>3、persistentVolumeClaim：</strong> 使用持久化存储。</p>
+                <p><strong>4、configMap/secret：</strong> 存储配置和敏感信息。</p>
+                <p><strong>5、云存储：</strong> gcePersistentDisk、awsElasticBlockStore等。</p>
+            </div>
+
+            <h2 id="section-11">11. Kubernetes的资源配额如何设置？</h2>
+            <p>Kubernetes资源配额设置：</p>
+            <div class="highlight">
+                <p><strong>1、ResourceQuota：</strong> 限制命名空间总资源使用量。</p>
+                <p><strong>2、LimitRange：</strong> 设置Pod/容器的默认和最大资源。</p>
+                <p><strong>3、requests：</strong> 容器需要的最少资源。</p>
+                <p><strong>4、limits：</strong> 容器可使用的最大资源。</p>
+            </div>
+
+            <h2 id="section-12">12. Kubernetes的Horizontal Pod Autoscaler如何工作？</h2>
+            <p>HPA工作原理：</p>
+            <div class="highlight">
+                <p><strong>1、指标采集：</strong> 从Metrics Server采集CPU、内存等指标。</p>
+                <p><strong>2、扩缩容条件：</strong> 根据指标和阈值决定是否扩缩容。</p>
+                <p><strong>3、冷却时间：</strong> 避免频繁扩缩容。</p>
+                <p><strong>4、最小/最大副本：</strong> 限制副本数范围。</p>
+            </div>
+
+            <h2 id="section-13">13. Kubernetes的Ingress是什么？如何使用？</h2>
+            <p>Ingress用于HTTP/HTTPS路由：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 外部访问集群内部服务的入口。</p>
+                <p><strong>2、规则：</strong> 基于域名和路径的路由规则。</p>
+                <p><strong>3、TLS：</strong> 支持SSL/TLS终止。</p>
+                <p><strong>4、控制器：</strong> 需要部署Ingress Controller。</p>
+            </div>
+
+            <h2 id="section-14">14. Kubernetes的ConfigMap和Secret有什么区别？</h2>
+            <p>ConfigMap和Secret的区别：</p>
+            <div class="highlight">
+                <p><strong>1、用途：</strong> ConfigMap存储配置，Secret存储敏感信息。</p>
+                <p><strong>2、编码：</strong> Secret值是Base64编码（可选加密）。</p>
+                <p><strong>3、类型：</strong> Secret有多种类型（Opaque、kubernetes.io/tls等）。</p>
+                <p><strong>4、访问控制：</strong> Secret可以更细粒度地控制访问。</p>
+            </div>
+
+            <h2 id="section-15">15. Kubernetes的污点和容忍是什么？</h2>
+            <p>Taints和Tolerations机制：</p>
+            <div class="highlight">
+                <p><strong>1、Taints：</strong> 节点可以设置污点，排斥没有容忍的Pod。</p>
+                <p><strong>2、Tolerations：</strong> Pod可以设置容忍，允许调度到有污点的节点。</p>
+                <p><strong>3、效果：</strong> NoSchedule、PreferNoSchedule、NoExecute。</p>
+                <p><strong>4、使用场景：</strong> 专用节点、节点维护。</p>
+            </div>
+
+            <h2 id="section-16">16. Kubernetes的Leader选举如何实现？</h2>
+            <p>Kubernetes Leader选举机制：</p>
+            <div class="highlight">
+                <p><strong>1、Lease对象：</strong> 使用Kubernetes的Lease对象实现。</p>
+                <p><strong>2、端点：</strong> Controller Manager使用端点对象。</p>
+                <p><strong>3、抢锁：</strong> 组件尝试获取Lease锁成为Leader。</p>
+                <p><strong>4、续约：</strong> Leader定期续约，失效后其他候选者抢锁。</p>
+            </div>
+
+            <h2 id="section-17">17. Kubernetes的安全机制有哪些？</h2>
+            <p>Kubernetes安全机制：</p>
+            <div class="highlight">
+                <p><strong>1、RBAC：</strong> 基于角色的访问控制。</p>
+                <p><strong>2、NetworkPolicy：</strong> 网络策略控制Pod间通信。</p>
+                <p><strong>3、SecurityContext：</strong> 设置容器安全上下文。</p>
+                <p><strong>4、Pod Security Policy：</strong> 限制Pod的安全配置（已废弃）。</p>
+                <p><strong>5、Secret管理：</strong> 安全存储和管理敏感信息。</p>
+            </div>
+
+            <h2 id="section-18">18. Kubernetes的etcd备份如何实现？</h2>
+            <p>etcd备份策略：</p>
+            <div class="highlight">
+                <p><strong>1、快照：</strong> 使用etcdctl snapshot save创建快照。</p>
+                <p><strong>2、自动备份：</strong> 配置自动备份任务。</p>
+                <p><strong>3、恢复：</strong> 使用snapshot restore恢复数据。</p>
+                <p><strong>4、备份存储：</strong> 将备份存储到安全位置。</p>
+            </div>
+
+            <h2 id="section-19">19. Kubernetes的Pod QoS级别有哪些？</h2>
+            <p>Pod QoS服务质量级别：</p>
+            <div class="highlight">
+                <p><strong>1、Guaranteed：</strong> 最高优先级，requests=limits。</p>
+                <p><strong>2、Burstable：</strong> 中等优先级，有requests或limits。</p>
+                <p><strong>3、BestEffort：</strong> 最低优先级，无requests和limits。</p>
+                <p><strong>4、OOM：</strong> OOM时先Kill BestEffort Pod。</p>
+            </div>
+
+            <h2 id="section-20">20. Kubernetes的Namespace有什么用？</h2>
+            <p>Namespace的作用：</p>
+            <div class="highlight">
+                <p><strong>1、资源隔离：</strong> 将集群资源划分给不同团队。</p>
+                <p><strong>2、命名隔离：</strong> 相同资源名可以在不同Namespace中共存。</p>
+                <p><strong>3、权限控制：</strong> 结合RBAC限制不同 Namespace访问。</p>
+                <p><strong>4、配额管理：</strong> 为不同Namespace设置不同资源配额。</p>
+            </div>
+
+            <h2 id="section-21">21. Kubernetes的kubelet主要功能是什么？</h2>
+            <p>kubelet的主要职责：</p>
+            <div class="highlight">
+                <p><strong>1、Pod管理：</strong> 根据API Server的指示创建和管理Pod。</p>
+                <p><strong>2、容器运行时：</strong> 与容器运行时（如Docker）交互。</p>
+                <p><strong>3、健康检查：</strong> 执行探针并报告容器状态。</p>
+                <p><strong>4、资源监控：</strong> 采集并报告节点和Pod指标。</p>
+            </div>
+
+            <h2 id="section-22">22. Kubernetes的kube-proxy作用是什么？</h2>
+            <p>kube-proxy的网络代理功能：</p>
+            <div class="highlight">
+                <p><strong>1、Service代理：</strong> 实现Service的虚拟IP转发。</p>
+                <p><strong>2、模式：</strong> userspace、iptables、ipvs模式。</p>
+                <p><strong>3、负载均衡：</strong> 在后端Pod之间进行负载均衡。</p>
+                <p><strong>4、服务发现：</strong> 配合kube-dns实现服务发现。</p>
+            </div>
+
+            <h2 id="section-23">23. Kubernetes如何实现灰度发布？</h2>
+            <p>Kubernetes灰度发布策略：</p>
+            <div class="highlight">
+                <p><strong>1、Deployment滚动更新：</strong> 逐步替换旧版本Pod。</p>
+                <p><strong>2、Service标签筛选：</strong> 通过标签控制流量。</p>
+                <p><strong>3、Istio/Linkerd：</strong> 使用服务网格实现细粒度流量控制。</p>
+                <p><strong>4、Canary Deployment：</strong> 专门的金丝雀部署工具。</p>
+            </div>
+
+            <h2 id="section-24">24. Kubernetes的Operator模式是什么？</h2>
+            <p>Operator模式：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 用自定义控制器封装运维知识。</p>
+                <p><strong>2、CRD：</strong> 使用自定义资源定义新对象。</p>
+                <p><strong>3、控制器：</strong> 控制器监听CRD并执行相应操作。</p>
+                <p><strong>4、应用：</strong> Prometheus Operator、cert-manager等。</p>
+            </div>
+
+            <h2 id="section-25">25. Kubernetes的Pod亲和性和反亲和性是什么？</h2>
+            <p>Pod亲和性/反亲和性：</p>
+            <div class="highlight">
+                <p><strong>1、节点亲和性：</strong> 调度Pod到满足条件的节点。</p>
+                <p><strong>2、Pod亲和性：</strong> 将相关Pod调度到一起。</p>
+                <p><strong>3、Pod反亲和性：</strong> 将相关Pod调度到不同节点/区域。</p>
+                <p><strong>4、使用场景：</strong> 高可用部署、区域性服务。</p>
+            </div>
+
+            <h2 id="section-26">26. Kubernetes的集群升级如何实现？</h2>
+            <p>Kubernetes集群升级过程：</p>
+            <div class="highlight">
+                <p><strong>1、版本兼容性：</strong> 升级遵循n-1兼容性。</p>
+                <p><strong>2、Master先升级：</strong> 先升级控制平面组件。</p>
+                <p><strong>3、节点升级：</strong> 使用kubeadm upgrade或手动升级。</p>
+                <p><strong>4、验证：</strong> 每步升级后验证集群健康。</p>
+            </div>
+
+            <h2 id="section-27">27. Kubernetes的日志收集如何实现？</h2>
+            <p>Kubernetes日志收集方案：</p>
+            <div class="highlight">
+                <p><strong>1、节点级日志：</strong> 节点上的日志代理收集所有容器日志。</p>
+                <p><strong>2、Sidecar：</strong> 使用Sidecar容器收集应用日志。</p>
+                <p><strong>3、工具：</strong> ELK（Elasticsearch、Logstash、Kibana）、EFK。</p>
+                <p><strong>4、云服务：</strong> 云厂商提供的日志服务。</p>
+            </div>
+
+            <h2 id="section-28">28. Kubernetes的PodPreset是什么？</h2>
+            <p>PodPreset用于自动注入配置：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 自动为Pod注入环境变量、卷等。</p>
+                <p><strong>2、Selector：</strong> 通过标签选择要注入的Pod。</p>
+                <p><strong>3、类型：</strong> 注入环境变量、卷、存储卷。</p>
+                <p><strong>4、注意：</strong> 需要启用PodPreset准入控制器。</p>
+            </div>
+
+            <h2 id="section-29">29. Kubernetes的资源限制如何避免饿死？</h2>
+            <p>Kubernetes资源保障机制：</p>
+            <div class="highlight">
+                <p><strong>1、requests：</strong> 保证Pod能获取到requests指定的资源。</p>
+                <p><strong>2、limits：</strong> 限制Pod可用资源上限。</p>
+                <p><strong>3、QoS：</strong> Guaranteed级别优先保障资源。</p>
+                <p><strong>4、ResourceQuota：</strong> 限制Namespace总资源使用。</p>
+            </div>
+
+            <h2 id="section-30">30. Kubernetes的CNI插件有哪些？</h2>
+            <p>常见CNI插件：</p>
+            <div class="highlight">
+                <p><strong>1、Flannel：</strong> 简单的网络插件，使用vxlan。</p>
+                <p><strong>2、Calico：</strong> 支持网络策略和BGP。</p>
+                <p><strong>3、Weave：</strong> 去中心化的网络插件。</p>
+                <p><strong>4、Cilium：</strong> 基于eBPF，提供网络和安全功能。</p>
+            </div>
+
+            <h2 id="section-31">31. Kubernetes的集群联邦（Kubefed）是什么？</h2>
+            <p>Kubernetes Federation（KubeFed）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 管理多个Kubernetes集群。</p>
+                <p><strong>2、跨集群部署：</strong> 单一API同时部署到多个集群。</p>
+                <p><strong>3、负载均衡：</strong> 跨集群负载均衡。</p>
+                <p><strong>4、使用场景：</strong> 多区域部署、灾备恢复。</p>
+            </div>
+
+            <h2 id="section-32">32. Kubernetes的Pod Disruption Budget是什么？</h2>
+            <p>Pod Disruption Budget（PDB）：</p>
+            <div class="highlight">
+                <p><strong>1、作用：</strong> 限制同时 disruption的Pod数量。</p>
+                <p><strong>2、场景：</strong> 节点维护、集群升级时保护应用。</p>
+                <p><strong>3、最小可用：</strong> 保持最少可用Pod数量。</p>
+                <p><strong>4、最大不可用：</strong> 允许最多不可用Pod比例。</p>
+            </div>
+
+            <h2 id="section-33">33. Kubernetes的指标服务器（Metrics Server）有什么用？</h2>
+            <p>Metrics Server作用：</p>
+            <div class="highlight">
+                <p><strong>1、采集指标：</strong> 采集集群和Pod的CPU、内存指标。</p>
+                <p><strong>2、HPA：</strong> 为HPA提供扩缩容依据。</p>
+                <p><strong>3、kubectl top：</strong> 支持kubectl top命令查看资源使用。</p>
+                <p><strong>4、部署：</strong> 常用kubectl top nodes、kubectl top pods。</p>
+            </div>
+
+            <h2 id="section-34">34. Kubernetes的准入控制器有哪些？</h2>
+            <p>常见的准入控制器：</p>
+            <div class="highlight">
+                <p><strong>1、AlwaysPullImages：</strong> 强制每次都拉取镜像。</p>
+                <p><strong>2、ServiceAccount：</strong> 自动挂载ServiceAccount。</p>
+                <p><strong>3、NamespaceLifecycle：</strong> 防止删除系统命名空间。</p>
+                <p><strong>4、ResourceQuota：</strong> 强制执行资源配额。</p>
+            </div>
+
+            <h2 id="section-35">35. Kubernetes和Docker Swarm的区别是什么？</h2>
+            <p>Kubernetes和Docker Swarm对比：</p>
+            <div class="highlight">
+                <p><strong>1、复杂度：</strong> K8S更复杂但功能更全面。</p>
+                <p><strong>2、部署：</strong> Swarm部署更简单，与Docker集成紧密。</p>
+                <p><strong>3、滚动更新：</strong> 两者都支持滚动更新。</p>
+                <p><strong>4、选择：</strong> 根据团队能力和需求选择。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

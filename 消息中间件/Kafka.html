@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafka 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Kafka 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Kafka的基本概念是什么？</h2>
+            <p>Kafka是一个分布式流处理平台：</p>
+            <div class="highlight">
+                <p><strong>1、消息队列：</strong> Kafka是一个高性能的分布式消息队列系统。</p>
+                <p><strong>2、发布订阅：</strong> 支持发布-订阅模式的消息传递。</p>
+                <p><strong>3、持久化：</strong> 消息持久化到磁盘，保证消息可靠性。</p>
+                <p><strong>4、分布式：</strong> 支持集群部署和分区存储。</p>
+            </div>
+
+            <h2 id="section-2">2. Kafka的架构是怎样的？</h2>
+            <p>Kafka的核心架构组件：</p>
+            <div class="highlight">
+                <p><strong>1、Broker：</strong> Kafka集群中的服务节点。</p>
+                <p><strong>2、Topic：</strong> 消息主题，用于消息分类。</p>
+                <p><strong>3、Partition：</strong> Topic的分区，实现消息并行处理。</p>
+                <p><strong>4、Producer：</strong> 消息生产者。</p>
+                <p><strong>5、Consumer：</strong> 消息消费者。</p>
+                <p><strong>6、Consumer Group：</strong> 消费者组，实现消息并行消费。</p>
+            </div>
+
+            <h2 id="section-3">3. Kafka的消息持久化机制是怎样的？</h2>
+            <p>Kafka的消息持久化原理：</p>
+            <div class="highlight">
+                <p><strong>1、顺序写入：</strong> 消息追加到文件末尾，顺序写入提高性能。</p>
+                <p><strong>2、分区存储：</strong> 每个分区对应一个日志文件。</p>
+                <p><strong>3、索引：</strong> 消息偏移量索引和时间戳索引。</p>
+                <p><strong>4、清理策略：</strong> 按时间或大小删除过期消息。</p>
+            </div>
+
+            <h2 id="section-4">4. Kafka如何保证消息不丢失？</h2>
+            <p>Kafka保证消息可靠的机制：</p>
+            <div class="highlight">
+                <p><strong>1、 Producer端：</strong> 设置acks=all，消息复制到所有ISR后确认。</p>
+                <p><strong>2、Broker端：</strong> replication.factor>=3，min.insync.replicas>=2。</p>
+                <p><strong>3、Consumer端：</strong> 手动提交offset，确保处理完成后提交。</p>
+                <p><strong>4、选举：</strong> 启用unclean.leader.election=false。</p>
+            </div>
+
+            <h2 id="section-5">5. Kafka如何实现消息顺序性？</h2>
+            <p>Kafka保证消息顺序的方法：</p>
+            <div class="highlight">
+                <p><strong>1、单分区：</strong> 同一分区内消息有序。</p>
+                <p><strong>2、Partition Key：</strong> 使用相同key发送到同一分区。</p>
+                <p><strong>3、消费者单线程：</strong> 单消费者消费单个分区。</p>
+                <p><strong>4、业务保证：</strong> 业务层面保证消息处理的幂等性。</p>
+            </div>
+
+            <h2 id="section-6">6. Kafka的ISR机制是什么？</h2>
+            <p>In-Sync Replicas（ISR）机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 与Leader保持同步的副本集合。</p>
+                <p><strong>2、同步条件：</strong> 副本在replica.lag.time.max.ms内追赶上Leader。</p>
+                <p><strong>3、ISR收缩：</strong> 副本落后太多或无响应会被踢出ISR。</p>
+                <p><strong>4、写入条件：</strong> acks=all时消息必须写入所有ISR。</p>
+            </div>
+
+            <h2 id="section-7">7. Kafka的分区分配策略有哪些？</h2>
+            <p>Kafka分区分配策略：</p>
+            <div class="highlight">
+                <p><strong>1、RoundRobin：</strong> 轮询策略，尽量均匀分配。</p>
+                <p><strong>2、StickyAssignor：</strong> 粘性分配，保持分区分配稳定。</p>
+                <p><strong>3、Range：</strong> 按主题划分，可能不均匀。</p>
+                <p><strong>4、自定义：</strong> 可以实现自定义分配策略。</p>
+            </div>
+
+            <h2 id="section-8">8. Kafka的消费者组机制是怎样的？</h2>
+            <p>Consumer Group的工作原理：</p>
+            <div class="highlight">
+                <p><strong>1、负载均衡：</strong> 组内消费者共同消费分区，实现负载均衡。</p>
+                <p><strong>2、独占消费：</strong> 同一分区只能被组内一个消费者消费。</p>
+                <p><strong>3、组隔离：</strong> 不同消费者组相互隔离，独立消费。</p>
+                <p><strong>4、Rebalance：</strong> 消费者加入或离开时触发再平衡。</p>
+            </div>
+
+            <h2 id="section-9">9. Kafka如何实现高吞吐量？</h2>
+            <p>Kafka高吞吐量的原因：</p>
+            <div class="highlight">
+                <p><strong>1、顺序写入：</strong> 消息追加到日志文件末尾，顺序写入磁盘。</p>
+                <p><strong>2、页缓存：</strong> 利用操作系统的页缓存，零拷贝技术。</p>
+                <p><strong>3、网络优化：</strong> sendfile零拷贝减少数据复制。</p>
+                <p><strong>4、分区并行：</strong> 多分区并行处理提高吞吐量。</p>
+            </div>
+
+            <h2 id="section-10">10. Kafka的零拷贝技术是什么？</h2>
+            <p>Kafka零拷贝（Zero-Copy）原理：</p>
+            <div class="highlight">
+                <p><strong>1、传统方式：</strong> 数据从磁盘读出后需要经过四次复制。</p>
+                <p><strong>2、零拷贝：</strong> 使用sendfile，直接从内核缓冲区发送。</p>
+                <p><strong>3、减少复制：</strong> 减少CPU参与，降低上下文切换。</p>
+                <p><strong>4、效果：</strong> 大幅提升数据传输效率。</p>
+            </div>
+
+            <h2 id="section-11">11. Kafka的Rebalance机制是怎样的？</h2>
+            <p>Kafka Rebalance触发条件和过程：</p>
+            <div class="highlight">
+                <p><strong>1、触发条件：</strong> 消费者加入或离开、订阅主题变化、分区数量变化。</p>
+                <p><strong>2、通知：</strong> Group Coordinator通知所有消费者开始Rebalance。</p>
+                <p><strong>3、提交：</strong> 消费者停止消费，提交offset，尝试加入消费者组。</p>
+                <p><strong>4、分区分配：</strong> Coordinator重新分配分区给各消费者。</p>
+            </div>
+
+            <h2 id="section-12">12. Kafka如何避免Rebalance？</h2>
+            <p>避免不必要Rebalance的方法：</p>
+            <div class="highlight">
+                <p><strong>1、Session Timeout：</strong> 合理设置session.timeout.ms和heartbeat.interval.ms。</p>
+                <p><strong>2、处理时间：</strong> 消费者处理消息的时间不能过长。</p>
+                <p><strong>3、异步提交：</strong> 使用异步提交避免阻塞。</p>
+                <p><strong>4、静态成员：</strong> 使用静态成员group.instance.id避免Rebalance。</p>
+            </div>
+
+            <h2 id="section-13">13. Kafka的分区副本机制是怎样的？</h2>
+            <p>Kafka分区副本机制：</p>
+            <div class="highlight">
+                <p><strong>1、Leader：</strong> 所有读写操作都经过Leader。</p>
+                <p><strong>2、Follower：</strong> 被动从Leader拉取消息进行同步。</p>
+                <p><strong>3、ISR：</strong> 与Leader保持同步的副本集合。</p>
+                <p><strong>4、故障转移：</strong> Leader挂掉后从ISR中选举新Leader。</p>
+            </div>
+
+            <h2 id="section-14">14. Kafka如何实现消息幂等性？</h2>
+            <p>Kafka幂等性实现：</p>
+            <div class="highlight">
+                <p><strong>1、enable.idempotence：</strong> 开启幂等性配置。</p>
+                <p><strong>2、Producer ID：</strong> 每个Producer有唯一ID。</p>
+                <p><strong>3、Sequence Number：</strong> 每条消息有序列号，Broker去重。</p>
+                <p><strong>4、限制：</strong> 只能保证单个Producer会话内的幂等性。</p>
+            </div>
+
+            <h2 id="section-15">15. Kafka事务消息是什么？如何使用？</h2>
+            <p>Kafka事务消息机制：</p>
+            <div class="highlight">
+                <p><strong>1、事务：</strong> 保证生产消息和消费消息的原子性。</p>
+                <p><strong>2、配置：</strong> 设置transactional.id开启事务。</p>
+                <p><strong>3、API：</strong> initTransaction、beginTransaction、commitTransaction。</p>
+                <p><strong>4、隔离级别：</strong> read_committed和read_uncommitted。</p>
+            </div>
+
+            <h2 id="section-16">16. Kafka的日志保留策略有哪些？</h2>
+            <p>Kafka日志清理策略：</p>
+            <div class="highlight">
+                <p><strong>1、Delete：</strong> 按时间或大小删除过期日志。</p>
+                <p><strong>2、Compact：</strong> 对相同key的消息进行压缩，保留最新值。</p>
+                <p><strong>3、保留时间：</strong> log.retention.hours/ms设置保留时间。</p>
+                <p><strong>4、保留大小：</strong> log.retention.bytes设置每个分区保留大小。</p>
+            </div>
+
+            <h2 id="section-17">17. Kafka的分区数可以减少吗？</h2>
+            <p>Kafka分区数调整：</p>
+            <div class="highlight">
+                <p><strong>1、只能增加：</strong> Kafka分区数只能增加，不能减少。</p>
+                <p><strong>2、原因：</strong> 减少分区会影响已有消息的存储位置。</p>
+                <p><strong>3、影响：</strong> 分区数变化会导致消费者组Rebalance。</p>
+                <p><strong>4、规划：</strong> 创建Topic时需要合理规划分区数。</p>
+            </div>
+
+            <h2 id="section-18">18. Kafka的Controller是什么？</h2>
+            <p>Kafka Controller的作用：</p>
+            <div class="highlight">
+                <p><strong>1、选举：</strong> 从Broker中选举一个作为Controller。</p>
+                <p><strong>2、分区Leader选举：</strong> 负责分区Leader的选举和failover。</p>
+                <p><strong>3、成员管理：</strong> 管理Broker的加入和离开。</p>
+                <p><strong>4、Topic管理：</strong> 创建、删除Topic，分区副本分配。</p>
+            </div>
+
+            <h2 id="section-19">19. Kafka如何处理消息积压？</h2>
+            <p>Kafka消息积压的处理方法：</p>
+            <div class="highlight">
+                <p><strong>1、增加分区：</strong> 增加消费者并行度，提高消费速度。</p>
+                <p><strong>2、增加消费者：</strong> 横向扩展消费者实例。</p>
+                <p><strong>3、优化消费逻辑：</strong> 减少每条消息的处理时间。</p>
+                <p><strong>4、消费者多线程：</strong> 消费者内部使用多线程并行处理。</p>
+            </div>
+
+            <h2 id="section-20">20. Kafka的Exactly Once语义是什么？</h2>
+            <p>Kafka Exactly Once语义：</p>
+            <div class="highlight">
+                <p><strong>1、定义：</strong> 每条消息只会被处理一次，不会重复也不会丢失。</p>
+                <p><strong>2、Producer端：</strong> 开启幂等性或使用事务保证。</p>
+                <p><strong>3、Consumer端：</strong> 手动提交offset+业务处理原子性。</p>
+                <p><strong>4、注意事项：</strong> Exactly Once是端到端的语义。</p>
+            </div>
+
+            <h2 id="section-21">21. Kafka的Lag是什么？如何监控？</h2>
+            <p>Kafka消费Lag监控：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 消费LAG = 最新消息offset - 已消费offset。</p>
+                <p><strong>2、原因：</strong> 消费速度慢或处理时间长导致LAG增大。</p>
+                <p><strong>3、监控工具：</strong> Kafka Manager、Confluent Control Center。</p>
+                <p><strong>4、命令：</strong> kafka-consumer-groups --describe查看LAG。</p>
+            </div>
+
+            <h2 id="section-22">22. Kafka如何实现消息优先级？</h2>
+            <p>Kafka消息优先级实现：</p>
+            <div class="highlight">
+                <p><strong>1、有限支持：</strong> Kafka本身不支持消息优先级。</p>
+                <p><strong>2、分区模拟：</strong> 创建多个分区，高优先级发到独立分区。</p>
+                <p><strong>3、单独消费：</strong> 高优先级分区由独立消费者优先处理。</p>
+                <p><strong>4、替代方案：</strong> 使用RocketMQ等支持优先级的消息队列。</p>
+            </div>
+
+            <h2 id="section-23">23. Kafka的选举机制是怎样的？</h2>
+            <p>Kafka Leader选举机制：</p>
+            <div class="highlight">
+                <p><strong>1、Controller选举：</strong> 通过ZooKeeper或KRaft选举Controller。</p>
+                <p><strong>2、分区Leader选举：</strong> 由Controller执行，从ISR中选举。</p>
+                <p><strong>3、优先副本：</strong> 优先选择preferred replica作为Leader。</p>
+                <p><strong>4、unclean选举：</strong> 可以允许从非ISR副本中选举。</p>
+            </div>
+
+            <h2 id="section-24">24. Kafka和老版本ZooKeeper的关系是什么？</h2>
+            <p>Kafka与ZooKeeper的关系（KRaft模式前）：</p>
+            <div class="highlight">
+                <p><strong>1、元数据存储：</strong> ZooKeeper存储Kafka集群元数据。</p>
+                <p><strong>2、选举：</strong> Controller选举依赖ZooKeeper。</p>
+                <p><strong>3、配置存储：</strong> Topic配置、副本分配等存储在ZooKeeper。</p>
+                <p><strong>4、KIP-500：</strong> Kafka正在向KRaft模式演进，去除ZooKeeper依赖。</p>
+            </div>
+
+            <h2 id="section-25">25. Kafka Streams是什么？有什么特点？</h2>
+            <p>Kafka Streams特性：</p>
+            <div class="highlight">
+                <p><strong>1、轻量级：</strong> 无需独立集群，作为库运行。</p>
+                <p><strong>2、 Exactly Once：</strong> 支持端到端Exactly Once处理。</p>
+                <p><strong>3、状态存储：</strong> 内置状态存储，支持状态计算。</p>
+                <p><strong>4、窗口计算：</strong> 支持时间窗口和会话窗口。</p>
+            </div>
+
+            <h2 id="section-26">26. Kafka的配置文件有哪些？</h2>
+            <p>Kafka关键配置参数：</p>
+            <div class="highlight">
+                <p><strong>1、Broker配置：</strong> broker.id、listeners、log.dirs。</p>
+                <p><strong>2、Topic配置：</strong> partitions、replication.factor。</p>
+                <p><strong>3、Producer配置：</strong> acks、retries、batch.size。</p>
+                <p><strong>4、Consumer配置：</strong> group.id、auto.offset.reset。</p>
+            </div>
+
+            <h2 id="section-27">27. Kafka如何实现消息过滤？</h2>
+            <p>Kafka消息过滤方式：</p>
+            <div class="highlight">
+                <p><strong>1、Consumer过滤：</strong> Consumer端根据业务逻辑过滤。</p>
+                <p><strong>2、Header过滤：</strong> 根据消息Header进行过滤。</p>
+                <p><strong>3、SQL过滤：</strong> 使用Kafka Streams DSL进行过滤。</p>
+                <p><strong>4、分topic：</strong> 业务拆分到不同topic实现粗粒度过滤。</p>
+            </div>
+
+            <h2 id="section-28">28. Kafka的副本同步机制是怎样的？</h2>
+            <p>Kafka副本同步原理：</p>
+            <div class="highlight">
+                <p><strong>1、拉取：</strong> Follower从Leader拉取消息。</p>
+                <p><strong>2、写入：</strong> 消息写入本地日志后发送ACK。</p>
+                <p><strong>3、检查：</strong> Leader检查ISR列表的同步状态。</p>
+                <p><strong>4、滞后检测：</strong> 超过replica.lag.time.max.ms判定为滞后。</p>
+            </div>
+
+            <h2 id="section-29">29. Kafka消息的压缩格式有哪些？</h2>
+            <p>Kafka支持的压缩格式：</p>
+            <div class="highlight">
+                <p><strong>1、Gzip：</strong> 压缩比高，CPU开销大。</p>
+                <p><strong>2、Snappy：</strong> 压缩速度快，压缩比一般。</p>
+                <p><strong>3、LZ4：</strong> 压缩解压速度快。</p>
+                <p><strong>4、ZSTD：</strong> Facebook开源，压缩比和速度均衡。</p>
+            </div>
+
+            <h2 id="section-30">30. Kafka的性能调优有哪些方法？</h2>
+            <p>Kafka性能调优建议：</p>
+            <div class="highlight">
+                <p><strong>1、硬件：</strong> 使用SSD，提升磁盘IO性能。</p>
+                <p><strong>2、分区数：</strong> 合理设置分区数，避免过多或过少。</p>
+                <p><strong>3、批量发送：</strong> 调整batch.size和linger.ms。</p>
+                <p><strong>4、消费者：</strong> 适当增加fetch.min.bytes提升吞吐量。</p>
+            </div>
+
+            <h2 id="section-31">31. Kafka和RocketMQ的区别是什么？</h2>
+            <p>Kafka与RocketMQ对比：</p>
+            <div class="highlight">
+                <p><strong>1、事务消息：</strong> RocketMQ原生支持，Kafka需要额外处理。</p>
+                <p><strong>2、延迟消息：</strong> RocketMQ支持，Kafka不支持。</p>
+                <p><strong>3、消费模式：</strong> Kafka使用Consumer Group，RocketMQ更灵活。</p>
+                <p><strong>4、吞吐量：</strong> Kafka吞吐量更高，RocketMQ功能更丰富。</p>
+            </div>
+
+            <h2 id="section-32">32. Kafka的Multi-Tenancy是什么？</h2>
+            <p>Kafka多租户支持：</p>
+            <div class="highlight">
+                <p><strong>1、Quota机制：</strong> 限制用户或客户端的请求配额。</p>
+                <p><strong>2、ACL：</strong> 基于用户的访问控制列表。</p>
+                <p><strong>3、命名空间：</strong> 通过前缀实现Topic隔离。</p>
+                <p><strong>4、资源限制：</strong> 按租户设置存储配额。</p>
+            </div>
+
+            <h2 id="section-33">33. Kafka的消息积压监控指标有哪些？</h2>
+            <p>Kafka重要监控指标：</p>
+            <div class="highlight">
+                <p><strong>1、Consumer Lag：</strong> 消费延迟，最重要的指标。</p>
+                <p><strong>2、UnderReplicatedPartitions：</strong> 副本不足的分区数。</p>
+                <p><strong>3、Disk Usage：</strong> 磁盘使用率，防止空间耗尽。</p>
+                <p><strong>4、Network Throughput：</strong> 网络吞吐量，检测带宽瓶颈。</p>
+            </div>
+
+            <h2 id="section-34">34. Kafka的消息广播和集群间复制如何实现？</h2>
+            <p>Kafka消息复制功能：</p>
+            <div class="highlight">
+                <p><strong>1、MirrorMaker：</strong> Kafka官方跨集群复制工具。</p>
+                <p><strong>2、主题级别的复制：</strong> 选择性复制特定主题。</p>
+                <p><strong>3、消息广播：</strong> 使用多个Consumer Group各自消费。</p>
+                <p><strong>4、集群联邦：</strong> 使用Kafka tiering或外部工具实现多集群管理。</p>
+            </div>
+
+            <h2 id="section-35">35. Kafka 3.0有哪些新特性？</h2>
+            <p>Kafka 3.0新特性：</p>
+            <div class="highlight">
+                <p><strong>1、KRaft：</strong> 改进的自我管理模式，不再依赖ZooKeeper。</p>
+                <p><strong>2、粘性分区策略：</strong> 新的分区分配策略减少Rebalance。</p>
+                <p><strong>3、增量Cooperative Rebalance：</strong> 更高效的Rebalance机制。</p>
+                <p><strong>4、Drop-in体验：</strong> 改进了Docker镜像和配置简化。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>
