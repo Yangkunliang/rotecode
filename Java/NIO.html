@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java NIO 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Java NIO 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Java NIO中的Buffer有哪些主要类型？</h2>
+            <p>Java NIO中的Buffer用于与NIO通道进行交互，作为基本的数据容器。主要类型包括：</p>
+            <div class="highlight">
+                <p><strong>1、ByteBuffer：</strong>  最常用的类型，用于存储字节数据。</p>
+                <p><strong>2、CharBuffer：</strong>  用于存储字符数据。</p>
+                <p><strong>3、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer、ShortBuffer：</strong>  分别用于存储双精度浮点数、单精度浮点数、整型、长整型和短整型数据。</p>
+                <p><strong>4、MappedByteBuffer：</strong>  可以让文件直接在内存（堆外内存）中进行修改，而不是每次读写都通过一个中间缓冲区进行。</p>
+            </div>
+            <p>这些Buffer类都继承自java.nio.Buffer类，各自实现了相应类型的数据处理和存储功能。</p>
+
+            <h2 id="section-2">2. 如何使用Selector进行非阻塞IO操作？</h2>
+            <p>Selector是Java NIO中的一个组件，允许单线程处理多个Channel。使用Selector进行非阻塞IO操作的步骤如下：</p>
+            <div class="highlight">
+                <p><strong>1、打开Selector：</strong>  通过调用<strong>Selector.open()</strong>方法创建一个Selector。</p>
+                <p><strong>2、将Channel注册到Selector上：</strong>  通过调用<strong>SelectableChannel.register(Selector sel, int ops)</strong>方法将通道注册到选择器上，并指定感兴趣的IO事件（如：SelectionKey.OP_READ、SelectionKey.OP_WRITE等）。</p>
+                <p><strong>3、选择就绪的通道：</strong>  通过调用<strong>Selector.select()</strong>方法检查注册在该选择器上的通道是否有任何准备就绪的IO事件。此方法会阻塞，直到至少有一个通道就绪。</p>
+                <p><strong>4、处理就绪的通道：</strong>  通过<strong>Selector.selectedKeys()</strong>获取就绪通道的SelectionKey集合，遍历每个key处理相应的IO事件。</p>
+            </div>
+            <p>这种方式可以高效地管理多个通道上的IO操作，提高应用程序的性能。</p>
+
+            <h2 id="section-3">3. Channel在Java NIO中的作用是什么？</h2>
+            <p>Channel是Java NIO中的基础，用于在字节缓冲区和通道之间进行数据传输。Channel的作用包括：</p>
+            <div class="highlight">
+                <p><strong>1、数据的读取和写入：</strong>  通过Channel，程序可以读取数据到Buffer中，或从Buffer中写入数据到Channel。</p>
+                <p><strong>2、支持异步IO操作：</strong>  多个Channel可以注册到一个Selector，实现非阻塞的IO操作。</p>
+                <p><strong>3、支持多种传输协议：</strong>  Java NIO提供了多种Channel实现，如FileChannel、DatagramChannel、SocketChannel和ServerSocketChannel等，支持不同的数据传输协议。</p>
+            </div>
+            <p>Channel是Java NIO高效IO操作的关键，它提供了一种更接近操作系统IO操作的模型。</p>
+
+            <h2 id="section-4">4. Java NIO与传统IO（BIO）的主要区别是什么？</h2>
+            <p>Java NIO和BIO在IO处理模型上有本质的区别，主要体现在：</p>
+            <div class="highlight">
+                <p><strong>1、IO模型：</strong>  BIO基于流模型实现，是阻塞式IO；而NIO基于通道（Channel）和缓冲区（Buffer）实现，支持非阻塞式IO和选择器（Selector）机制。</p>
+                <p><strong>2、数据处理方式：</strong>  BIO以流的方式处理数据，适合于小量数据的传输；NIO以块的方式处理数据，适合于大量数据的传输。</p>
+                <p><strong>3、并发处理能力：</strong>  BIO为每个连接创建一个线程，适用于连接数目较少且固定的应用场景；NIO可以使用单个线程管理多个连接，适用于连接数目多且动态变化的应用场景。</p>
+                <p><strong>4、API复杂度：</strong>  NIO的API比BIO更复杂，需要更多的时间和努力去理解和掌握。</p>
+            </div>
+            <p>NIO提供了更高的性能和更灵活的IO处理机制，特别是在需要处理成千上万个连接的高性能网络服务器中，NIO表现更加优越。</p>
+
+            <h2 id="section-5">5. NIO中的文件通道FileChannel的主要功能是什么？</h2>
+            <p>FileChannel是Java NIO中的一个重要组件，用于文件的读写操作。其主要功能包括：</p>
+            <div class="highlight">
+                <p><strong>1、读写操作：</strong>  FileChannel可以从文件中读取数据到Buffer，也可以将Buffer中的数据写入到文件。这些操作通过<strong>read()</strong>和<strong> write()</strong>方法实现。</p>
+                <p><strong>2、文件大小调整：</strong>  通过<strong>truncate()</strong>方法可以调整到某个特定大小。</p>
+                <p><strong>3、文件区域加锁：</strong>  FileChannel提供了<strong>lock()</strong>和<strong> tryLock()</strong>方法，可以对文件的特定区域加锁，防止其他进程同时修改。</p>
+                <p><strong>4、数据传输：</strong>  支持<strong>transferTo()</strong>和<strong> transferFrom()</strong>方法，可以直接在FileChannel之间传输数据，这是一种高效的数据传输方式。</p>
+                <p><strong>5、映射内存：</strong>  通过<strong>map()</strong>方法可以将文件的某个区域映射到内存中，对映射区域的操作会直接反映到文件上。</p>
+            </div>
+
+            <h2 id="section-6">6. Selector的select()、selectNow()和select(long timeout)方法有何区别？</h2>
+            <p>Selector的选择操作是NIO非阻塞IO的核心，不同的选择方法如下：</p>
+            <div class="highlight">
+                <p><strong>1、select()：</strong>  是阻塞方法，直到至少有一个注册的通道就绪（即，选择键的数量大于0）才返回。如果已经有通道就绪，立即返回就绪的通道数量。</p>
+                <p><strong>2、selectNow()：</strong>  是非阻塞方法，不管是否有通道就绪，立即返回。这意味着，如果没有通道就绪，selectNow()会返回0。</p>
+                <p><strong>3、select(long timeout)：</strong>  允许带有超时时间的阻塞，最多阻塞timeout毫秒。如果在超时时间内有通道就绪，则提前返回；如果超时时间到达仍没有通道就绪，则返回0。</p>
+            </div>
+            <p>这三种方法提供了不同的选择机制，以适应不同的应用场景，如实现超时检测、非阻塞轮询等。</p>
+
+            <h2 id="section-7">7. 在Java NIO中，如何实现Socket编程？</h2>
+            <p>在Java NIO中实现Socket编程主要涉及使用SocketChannel和ServerSocketChannel。以下是创建基于NIO的客户端和服务器端的基本步骤：</p>
+            <div class="highlight">
+                <p><strong>1、打开ServerSocketChannel（服务器端）：</strong>  通过<strong>ServerSocketChannel.open()</strong>方法创建。</p>
+                <p><strong>2、配置为非阻塞模式：</strong>  通过<strong>configureBlocking(false)</strong>方法设置Channel为非阻塞模式。</p>
+                <p><strong>3、绑定端口：</strong>  通过<strong>bind()</strong>方法将服务器端Channel绑定到一个端口上。</p>
+                <p><strong>4、接受连接：</strong>  服务器端通过<strong>accept()</strong>方法接受客户端的连接请求，该方法返回一个SocketChannel对象。</p>
+                <p><strong>5、打开SocketChannel（客户端）：</strong>  客户端通过<strong>SocketChannel.open()</strong>方法创建，并连接到服务器。</p>
+                <p><strong>6、读写数据：</strong>  通过<strong>read()</strong>和<strong> write()</strong>方法在SocketChannel上进行数据的读取和写入。</p>
+                <p><strong>7、使用Selector管理多个通道：</strong>  可以将多个SocketChannel注册到一个Selector上，使用单个线程来处理多个客户端连接。</p>
+            </div>
+
+            <h2 id="section-8">8. ByteBuffer的flip()、clear()和compact()方法各自的作用是什么？</h2>
+            <p>ByteBuffer中的这些方法用于辅助缓冲区的读写操作：</p>
+            <div class="highlight">
+                <p><strong>1、flip()方法：</strong>  将Buffer从写模式切换到读模式。调用flip()方法会将limit设置为当前position的值，position设置为0，这样就可以读取之前写入的所有数据。</p>
+                <p><strong>2、clear()方法：</strong>  用于清空缓冲区。它会将position设置为0，limit设置为capacity的值，从而使缓冲区准备好重新被写入。但是它并不会清除缓冲区中的数据，只是将标记重置。</p>
+                <p><strong>3、compact()方法：</strong>  用于读取模式后的压缩。它会将所有未读的数据复制到缓冲区的开始处，然后将position设置到最后一个未读元素之后，limit设置为capacity，为后续的写入准备空间。</p>
+            </div>
+            <p>这些方法是ByteBuffer使用中的关键，有效地帮助管理缓冲区的数据和状态，以支持复杂的读写操作和缓冲区的重复使用。</p>
+
+            <h2 id="section-9">9. 如何在Java NIO中管理大文件的高效读写？</h2>
+            <p>在Java NIO中管理大文件的高效读写可以通过以下方式实现：</p>
+            <div class="highlight">
+                <p><strong>1、使用FileChannel与ByteBuffer：</strong>  通过<strong>FileChannel</strong> 的<strong>map()方法将文件映射到内存中的MappedByteBuffer</strong> ，这样可以直接在内存中对文件进行读写操作，减少了数据在内核空间和用户空间之间的拷贝，提高了读写效率。</p>
+                <p><strong>2、利用直接缓冲区：</strong>  直接缓冲区（<strong>ByteBuffer.allocateDirect()</strong>创建）可以在某些场景下提高性能，因为它们可以减少将数据从Java堆移动到原生IO操作中的次数。</p>
+                <p><strong>3、采用分散（Scatter）和聚集（Gather）：</strong>  使用<strong>FileChannel</strong> 的<strong>read(ByteBuffer[] dsts)</strong>和<strong> write(ByteBuffer[] srcs)</strong>方法可以实现分散读和聚集写操作，允许同时读写多个缓冲区。</p>
+                <p><strong>4、选择合适的读写策略：</strong>  对于顺序访问的大文件，可以采用较大的缓冲区和批量读写操作来提高效率。</p>
+            </div>
+
+            <h2 id="section-10">10. NIO中的Path、Paths和Files类的用途是什么？</h2>
+            <p>在Java NIO中，<strong>Path</strong> 、<strong>Paths</strong> 和<strong>Files</strong> 类提供了一种更加现代和灵活的文件系统操作方式：</p>
+            <div class="highlight">
+                <p><strong>1、Path：</strong>  代表了文件系统中的路径。不同于旧的<strong>File</strong> 类，<strong>Path</strong> 提供了更丰富的文件路径操作功能，如解析、比较和访问路径的各个部分。</p>
+                <p><strong>2、Paths：</strong>  是一个工具类，提供静态方法用于更容易地获取<strong>Path</strong> 对象。例如，<strong>Paths.get(String first, String... more)方法通过接收一个或多个字符串参数来构建Path</strong> 对象。</p>
+                <p><strong>3、Files：</strong>  提供了静态方法执行文件操作，如创建、删除文件或目录，读写文件，以及更高级的文件操作，如设置文件权限、复制和移动文件等。</p>
+            </div>
+
+            <h2 id="section-11">11. 如何使用AsynchronousFileChannel实现非阻塞文件IO操作？</h2>
+            <p><strong>AsynchronousFileChannel</strong> 是Java NIO2的一个特性，提供了一种非阻塞的文件IO操作方式。使用<strong>AsynchronousFileChannel</strong> 进行非阻塞文件IO操作的步骤包括：</p>
+            <div class="highlight">
+                <p><strong>1、打开AsynchronousFileChannel：</strong>  通过<strong>AsynchronousFileChannel.open()</strong>方法打开一个文件通道，需要指定文件路径和打开模式。</p>
+                <p><strong>2、读取数据：</strong>  使用<strong>read(ByteBuffer dst, long position, A attachment, CompletionHandler<Integer,? super A> handler)</strong>方法异步读取数据。方法调用后立即返回，读取操作完成时，指定的完成处理器（<strong>CompletionHandler</strong> ）会被执行。</p>
+                <p><strong>3、写入数据：</strong>  使用<strong>write(ByteBuffer src, long position, A attachment, CompletionHandler<Integer,? super A> handler)</strong>方法异步写入数据。</p>
+                <p><strong>4、关闭Channel：</strong>  异步操作完成后，需要关闭<strong>AsynchronousFileChannel</strong> 来释放资源。</p>
+            </div>
+
+            <h2 id="section-12">12. NIO中的通道(Channel)和流(Stream)在使用场景上有何不同？</h2>
+            <p>通道（Channel）和流（Stream）是Java IO和NIO中处理数据的两种不同机制，它们在使用场景上有明显的区别：</p>
+            <div class="highlight">
+                <p><strong>1、使用场景：</strong>  流（Stream）是单向的，适用于简单的顺序数据访问，如文件读写操作。而通道（Channel）可以进行双向操作，不仅可以从通道中读取数据，也可以写入数据到通道，更适合于需要双向通信的复杂数据处理。</p>
+                <p><strong>2、阻塞模式：</strong>  流操作是阻塞的，即数据读写时会阻塞当前线程直到操作完成。通道提供了非阻塞模式的支持，特别是通过Selector机制，一个线程可以管理多个输入和输出通道。</p>
+                <p><strong>3、性能：</strong>  在处理大量数据和需要高速数据传输时，NIO的通道提供了更高的性能，尤其是在使用直接缓冲区进行数据操作时。</p>
+                <p><strong>4、API复杂度：</strong>  由于NIO提供了更多的控制和灵活性，其API相对于传统的IO流来说更加复杂。</p>
+            </div>
+
+            <h2 id="section-13">13. NIO的SocketChannel如何实现连接、读取和写入操作？</h2>
+            <p>在Java NIO中，<strong>SocketChannel</strong> 是用于TCP网络通信的基础。实现连接、读取和写入操作的步骤如下：</p>
+            <div class="highlight">
+                <p><strong>1、打开SocketChannel：</strong>  通过<strong>SocketChannel.open()静态方法创建新的SocketChannel</strong> 对象。</p>
+                <p><strong>2、配置为非阻塞模式：</strong>  调用<strong>configureBlocking(false)</strong>方法，设置通道为非阻塞模式。</p>
+                <p><strong>3、连接到服务器：</strong>  通过<strong>connect(SocketAddress address)</strong>方法连接到服务器。由于是非阻塞模式，此方法可能在连接建立之前就返回。可以通过调用<strong> finishConnect()</strong>方法完成连接的建立过程。</p>
+                <p><strong>4、读取数据：</strong>  使用<strong>read(ByteBuffer dst)方法从SocketChannel</strong> 读取数据。</p>
+                <p><strong>5、写入数据：</strong>  使用<strong>write(ByteBuffer src)方法将ByteBuffer</strong> 中的数据写入到<strong>SocketChannel</strong> 。</p>
+                <p><strong>6、关闭SocketChannel：</strong>  使用完成后，调用<strong>close()方法关闭SocketChannel</strong> 。</p>
+            </div>
+
+            <h2 id="section-14">14. ByteBuffer的allocate()与allocateDirect()方法有何区别？</h2>
+            <p><strong>ByteBuffer</strong> 的<strong>allocate()</strong>与<strong>allocateDirect()</strong>方法用于创建缓冲区，但它们在内存使用方面有本质的区别：</p>
+            <div class="highlight">
+                <p><strong>1、allocate()方法：</strong>  创建的是一个Java堆内存中的缓冲区，数据会存储在JVM的堆空间。这意味着数据在Java应用和操作系统之间传输时可能需要复制，因此可能会稍微影响性能。</p>
+                <p><strong>2、allocateDirect()方法：</strong>  创建的是直接内存缓冲区，数据会被放置在操作系统的物理内存中，这样可以减少不必要的数据复制，提高数据处理的效率，特别是在大量数据的IO操作中。但是，直接缓冲区的分配和释放成本比较高，并且占用的是操作系统的内存资源。</p>
+            </div>
+
+            <h2 id="section-15">15. NIO中如何使用FileLock实现文件锁定？</h2>
+            <p>在Java NIO中，<strong>FileLock</strong> 用于对文件或文件的某个区域进行锁定，防止其他进程对文件的同时读写。使用<strong>FileLock</strong> 实现文件锁定的步骤包括：</p>
+            <div class="highlight">
+                <p><strong>1、获取FileChannel：</strong>  首先需要通过<strong>FileChannel</strong> 来访问文件。可以通过<strong>FileInputStream</strong> 、<strong>FileOutputStream</strong> 或<strong>RandomAccessFile</strong> 获取<strong>FileChannel</strong> 。</p>
+                <p><strong>2、锁定文件区域：</strong>  使用<strong>FileChannel</strong> 的<strong>lock()</strong>或<strong> tryLock()</strong>方法对整个文件或文件的特定区域进行锁定。<strong>lock()</strong>方法会阻塞直到获取锁，而<strong> tryLock()</strong>方法会立即返回，无论是否成功获取锁。</p>
+                <p><strong>3、操作文件：</strong>  在持有锁的情况下，可以安全地读写文件。</p>
+                <p><strong>4、释放锁：</strong>  操作完成后，通过调用<strong>FileLock.release()</strong>方法释放锁。</p>
+            </div>
+
+            <h2 id="section-16">16. 解释NIO中的多路复用器Selector及其工作原理。</h2>
+            <p>多路复用器<strong>Selector</strong> 是Java NIO编程的核心组件，允许单个线程管理多个Channel的IO事件。其工作原理如下：</p>
+            <div class="highlight">
+                <p><strong>1、创建Selector：</strong>  通过调用<strong>Selector.open()方法创建一个Selector</strong> 。</p>
+                <p><strong>2、注册Channel：</strong>  将<strong>Channel</strong> 注册到<strong>Selector</strong> 上，并指定需要监听的IO事件（如：读、写、连接和接受）。每个Channel注册时都会生成一个<strong>SelectionKey</strong> 。</p>
+                <p><strong>3、选择就绪的Channel：</strong>  通过调用<strong>Selector</strong> 的<strong>select()</strong>方法，阻塞地等待注册的Channel上有IO事件就绪。</p>
+                <p><strong>4、处理IO事件：</strong>  通过<strong>Selector.selectedKeys()</strong>获取就绪的SelectionKey集合，然后遍历这个集合处理相应的IO事件。处理完成后，需要从已选择键集合中移除当前的<strong>SelectionKey</strong> 。</p>
+                <p><strong>5、关闭Selector：</strong>  使用完毕后，调用<strong>Selector.close()方法关闭Selector</strong> 。</p>
+            </div>
+
+            <h2 id="section-17">17. 在Java NIO中，什么是非阻塞模式，它与阻塞模式有何不同？</h2>
+            <p>在Java NIO中，非阻塞模式是指在进行I/O操作时，如果当前没有数据可读或写，线程不会被阻塞，而是可以立即返回继续执行其他任务。这与传统的阻塞I/O模式形成对比。</p>
+            <div class="highlight">
+                <p><strong>1、I/O操作方式：</strong>  在非阻塞模式下，应用程序可以立即得知数据读写是否成功，并据此决定下一步操作。</p>
+                <p><strong>2、资源利用：</strong>  非阻塞模式允许单个线程管理多个输入和输出通道，提高了资源的利用率。</p>
+                <p><strong>3、应用场景：</strong>  非阻塞模式适合于I/O操作频繁但数据量不大的场景，能有效提升系统的响应性和吞吐量。</p>
+            </div>
+
+            <h2 id="section-18">18. 如何在Java NIO中实现通道之间的数据传输？</h2>
+            <p>在Java NIO中，可以使用<strong>FileChannel</strong> 的<strong>transferTo</strong> 和<strong>transferFrom</strong> 方法实现通道之间的数据传输，这两个方法允许将数据直接从一个通道传输到另一个通道，无需通过缓冲区中转。</p>
+            <div class="highlight">
+                <p><strong>1、打开源通道和目标通道：</strong>  首先，需要获取源文件和目标文件的<strong>FileChannel</strong> 。</p>
+                <p><strong>2、使用transferTo方法：</strong>  源通道的<strong>transferTo</strong> 方法可以将数据传输到目标通道。</p>
+                <p><strong>3、使用transferFrom方法：</strong>  目标通道的<strong>transferFrom</strong> 方法可以从源通道接收数据。</p>
+            </div>
+
+            <h2 id="section-19">19. 解释Java NIO中的文件属性视图FileAttributeView的用途。</h2>
+            <p>在Java NIO中，<strong>FileAttributeView</strong> 是一个用于访问特定文件属性集的视图接口。它提供了一种标准方式来读取和更新文件的属性，如文件的所有者信息、权限、时间戳等。</p>
+            <div class="highlight">
+                <p><strong>1、访问文件属性：</strong>  FileAttributeView提供读取和更新文件各种属性的方法。</p>
+                <p><strong>2、类型安全：</strong>  不同的FileAttributeView实现对应不同的文件系统属性集，提供了类型安全的访问方式。</p>
+                <p><strong>3、扩展性：</strong>  通过FileAttributeView接口，可以支持各种文件系统特定的属性。</p>
+            </div>
+
+            <h2 id="section-20">20. NIO中的直接缓冲区与堆缓冲区有什么区别？</h2>
+            <p>NIO中的直接缓冲区和堆缓冲区主要有以下区别：</p>
+            <div class="highlight">
+                <p><strong>1、内存位置：</strong>  堆缓冲区在JVM堆中分配，而直接缓冲区在操作系统内存中分配。</p>
+                <p><strong>2、性能：</strong>  直接缓冲区在进行IO操作时性能更高，因为数据可以直接在系统和应用之间传输，无需额外的内存复制。</p>
+                <p><strong>3、创建成本：</strong>  直接缓冲区的创建和销毁成本比堆缓冲区高。</p>
+                <p><strong>4、垃圾处理：</strong>  堆缓冲区受JVM垃圾回收管理，而直接缓冲区需要手动管理或等到 JVM 清理。</p>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTop = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+            backToTop.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

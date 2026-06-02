@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dubbo</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #fff0e6; color: #FF5000; }
+        .toc-list a.active { background: #FF5000; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #fff0e6; padding: 15px; border-radius: 6px; margin-top: 15px; color: #d4380d; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #FF5000; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #e64a00; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>Dubbo</h1>
+
+                <div class="question" id="q1">
+                    <h2>Dubbo是什么？它有哪些核心功能？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>高性能RPC通信：</strong>Dubbo是一款高性能的分布式服务框架，提供了RPC通信能力，支持多种通信协议。</li>
+                            <li><strong>服务治理：</strong>提供服务注册与发现、负载均衡、路由、容错等治理能力。</li>
+                            <li><strong>微服务集成：</strong>可以与Spring Cloud等微服务框架无缝集成。</li>
+                            <li><strong>多协议支持：</strong>支持Dubbo协议、REST、gRPC、Thrift等多种协议。</li>
+                        </ol>
+                        <div class="summary">Dubbo是阿里巴巴开源的分布式服务治理框架，目前是Apache顶级项目。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Dubbo的工作原理是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>服务提供者（Provider）：</strong>启动时向注册中心注册自己的服务。</li>
+                            <li><strong>服务消费者（Consumer）：</strong>启动时向注册中心订阅自己需要的服务。</li>
+                            <li><strong>注册中心（Registry）：</strong>返回服务提供者地址列表给消费者，如有变更，注册中心会推送变更通知。</li>
+                            <li><strong>消费者调用提供者：</strong>消费者根据负载均衡策略选择一台提供者进行调用。</li>
+                            <li><strong>监控中心（Monitor）：</strong>统计服务调用次数、调用时间等数据。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Dubbo支持哪些注册中心？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Zookeeper：</strong>最常用的注册中心，基于CAP理论，保证一致性。</li>
+                            <li><strong>Nacos：</strong>阿里巴巴开源的服务发现和配置管理平台。</li>
+                            <li><strong>Consul：</strong>HashiCorp开源的服务发现和配置管理工具。</li>
+                            <li><strong>Eureka：</strong>Netflix开源的服务注册中心，支持AP。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Dubbo的负载均衡策略有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Random LoadBalance：</strong>随机策略，按权重设置随机概率。</li>
+                            <li><strong>RoundRobin LoadBalance：</strong>轮询策略，按公约后的权重设置轮询比例。</li>
+                            <li><strong>LeastActive LoadBalance：</strong>最少活跃调用数策略，相同活跃数的随机。</li>
+                            <li><strong>ConsistentHash LoadBalance：</strong>一致性Hash策略，相同参数的请求总是发到同一提供者。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Dubbo的集群容错策略有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Failover Cluster：</strong>失败自动切换，当出现失败时重试其他服务器。</li>
+                            <li><strong>Failfast Cluster：</strong>快速失败，只发起一次调用，失败立即报错。</li>
+                            <li><strong>Failsafe Cluster：</strong>失败安全，出现异常时，直接忽略。</li>
+                            <li><strong>Failback Cluster：</strong>失败自动恢复，后台记录失败请求，定时重发。</li>
+                            <li><strong>Forking Cluster：</strong>并行调用多个服务器，只要有一个成功即返回。</li>
+                            <li><strong>Broadcast Cluster：</strong>广播调用所有提供者，逐个调用，任意一台报错则报错。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Dubbo的通信协议有哪些？各有什么特点？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Dubbo协议：</strong>默认使用Hessian序列化，TCP传输，适合小数据量大并发调用。</li>
+                            <li><strong>RMI协议：</strong>Java标准远程调用协议，JDK自带，适合少并发场景。</li>
+                            <li><strong>Hessian协议：</strong>基于HTTP的远程调用，使用Hessian序列化，适合传入传出参数较大时。</li>
+                            <li><strong>HTTP协议：</strong>使用Spring的HttpInvoker，基于HTTP和JSON序列化。</li>
+                            <li><strong>gRPC：</strong>Google开源的高性能RPC框架，支持双向流和流式处理。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Dubbo的序列化方式有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Hessian：</strong>Dubbo默认的序列化方式，性能较好。</li>
+                            <li><strong>Dubbo序列化：</strong>阿里巴巴自己开发的高效序列化方式。</li>
+                            <li><strong>JSON：</strong>使用Fastjson进行JSON序列化。</li>
+                            <li><strong>Java原生序列化：</strong>JDK自带，效率较低。</li>
+                            <li><strong>Avro：</strong>高性能序列化框架。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Dubbo的Directory是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>服务目录：</strong>Directory存储了所有可用的服务提供者列表。</li>
+                            <li><strong>RegistryDirectory：</strong>基于注册中心的服务目录，会动态更新。</li>
+                            <li><strong>StaticDirectory：</strong>静态服务目录，服务列表固定不变。</li>
+                            <li><strong>作用：</strong>为负载均衡提供可调用的服务列表。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Dubbo的Router是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>服务路由：</strong>决定服务消费者可调用哪些服务提供者的逻辑。</li>
+                            <li><strong>条件路由：</strong>基于条件表达式的路由规则。</li>
+                            <li><strong>脚本路由：</strong>基于脚本引擎（如JavaScript）的路由规则。</li>
+                            <li><strong>应用场景：</strong>用于服务隔离、灰度发布等场景。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Dubbo的ConfigCenter配置中心有什么作用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>配置管理：</strong>集中管理Dubbo的配置。</li>
+                            <li><strong>动态配置：</strong>支持运行时动态修改配置，无需重启。</li>
+                            <li><strong>配置共享：</strong>实现多环境、多租户的配置共享。</li>
+                            <li><strong>支持多种后端：</strong>如Zookeeper、Nacos、Apollo等。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Dubbo3的新特性有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>应用级服务发现：</strong>从接口级发现升级到应用级发现，更适合云原生。</li>
+                            <li><strong>Triple协议：</strong>基于HTTP/2的gRPC协议，兼容gRPC生态。</li>
+                            <li><strong>云原生支持：</strong>更好的Kubernetes支持。</li>
+                            <li><strong>性能提升：</strong>相比Dubbo2有20%以上的性能提升。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Dubbo如何实现延迟暴露？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>delay配置：</strong>通过<dubbo:service delay="5000"/>配置服务延迟暴露时间。</li>
+                            <li><strong>使用场景：</strong>用于服务依赖检查，等待依赖服务启动完成后再暴露。</li>
+                            <li><strong>Spring集成：</strong>配合Spring的Bean初始化完成后暴露服务。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>Dubbo的服务降级实现方式有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>mock配置：</strong>通过<dubbo:service mock="true"/>配置服务降级处理类。</li>
+                            <li><strong>客户端降级：</strong>在消费端配置mock，调用失败时返回mock数据。</li>
+                            <li><strong>整合Sentinel：</strong>使用Sentinel实现更细粒度的降级和熔断。</li>
+                            <li><strong>返回null：</strong>最简单的降级方式，调用失败时返回null。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

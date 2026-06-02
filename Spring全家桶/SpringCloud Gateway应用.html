@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringCloud Gateway应用</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #9c27b0; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #f3e5f5; color: #9c27b0; }
+        .toc-list a.active { background: #9c27b0; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #9c27b0; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #f3e5f5; padding: 15px; border-radius: 6px; margin-top: 15px; color: #7b1fa2; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #9c27b0; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #8e24aa; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>SpringCloud Gateway应用</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring Cloud Gateway的工作原理是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>请求接收：</strong>客户端向Spring Cloud Gateway发送请求。</li>
+                            <li><strong>Predicate匹配：</strong>Gateway Handler通过Predicate来匹配当前请求的所有路由条件，确定要使用的路由。</li>
+                            <li><strong>过滤器链处理：</strong>请求会经过一系列的过滤器（Filter），这些过滤器可以在请求发送前或响应后执行特定的操作，如日志记录、认证、修改请求头等。</li>
+                            <li><strong>代理转发：</strong>最终，请求被发送到后端服务。</li>
+                            <li><strong>响应返回：</strong>后端服务的响应也会经过过滤器链，最后返回给客户端。</li>
+                        </ol>
+                        <div class="summary">Spring Cloud Gateway基于WebFlux和Netty的异步非阻塞模式，实现了对请求的高效处理和灵活过滤。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring Cloud Gateway中的Predicate（断言）是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>路由匹配条件：</strong>Predicate用于定义Spring Cloud Gateway的路由匹配条件。</li>
+                            <li><strong>内置Predicate：</strong>Spring Cloud Gateway提供了多种内置的Predicate，如Path、Query、Method、Header等。</li>
+                            <li><strong>组合使用：</strong>可以通过配置多个Predicate来实现复杂的路由匹配逻辑。</li>
+                            <li><strong>动态路由：</strong>Predicate使得路由配置更加灵活，可以根据请求的不同属性来动态决定路由目标。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Spring Cloud Gateway中的Filter（过滤器）有哪些类型？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>按生命周期分类：</strong>
+                                <ul>
+                                    <li>Pre过滤器：在请求被路由之前执行，常用于认证、日志记录等。</li>
+                                    <li>Post过滤器：在响应返回客户端之前执行，常用于修改响应头、添加响应日志等。</li>
+                                </ul>
+                            </li>
+                            <li><strong>按类型分类：</strong>
+                                <ul>
+                                    <li>GatewayFilter：局部过滤器，作用于特定路由。</li>
+                                    <li>GlobalFilter：全局过滤器，作用于所有路由。</li>
+                                </ul>
+                            </li>
+                            <li><strong>常用过滤器：</strong>如AddRequestHeader、RemoveRequestHeader、AddResponseHeader、RequestRateLimiter等。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>如何在Spring Cloud Gateway中实现限流？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用RequestRateLimiter：</strong>Spring Cloud Gateway提供了RequestRateLimiter过滤器来实现限流。</li>
+                            <li><strong>配置限流策略：</strong>可以基于令牌桶或漏桶算法进行限流配置。</li>
+                            <li><strong>自定义限流键：</strong>可以通过KeyResolver接口自定义限流的键，如基于用户ID、IP地址等。</li>
+                            <li><strong>限流后的处理：</strong>当请求超过限流阈值时，可以返回特定的HTTP状态码或重定向到指定页面。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring Cloud Gateway与Zuul有哪些区别？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>底层技术：</strong>Spring Cloud Gateway基于WebFlux（响应式编程）和Netty，而Zuul基于Servlet和Java传统IO。</li>
+                            <li><strong>性能：</strong>由于Gateway使用异步非阻塞模型，其性能通常优于Zuul。</li>
+                            <li><strong>长期支持：</strong>Spring Cloud官方已不再维护Zuul，推荐使用Gateway。</li>
+                            <li><strong>功能特性：</strong>Gateway提供了更现代化的Predicate和Filter机制，配置更为灵活。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>如何在Spring Cloud Gateway中实现统一认证？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用全局过滤器：</strong>创建GlobalFilter实现统一的认证逻辑。</li>
+                            <li><strong>JWT令牌验证：</strong>在过滤器中验证JWT令牌的合法性，检查签名和过期时间。</li>
+                            <li><strong>路径排除：</strong>对于登录等公开接口，可以配置排除列表，不进行认证。</li>
+                            <li><strong>Token传递：</strong>验证通过后，将用户信息通过请求属性传递给后端服务。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Spring Cloud Gateway如何实现动态路由？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>配置中心：</strong>可以将路由配置放在Nacos、Apollo等配置中心中。</li>
+                            <li><strong>动态更新：</strong>当配置中心的路由信息变更时，Gateway可以自动感知并更新路由，无需重启服务。</li>
+                            <li><strong>服务发现集成：</strong>结合Eureka或Consul，Gateway可以自动根据服务名进行路由。</li>
+                            <li><strong> predicates和filters动态配置：</strong>可以在运行时动态调整predicates和filters的配置。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring Cloud Gateway的高可用是如何实现的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>多实例部署：</strong>将Gateway部署多个实例，通过负载均衡器分发请求。</li>
+                            <li><strong>健康检查：</strong>配合负载均衡器的健康检查机制，自动剔除故障实例。</li>
+                            <li><strong>熔断降级：</strong>结合Sentinel或Hystrix，实现熔断降级保护。</li>
+                            <li><strong>容器化部署：</strong>使用Docker和Kubernetes等容器编排工具，提高系统的弹性和可伸缩性。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Spring Cloud Gateway如何处理跨域请求？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用CorsWebFilter：</strong>Spring Cloud Gateway提供了CorsWebFilter来处理跨域请求。</li>
+                            <li><strong>配置跨域规则：</strong>可以在application.yml中配置允许的来源、方法、头部等信息。</li>
+                            <li><strong>路径匹配：</strong>可以为不同的路径配置不同的跨域规则。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Spring Cloud Gateway的执行流程是怎样的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Gateway Handler：</strong>请求首先被Gateway Handler接收。</li>
+                            <li><strong>Predicate Handler Mapping：</strong>通过PredicateHandlerMapping确定匹配的路由。</li>
+                            <li><strong>Filter Chain：</strong>请求进入Filter Chain，首先执行"pre"类型的过滤器。</li>
+                            <li><strong>Proxy Filter：</strong>经过代理过滤器发送请求到后端服务。</li>
+                            <li><strong>Post Filter：</strong>响应返回时执行"post"类型的过滤器。</li>
+                            <li><strong>Response：</strong>最终响应返回给客户端。</li>
+                        </ol>
+                        <div class="summary">整个流程体现了Gateway的请求处理模型，通过Predicates和Filters的组合实现灵活而强大的路由和过滤功能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>如何在Spring Cloud Gateway中实现熔断降级？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>引入 resilience4j-spring-cloud2 依赖：</strong>在项目中添加熔断相关的依赖。</li>
+                            <li><strong>配置熔断规则：</strong>在application.yml中配置熔断器的参数，如失败率阈值、超时时间等。</li>
+                            <li><strong>实现Fallback：</strong>创建一个实现GatewayFilter或GlobalFilter的类，并实现降级逻辑，当后端服务不可用时返回备选响应。</li>
+                            <li><strong>集成Sentinel：</strong>也可以使用Spring Cloud Alibaba的Sentinel来实现更细粒度的熔断降级控制。</li>
+                        </ol>
+                        <div class="summary">通过熔断降级机制，可以防止因后端服务故障导致的雪崩效应，提高系统的整体稳定性。</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

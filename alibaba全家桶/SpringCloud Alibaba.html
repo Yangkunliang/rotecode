@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringCloud Alibaba</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #fff0e6; color: #FF5000; }
+        .toc-list a.active { background: #FF5000; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #fff0e6; padding: 15px; border-radius: 6px; margin-top: 15px; color: #d4380d; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #FF5000; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #e64a00; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>SpringCloud Alibaba</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring Cloud Alibaba是什么？它包含哪些主要组件？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Sentinel：</strong>分布式系统的流量控制组件，提供流量控制、熔断降级等功能。</li>
+                            <li><strong>Nacos：</strong>服务发现和配置管理平台，提供服务注册发现和动态配置服务。</li>
+                            <li><strong>RocketMQ：</strong>分布式消息中间件，提供可靠的消息传输。</li>
+                            <li><strong>Dubbo：</strong>高性能Java RPC框架，提供服务间通信。</li>
+                            <li><strong>Seata：</strong>分布式事务解决方案，提供AT模式的分布式事务支持。</li>
+                            <li><strong>Dubbo：</strong>分布式事务解决方案，提供高性能和易用的分布式事务服务。</li>
+                        </ol>
+                        <div class="summary">Spring Cloud Alibaba为微服务架构提供了一站式解决方案，是Spring Cloud标准实现之一。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring Cloud Alibaba与Spring Cloud的区别是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>基础不同：</strong>Spring Cloud是标准，Spring Cloud Alibaba是具体实现。</li>
+                            <li><strong>组件选择：</strong>Spring Cloud使用Netflix等组件，Spring Cloud Alibaba使用阿里巴巴开源的组件。</li>
+                            <li><strong>功能覆盖：</strong>两者都提供微服务解决方案，但组件实现不同。</li>
+                            <li><strong>社区支持：</strong>Spring Cloud Alibaba由阿里巴巴维护，与Spring Cloud官方保持同步更新。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Nacos在Spring Cloud Alibaba中的作用是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>服务注册与发现：</strong>作为服务注册中心，管理微服务的注册与发现。</li>
+                            <li><strong>配置管理：</strong>提供动态配置服务，支持配置的集中管理和实时更新。</li>
+                            <li><strong>服务健康检查：</strong>支持两种健康检查模式：代理模式和服务器模式。</li>
+                            <li><strong>多环境支持：</strong>支持命名空间隔离，方便多环境配置管理。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Spring Cloud Alibaba中如何实现服务的熔断降级？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>引入Sentinel：</strong>通过添加spring-cloud-starter-alibaba-sentinel依赖。</li>
+                            <li><strong>配置Sentinel：</strong>在application.yml中配置Sentinel控制台地址。</li>
+                            <li><strong>使用注解：</strong>在需要熔断降级的方法上使用@SentinelResource注解。</li>
+                            <li><strong>定义降级处理：</strong>指定fallback方法或类来处理降级逻辑。</li>
+                            <li><strong>控制台配置规则：</strong>通过Sentinel控制台实时配置流控和熔断规则。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring Cloud Alibaba中的分布式事务如何实现？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用Seata：</strong>Seata提供了AT、TCC、SAGA和XA四种事务模式。</li>
+                            <li><strong>AT模式：</strong>自动补偿模式，对业务无侵入，适合大多数场景。</li>
+                            <li><strong>配置Seata：</strong>在应用中引入seata-spring-boot-starter依赖。</li>
+                            <li><strong>全局事务注解：</strong>使用@GlobalTransactional注解标记全局事务入口方法。</li>
+                            <li><strong>数据源代理：</strong>需要配置数据源代理，使Seata能够管理数据源。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Spring Cloud Alibaba如何实现服务限流？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong> Sentinel限流：</strong>基于Sentinel实现限流功能。</li>
+                            <li><strong>配置限流规则：</strong>通过@SentinelResource注解或控制台配置限流规则。</li>
+                            <li><strong>限流策略：</strong>支持QPS限流、并发线程数限流等多种策略。</li>
+                            <li><strong>热点参数限流：</strong>支持对特定参数进行精细化限流控制。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Nacos的服务注册与发现机制是怎样的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>服务注册：</strong>服务提供者在启动时向Nacos注册自己的元信息。</li>
+                            <li><strong>服务心跳：</strong>服务提供者定期发送心跳来维持自己的活跃状态。</li>
+                            <li><strong>服务同步：</strong>Nacos集群之间会同步服务注册信息。</li>
+                            <li><strong>服务查询：</strong>服务消费者从Nacos获取服务提供者列表。</li>
+                            <li><strong>健康检查：</strong>Nacos支持服务端探测和客户端上报两种健康检查方式。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring Cloud Alibaba中如何实现消息驱动？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>RocketMQ集成：</strong>通过spring-cloud-starter-alibaba-mqtt使用RocketMQ。</li>
+                            <li><strong>消息生产者：</strong>使用RocketMQTemplate发送消息。</li>
+                            <li><strong>消息消费者：</strong>使用@RocketMQMessageListener注解监听消息。</li>
+                            <li><strong>事务消息：</strong>支持RocketMQ的事务消息特性。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Nacos的配置管理功能有哪些特点？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>动态配置更新：</strong>配置变更实时推送到客户端，无需重启。</li>
+                            <li><strong>多环境配置：</strong>通过命名空间隔离开发、测试、生产环境。</li>
+                            <li><strong>配置版本管理：</strong>支持配置的历史版本回滚。</li>
+                            <li><strong>配置监听：</strong>客户端可以监听配置变更事件。</li>
+                            <li><strong>配置分组：</strong>通过分组管理不同业务的配置。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Spring Cloud Alibaba的版本如何与Spring Cloud版本对应？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>版本对应关系：</strong>Spring Cloud Alibaba有与Spring Cloud版本对应的适配版本。</li>
+                            <li><strong>组件版本：</strong>每个Spring Cloud Alibaba版本都会携带一系列兼容的阿里组件版本。</li>
+                            <li><strong>依赖管理：</strong>使用spring-cloud-alibaba-dependencies进行版本管理。</li>
+                            <li><strong>官方文档：</strong>应参考官方文档获取准确的版本对应关系。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Spring Cloud Alibaba中如何实现网关路由？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Spring Cloud Gateway集成：</strong>可以与Spring Cloud Gateway无缝集成。</li>
+                            <li><strong>网关限流：</strong>集成Sentinel实现网关级别的限流。</li>
+                            <li><strong>动态路由：</strong>结合Nacos实现动态路由配置。</li>
+                            <li><strong>路由断言：</strong>支持多种路由断言器进行请求匹配。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Spring Cloud Alibaba的Seata分布式事务工作原理是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>事务协调者（TC）：</strong>Seata服务器负责协调分布式事务的执行。</li>
+                            <li><strong>事务管理器（TM）：</strong>标注@GlobalTransactional的方法作为事务发起者。</li>
+                            <li><strong>资源管理器（RM）：</strong>每个微服务数据库作为资源管理器。</li>
+                            <li><strong>分支事务：</strong>每个服务本地事务作为分支事务。</li>
+                            <li><strong>一阶段解析SQL：</strong>解析SQL，记录前后镜像。</li>
+                            <li><strong>二阶段提交/回滚：</strong>根据全局事务结果执行提交或回滚。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java JDK 8,11,17,21 新特性 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Java JDK 8,11,17,21 新特性 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. JDK 8中lambda表达式的引入有什么意义？</h2>
+            <p>JDK 8中引入的lambda表达式标志着Java对函数式编程范式的支持。这一新特性有以下几个重要意义：</p>
+            <div class="highlight">
+                <p><strong>1、代码更简洁：</strong>  使用lambda表达式可以用更少的代码实现相同的功能。</p>
+                <p><strong>2、增强集合库的功能：</strong>  通过引入Stream API，lambda表达式使得对集合进行序列化操作变得更加简单和高效。</p>
+                <p><strong>3、提高编程效率：</strong>  lambda表达式使得编写代码时更加关注做什么而不是怎么做。</p>
+                <p><strong>4、促进函数式编程的使用：</strong>  通过lambda表达式的引入，鼓励开发者采用更加声明式的编程风格。</p>
+            </div>
+
+            <h2 id="section-2">2. JDK 11中引入的var关键字有什么作用？</h2>
+            <p>JDK 11引入的var关键字允许在局部变量声明时进行类型推断，从而避免了重复声明变量类型的冗余。其作用包括：</p>
+            <div class="highlight">
+                <p><strong>1、简化变量声明：</strong>  使用var可以在不牺牲代码可读性的情况下，减少代码的冗余度。</p>
+                <p><strong>2、提高开发效率：</strong>  减少了编码时的工作量，使得开发者可以更快地编写代码。</p>
+                <p><strong>3、增加代码的灵活性：</strong>  由于var是在编译时确定类型，因此使用var声明的代码更容易进行重构。</p>
+            </div>
+
+            <h2 id="section-3">3. JDK 17中密封类（sealed classes）的引入有什么好处？</h2>
+            <p>JDK 17引入的密封类是对Java类层次结构的一个重要补充，其好处包括：</p>
+            <div class="highlight">
+                <p><strong>1、更精确的类型控制：</strong>  通过指定哪些类可以继承密封类，开发者可以更精确地控制类的继承结构。</p>
+                <p><strong>2、增强代码的可读性和可维护性：</strong>  明确表达类之间的关系和用途，提高代码的清晰度。</p>
+                <p><strong>3、促进使用模式匹配：</strong>  密封类与模式匹配结合使用，可以在编译时进行更加严格的类型检查。</p>
+                <p><strong>4、提高安全性和封装性：</strong>  限制类的继承，防止不必要的扩展，保护代码的安全性和封装性。</p>
+            </div>
+
+            <h2 id="section-4">4. JDK 8中Stream API的作用是什么？</h2>
+            <p>JDK 8中引入的Stream API主要作用是提供了一种高效且简洁的方式来处理Java中的集合操作。其核心优点包括：</p>
+            <div class="highlight">
+                <p><strong>1、更简洁的代码：</strong>  Stream API利用lambda表达式，大大减少了实现同样功能时的代码量。</p>
+                <p><strong>2、更高的执行效率：</strong>  Stream API支持顺序和并行两种处理模式，可以很容易地进行并行操作。</p>
+                <p><strong>3、更强的操作能力：</strong>  提供了丰富的操作，如filter、map、reduce、find、match、sort等。</p>
+                <p><strong>4、更好的可读性：</strong>  Stream操作的链式调用，使代码更易读、易懂。</p>
+            </div>
+
+            <h2 id="section-5">5. JDK 11中的HTTP Client API有哪些改进？</h2>
+            <p>JDK 11引入了新的HTTP Client API，相比于旧的HttpURLConnection，提供了更现代、更功能丰富的HTTP客户端实现。主要改进包括：</p>
+            <div class="highlight">
+                <p><strong>1、支持HTTP/2：</strong>  默认支持HTTP/2协议及其新特性，如多路复用、服务器推送等。</p>
+                <p><strong>2、更简洁的API：</strong>  提供了一个更简洁易用的API。</p>
+                <p><strong>3、异步请求支持：</strong>  内置异步请求的支持，不需要额外的库或复杂的配置。</p>
+                <p><strong>4、WebSocket支持：</strong>  提供了WebSocket API，方便实现双向实时通信。</p>
+            </div>
+
+            <h2 id="section-6">6. JDK 8中接口的默认方法和静态方法有什么作用？</h2>
+            <p>JDK 8中接口新增了默认方法和静态方法，这两种方法的引入具有重要意义：</p>
+            <div class="highlight">
+                <p><strong>1、允许接口有具体实现：</strong>  默认方法使接口可以提供方法的实现，这样即使在不改变实现类的情况下也能扩展接口的功能。</p>
+                <p><strong>2、向后兼容：</strong>  通过默认方法，可以向接口添加新的方法而不破坏现有的实现。</p>
+                <p><strong>3、增强接口功能：</strong>  静态方法允许在接口中直接定义静态方法，使得接口不仅可以用于定义类型，还可以作为工具类使用。</p>
+            </div>
+
+            <h2 id="section-7">7. JDK 11的局部变量类型推断有哪些限制？</h2>
+            <p>JDK 11引入的局部变量类型推断（通过var关键字）虽然提高了代码的简洁性，但也有以下几个限制：</p>
+            <div class="highlight">
+                <p><strong>1、仅限于局部变量：</strong>  类型推断只能应用于局部变量，不能用于类的属性、方法参数或返回类型。</p>
+                <p><strong>2、必须初始化：</strong>  声明var类型的变量时必须同时初始化，以便编译器能推断出具体的类型。</p>
+                <p><strong>3、无法用于null值：</strong>  不能将null直接赋值给var声明的变量。</p>
+                <p><strong>4、单个变量声明：</strong>  不能在一个语句中使用var声明多个变量。</p>
+            </div>
+
+            <h2 id="section-8">8. JDK 8中Optional类的引入目的是什么？</h2>
+            <p>JDK 8引入的Optional类旨在提供一种更优雅的方式来处理空值情况，避免直接使用null，从而减少空指针异常。其目的包括：</p>
+            <div class="highlight">
+                <p><strong>1、提升代码的可读性：</strong>  通过Optional的使用，明确表示变量可能不存在。</p>
+                <p><strong>2、促进更好的编程习惯：</strong>  引导开发者在编写代码时更加关注变量的空值情况。</p>
+                <p><strong>3、提供丰富的API：</strong>  Optional类提供了丰富的API，如isPresent、ifPresent、orElse等。</p>
+            </div>
+
+            <h2 id="section-9">9. JDK 11中新增的String API有哪些？</h2>
+            <p>JDK 11对String类进行了增强，引入了多个新的API，主要包括：</p>
+            <div class="highlight">
+                <p><strong>1、isBlank()：</strong>  检查字符串是否为空或只包含空白字符。</p>
+                <p><strong>2、lines()：</strong>  返回一个流（Stream），其中包含了原字符串中的各个行。</p>
+                <p><strong>3、strip()、stripLeading()、stripTrailing()：</strong>  分别用于去除字符串首尾的空白字符、只去除开头的空白字符、只去除尾部的空白字符。</p>
+                <p><strong>4、repeat(int n)：</strong>  返回一个字符串，该字符串是将原字符串重复n次构成。</p>
+            </div>
+
+            <h2 id="section-10">10. JDK 8中的方法引用有什么用途？</h2>
+            <p>JDK 8中引入的方法引用提供了一种引用方法而不执行方法的方式。方法引用的主要用途包括：</p>
+            <div class="highlight">
+                <p><strong>1、简化Lambda表达式：</strong>  方法引用可以作为Lambda表达式的一种简化形式。</p>
+                <p><strong>2、提高代码的可读性：</strong>  方法引用的使用使得代码更加简洁，更易于阅读和理解。</p>
+                <p><strong>3、促进函数式编程风格：</strong>  方法引用与Lambda表达式一道，促进了Java中函数式编程风格的使用。</p>
+                <p><strong>4、增强代码的重用性：</strong>  通过方法引用，可以直接重用现有方法。</p>
+            </div>
+
+            <h2 id="section-11">11. JDK 17中记录类（record class）的引入有什么好处？</h2>
+            <p>JDK 17引入的记录类（record class）是一种特殊的类，它主要用于简化数据传输对象（DTO）的创建和使用。记录类的引入带来了以下好处：</p>
+            <div class="highlight">
+                <p><strong>1、减少样板代码：</strong>  记录类自动为类的字段生成getter方法、equals()、hashCode()、toString()方法。</p>
+                <p><strong>2、不可变性：</strong>  记录类的实例是不可变的，创建实例后其状态不能改变。</p>
+                <p><strong>3、清晰的语义：</strong>  记录类的语义非常清晰，它们被设计用来表示不可变的数据聚合。</p>
+                <p><strong>4、易于使用的构造函数：</strong>  记录类自动生成一个构造函数。</p>
+            </div>
+
+            <h2 id="section-12">12. JDK 17中强化Switch表达式有哪些新特性？</h2>
+            <p>JDK 17强化了Switch表达式，引入了以下新特性：</p>
+            <div class="highlight">
+                <p><strong>1、支持yield关键字：</strong>  允许在case代码块中使用yield返回一个值。</p>
+                <p><strong>2、模式匹配的支持：</strong>  引入了模式匹配的能力，可以在case语句中直接进行类型检查和转换。</p>
+                <p><strong>3、更丰富的控制流：</strong>  通过允许case语句同时匹配多个条件，提供了更丰富的控制流选项。</p>
+            </div>
+
+            <h2 id="section-13">13. JDK 11中引入的ZGC垃圾收集器有什么特点？</h2>
+            <p>JDK 11引入的ZGC（Z Garbage Collector）垃圾收集器主要特点包括：</p>
+            <div class="highlight">
+                <p><strong>1、低停顿时间：</strong>  ZGC设计目标是实现垃圾收集过程中的停顿时间不超过10ms。</p>
+                <p><strong>2、可伸缩性：</strong>  ZGC支持的堆大小范围广，从几百MB到几TB的堆内存都能高效处理。</p>
+                <p><strong>3、无锁并发：</strong>  使用无锁的数据结构，减少垃圾收集过程中的竞争。</p>
+            </div>
+
+            <h2 id="section-14">14. JDK 21的虚拟线程对并发编程有哪些影响？</h2>
+            <p>JDK 21引入了虚拟线程（Project Loom），对并发编程产生了重大影响：</p>
+            <div class="highlight">
+                <p><strong>1、简化并发编程：</strong>  提供轻量级的线程（纤程），使并发编程更简单。</p>
+                <p><strong>2、提高性能：</strong>  纤程比传统线程更轻量，可以大幅提高系统处理并发的能力。</p>
+                <p><strong>3、更好的资源管理：</strong>  通过轻量级线程的引入，能够更高效地管理和调度系统资源。</p>
+                <p><strong>4、增强可伸缩性：</strong>  应用可以在维持高性能的同时，支持更多的并发任务。</p>
+            </div>
+
+            <h2 id="section-15">15. JDK 17中密封类（sealed classes）为Java类型系统带来了哪些新的可能性？</h2>
+            <p>JDK 17中引入的密封类（sealed classes）提供了对类层次结构的精确控制，为Java类型系统带来了以下新的可能性：</p>
+            <div class="highlight">
+                <p><strong>1、精确的类型控制：</strong>  开发者可以明确指定哪些类或接口能够扩展密封类。</p>
+                <p><strong>2、更丰富的模式匹配：</strong>  密封类与Java的模式匹配特性结合，能够提供更丰富的模式匹配能力。</p>
+                <p><strong>3、促进领域模型的准确表达：</strong>  通过限制继承，密封类允许开发者更准确地建模领域概念。</p>
+                <p><strong>4、增强的可维护性：</strong>  由于继承被限制在特定的类或接口，这使得代码库更易于理解和维护。</p>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTop = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+            backToTop.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

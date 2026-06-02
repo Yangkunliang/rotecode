@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDK 11 新特性</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        .sidebar h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .toc-list a:hover {
+            background: #e8f5e9;
+            color: #4CAF50;
+        }
+        .toc-list a.active {
+            background: #4CAF50;
+            color: #fff;
+        }
+        .content-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px 40px;
+            background: #fff;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .question {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .question h2 {
+            color: #333;
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        .answer {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .answer ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .answer li {
+            margin-bottom: 8px;
+        }
+        .summary {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #2e7d32;
+            font-size: 14px;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+        }
+        .back-to-top:hover {
+            background: #45a049;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content-wrapper {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>JDK 11 新特性</h1>
+
+                <div class="question" id="q1">
+                    <h2>在JDK 11中Lambda表达式有哪些改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>局部变量类型推断：</strong>JDK 11中允许在Lambda表达式中使用var关键字，使得编译器可以推断局部变量的类型，从而简化了代码的编写。</li>
+                            <li><strong>改善编译器推断机制：</strong>在JDK 11中，Lambda表达式的目标类型推断得到了改进，提高了类型推断的准确性和效率。</li>
+                            <li><strong>性能优化：</strong>JDK 11对Lambda表达式的底层实现进行了优化，减少了内存占用和提升了执行效率。</li>
+                            <li><strong>增强函数接口的支持：</strong>JDK 11加强了对函数式接口的支持，为开发者在使用Lambda表达式时提供了更多的便利性。</li>
+                            <li><strong>API的整合和改进：</strong>JDK 11中的新API和改进的API允许与Lambda表达式更加紧密地集成，从而提高了开发的灵活性和效率。</li>
+                        </ol>
+                        <div class="summary">JDK 11对Lambda表达式的各项改进，使得开发者可以更加简洁和高效地使用Lambda表达式进行编程，同时也提升了运行时的性能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>JDK 11中的新文件方法有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>文件读写的新方法：</strong>JDK 11在Files类中新增了readString和writeString方法，允许直接读取或写入文件的内容，简化了文件操作。</li>
+                            <li><strong>临时文件的改进：</strong>Files类中的createTempFile方法增加了更多的重载版本，使得创建临时文件更加灵活和方便。</li>
+                            <li><strong>更好的文件属性支持：</strong>JDK 11增加了对文件属性更细致的访问和设置支持，如更好地处理文件的权限和属性。</li>
+                            <li><strong>路径操作的新方法：</strong>Path类增加了一些新方法，如relativize方法，可以更容易地计算相对路径。</li>
+                            <li><strong>文件遍历的改进：</strong>JDK 11优化了文件遍历的API，使得遍历大型目录更加高效。</li>
+                        </ol>
+                        <div class="summary">JDK 11在文件处理方面的新特性和改进，极大地增强了文件操作的便利性和效率，为开发者提供了更多的灵活性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>JDK 11中的HTTP Client API有哪些特点？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>正式成为标准API：</strong>在JDK 11中，HTTP Client API从Incubator模块正式成为标准API，支持HTTP/1.1和HTTP/2。</li>
+                            <li><strong>简化的API设计：</strong>新的HTTP Client API设计简洁，易于使用，支持同步和异步模式，使得发送请求和处理响应更加方便。</li>
+                            <li><strong>支持HTTP/2特性：</strong>该API默认支持HTTP/2特性，如流控制、服务器推送等，同时向后兼容HTTP/1.1。</li>
+                            <li><strong>增强的安全性：</strong>JDK 11在HTTP Client API中增加了对WebSocket的支持，同时提高了安全性和稳定性。</li>
+                            <li><strong>改善的性能：</strong>通过新的HTTP Client API，网络通信的性能得到了显著的提升，特别是在处理大量并发请求时。</li>
+                        </ol>
+                        <div class="summary">JDK 11引入的HTTP Client API是对Java网络编程的一大改进，提供了一个现代化、高性能且易于使用的API来处理网络请求。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>JDK 11中String类有哪些新增方法？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>isBlank方法：</strong>用于判断字符串是否为空或只包含空白字符，增强了字符串的检查能力。</li>
+                            <li><strong>lines方法：</strong>该方法将字符串分割为一个流，每个元素是一行，便于逐行处理字符串。</li>
+                            <li><strong>repeat方法：</strong>允许将字符串重复指定次数，简化了字符串的重复拼接操作。</li>
+                            <li><strong>strip、stripLeading、stripTrailing方法：</strong>这些方法用于去除字符串开头、结尾或两侧的空白字符，比trim方法更智能，支持处理Unicode空白字符。</li>
+                            <li><strong>transform方法：</strong>允许对字符串进行函数式处理，增加了字符串处理的灵活性和表达力。</li>
+                        </ol>
+                        <div class="summary">JDK 11中String类的这些新增方法，为字符串处理提供了更多的便利性和强大的功能，使得字符串操作更加高效和灵活。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>JDK 11中的垃圾收集器改进有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Epsilon 垃圾收集器：</strong>一个实验性的"No-Op"收集器，主要用于性能测试，它基本上不进行任何垃圾收集操作。</li>
+                            <li><strong>ZGC 改进：</strong>Z Garbage Collector (ZGC) 在JDK 11中进入实验阶段，它是一个可伸缩的低延迟垃圾收集器，目标是处理大堆内存而引入的延迟。</li>
+                            <li><strong>并发线程处理：</strong>JDK 11对G1垃圾收集器进行了改进，包括并发线程的处理能力，减少了Full GC的发生频率。</li>
+                            <li><strong>GC日志统一：</strong>JDK 11统一了垃圾收集日志的格式，便于监控和分析GC行为和性能。</li>
+                            <li><strong>废弃ParallelScavenge和Serial GC组合：</strong>JDK 11开始废弃ParallelScavenge和Serial垃圾收集器的组合使用，以简化GC配置和提高效率。</li>
+                        </ol>
+                        <div class="summary">JDK 11在垃圾收集方面的改进，增强了Java应用的性能和可伸缩性，同时提供了更多的选项和工具来监控和管理垃圾收集行为。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>JDK 11中对Unicode的支持有何改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>支持最新的Unicode标准：</strong>JDK 11更新了对Unicode 10的支持，包括新增的字符和脚本。</li>
+                            <li><strong>改进的字符属性方法：</strong>Character类中的方法被更新，以支持最新的Unicode标准和字符属性。</li>
+                            <li><strong>新增的Unicode语言标签：</strong>Locale类增加了对Unicode语言标签的支持，增强了国际化处理能力。</li>
+                            <li><strong>正则表达式的Unicode改进：</strong>JDK 11改进了正则表达式的Unicode处理，支持Unicode扩展匹配和Unicode脚本匹配。</li>
+                            <li><strong>优化的字符串处理：</strong>字符串处理在JDK 11中得到优化，更好地支持Unicode，提高了处理效率和兼容性。</li>
+                        </ol>
+                        <div class="summary">JDK 11对Unicode的全面支持和改进，使得Java应用可以更加容易地处理全球化的数据和文本，增强了国际化和本地化的能力。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>JDK 11中的安全性改进有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>强化了加密支持：</strong>JDK 11增加了对TLS 1.3的支持，提供了更加安全的网络通信能力。</li>
+                            <li><strong>废除旧的安全特性：</strong>JDK 11中废除了一些不安全或过时的加密算法和协议，增强了Java应用的安全性。</li>
+                            <li><strong>改进的密钥管理：</strong>对密钥管理和存储机制进行了改进，使得管理密钥和证书更加灵活和安全。</li>
+                            <li><strong>增加了新的安全API：</strong>引入了新的API，如用于处理安全令牌的API，以支持更广泛的安全操作。</li>
+                            <li><strong>提升了安全性能：</strong>在JDK 11中，对安全相关的性能进行了优化，确保了更快的加密和解密处理速度。</li>
+                        </ol>
+                        <div class="summary">JDK 11在安全性方面的改进，增强了Java平台的安全性能和能力，为开发安全的应用程序提供了更强大的支持。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>JDK 11中对Java语言的哪些改进可以提高开发者的生产力？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>局部变量类型推断的扩展：</strong>通过var关键字，可以在Lambda表达式中进行类型推断，简化了代码的编写。</li>
+                            <li><strong>新的字符串处理方法：</strong>例如isBlank、lines、repeat等方法，为字符串处理提供了更多的便捷操作。</li>
+                            <li><strong>改进的集合API：</strong>提供了更丰富的集合API，如of和copyOf方法，简化了集合对象的创建和处理。</li>
+                            <li><strong>易于使用的文件API：</strong>新增的Files.readString和Files.writeString方法简化了文件的读写操作。</li>
+                            <li><strong>标准化的HTTP Client API：</strong>提供了一个现代化、简洁的HTTP Client API，支持同步和异步模式，增强了网络编程的能力。</li>
+                        </ol>
+                        <div class="summary">JDK 11通过这些语言和API层面的改进，显著提高了开发者的生产力，使得Java开发更加高效和便捷。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>JDK 11中新增的Launch Single-File Source-Code Programs特性有哪些用途？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>快速启动单文件程序：</strong>允许直接运行单个Java文件的源代码，无需明确编译成.class文件，加速开发测试流程。</li>
+                            <li><strong>简化学习和教学：</strong>适合教育和学习环境，新手可以更快地开始Java编程，无需了解复杂的编译过程。</li>
+                            <li><strong>便于脚本编写：</strong>支持像编写脚本一样快速创建和运行Java代码，适合小型任务和自动化脚本。</li>
+                            <li><strong>轻松验证代码片段：</strong>开发者可以迅速验证单个Java文件中的代码片段，无需设置完整的项目结构。</li>
+                            <li><strong>增强Java的灵活性：</strong>提供了更多的选择来执行Java代码，使Java用于小型或临时任务变得更加方便。</li>
+                        </ol>
+                        <div class="summary">这一特性使得Java程序的编写、运行更加便捷，尤其对于学习、教学和快速测试场景非常有用。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>JDK 11的Flight Recorder特性有哪些改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>低开销数据收集：</strong>Flight Recorder在JDK 11中被设计为低开销的数据收集工具，对运行时性能影响小。</li>
+                            <li><strong>详细的性能分析：</strong>提供了更为详尽的应用和JVM性能数据，便于深入分析和诊断性能问题。</li>
+                            <li><strong>易于集成和扩展：</strong>支持通过JMX进行远程控制，同时提供了API，方便开发者集成和扩展。</li>
+                            <li><strong>改进的用户界面：</strong>Flight Recorder的用户界面得到改进，提供了更加直观和易用的数据展示。</li>
+                            <li><strong>丰富的事件类型：</strong>支持广泛的事件类型和数据点，使得性能分析更加全面和细致。</li>
+                        </ol>
+                        <div class="summary">Flight Recorder的这些改进，增强了其作为一个内置性能监控和诊断工具的能力，有助于开发者更有效地分析和优化Java应用。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>JDK 11中对Nest-Based Access Control的支持是如何实现的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>增强的访问控制：</strong>通过Nest-Based Access Control，Java 11增强了嵌套类之间的访问控制，允许嵌套类之间访问私有成员。</li>
+                            <li><strong>减少样板代码：</strong>减少了内部类和包含它们的外部类之间访问私有成员时需要的样板代码，提高了代码的可读性和简洁性。</li>
+                            <li><strong>改善的编译器性能：</strong>通过引入更高效的访问检查机制，改善了编译器的性能。</li>
+                            <li><strong>简化的内部类结构：</strong>使得内部类结构更加简单，提高了运行时性能。</li>
+                            <li><strong>提升了封装性：</strong>通过允许嵌套类直接访问外围类的私有成员，提升了类的封装性。</li>
+                        </ol>
+                        <div class="summary">这种访问控制的改进简化了嵌套类的使用，并优化了性能和封装性，对于大型Java应用开发尤其有益。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>JDK 11中引入的新的API和库有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>标准HTTP Client API：</strong>正式引入了支持HTTP/2的HTTP Client API，替代了旧的HttpURLConnection。</li>
+                            <li><strong>新的字符串方法：</strong>如isBlank、repeat、strip等方法，为字符串处理提供更多的便利。</li>
+                            <li><strong>集合API的扩展：</strong>如List、Set和Map的of和copyOf方法，简化了不可变集合的创建。</li>
+                            <li><strong>Optional类的改进：</strong>增加了ifPresentOrElse和or等方法，提高了Optional类的使用便利性。</li>
+                            <li><strong>改进的文件操作API：</strong>Files类新增了更多便利方法，如readString、writeString等，简化了文件操作。</li>
+                        </ol>
+                        <div class="summary">通过这些新引入的API和库，JDK 11为Java开发者提供了更多的工具和功能，以编写更简洁、高效的代码。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>JDK 11中对模块系统的改进有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>强化模块封装性：</strong>JDK 11进一步加强了模块系统的封装性，限制对内部API的访问，促进了更好的模块化架构。</li>
+                            <li><strong>模块化运行时镜像：</strong>通过jlink工具，可以创建更小的运行时镜像，只包含应用程序实际需要的模块，减少了资源消耗。</li>
+                            <li><strong>模块解析优化：</strong>改进了模块解析的算法，加快了启动时间和运行时性能。</li>
+                            <li><strong>增加模块服务加载能力：</strong>引入了新的模块服务加载机制，允许动态加载服务提供者，增强了模块间的动态交互能力。</li>
+                            <li><strong>提升模块定义的灵活性：</strong>支持在编译时和运行时动态定义模块，使得模块化应用更加灵活。</li>
+                        </ol>
+                        <div class="summary">JDK 11对模块系统的这些改进，提高了Java应用的封装性、性能和灵活性，促进了模块化开发的实践。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q14">
+                    <h2>JDK 11中的动态类文件常量(Dynamic Class-File Constants)带来了哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>常量池的增强：</strong>引入了动态计算常量的能力，允许常量池项在运行时被动态解析，提供了更大的表达能力和灵活性。</li>
+                            <li><strong>性能优化：</strong>通过使用动态常量，减少了启动时间和内存占用，因为它们允许更延迟的初始化。</li>
+                            <li><strong>增强的编码能力：</strong>动态类文件常量支持更复杂的表达式和数据结构的表示，使得字节码的生成更加灵活和强大。</li>
+                            <li><strong>便于语言设计者：</strong>对于其他JVM语言的设计者来说，动态常量提供了更多的可能性，用于实现高级优化和语言特性。</li>
+                            <li><strong>支持未来的语言特性：</strong>为Java未来版本的语言特性，如值类型，提供了基础支持。</li>
+                        </ol>
+                        <div class="summary">动态类文件常量的引入，为Java虚拟机和Java语言提供了更高的表达能力和性能优化的可能，有助于支持更复杂和高效的语言特性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q15">
+                    <h2>JDK 11中VarHandle的改进有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>性能优化：</strong>VarHandle性能得到了显著提升，特别是在并发环境下的操作，提高了变量访问的效率。</li>
+                            <li><strong>更广泛的应用场景：</strong>对VarHandle的功能扩展，使其可以应用于更多的上下文和数据类型，包括原子操作上的改进。</li>
+                            <li><strong>提高代码可读性和简洁性：</strong>与反射相比，VarHandle提供了更直接和类型安全的方式来访问字段和数组元素，改善了代码的可读性。</li>
+                            <li><strong>增强的内存屏障功能：</strong>VarHandle现在提供了更多控制内存屏障的操作，对于编写低级并发控制代码非常有用。</li>
+                            <li><strong>支持定制复杂的原子操作：</strong>VarHandle支持更复杂的原子操作，如条件更新，这在之前的原子类中是不可用的。</li>
+                        </ol>
+                        <div class="summary">VarHandle的这些改进，提高了Java在低级并发操作中的表达能力和性能，对于需要细粒度控制的应用非常重要。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q16">
+                    <h2>JDK 11中对注解的哪些改进增加了编程的灵活性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>容器注解的改进：</strong>在JDK 11中，对重复注解的处理进行了优化，使得容器注解更加易用和灵活。</li>
+                            <li><strong>注解的类型推断：</strong>增加了对注解属性的类型推断能力，减少了编码时的冗余和提高了代码的清晰度。</li>
+                            <li><strong>增强的反射支持：</strong>通过反射API，可以更灵活地访问和处理注解信息，提高了注解处理的动态性。</li>
+                            <li><strong>注解在模块系统中的应用：</strong>JDK 11的模块系统中增加了对注解的支持，允许在模块声明中使用注解，增加了模块描述的灵活性。</li>
+                            <li><strong>更广泛的应用场景：</strong>注解现在可以被更广泛地应用于各种程序元素上，包括局部变量、类型使用等，提高了注解的适用范围。</li>
+                        </ol>
+                        <div class="summary">通过这些改进，注解在JDK 11中变得更加强大和灵活，为开发者提供了更多的元数据处理能力。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q17">
+                    <h2>JDK 11中引入的新的编译器优化有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>应用类数据共享（AppCDS）：</strong>JDK 11扩展了类数据共享（CDS）功能，允许应用程序类也能被包含在共享归档中，减少了启动时间和JVM的内存消耗。</li>
+                            <li><strong>改进的JIT编译器：</strong>JIT编译器在JDK 11中得到优化，提高了编译效率和执行性能，特别是对热点代码的优化更加精细。</li>
+                            <li><strong>Graal编译器：</strong>虽然作为实验性功能引入，Graal编译器是一个基于Java的JIT编译器，旨在提高Java应用的性能。</li>
+                            <li><strong>垃圾收集器优化：</strong>JDK 11中的垃圾收集器，如G1和ZGC，经过优化，提高了垃圾收集的效率和应用的响应时间。</li>
+                            <li><strong>优化的AOT编译：</strong>即时编译(AOT)在JDK 11中得到进一步的优化，减少了应用启动时间和提高了系统性能。</li>
+                        </ol>
+                        <div class="summary">这些编译器和性能优化改进了JDK 11的执行效率，对于提高Java应用的运行性能有显著影响。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q18">
+                    <h2>JDK 11中新增的低延迟垃圾收集器ZGC有哪些特点？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>低停顿时间：</strong>ZGC旨在实现低延迟，停顿时间不应超过10ms，即使在处理大型堆时也是如此。</li>
+                            <li><strong>可伸缩性：</strong>ZGC设计以支持多TB级别的堆内存，无论堆的大小，都能保持低延迟。</li>
+                            <li><strong>并发处理：</strong>ZGC的大多数垃圾收集过程都是并发执行的，意味着它可以在应用程序运行时继续处理内存回收。</li>
+                            <li><strong>染色指针技术：</strong>使用染色指针技术来避免完全重映射整个地址空间，从而提高性能。</li>
+                            <li><strong>无锁的堆结构：</strong>ZGC采用无锁设计的堆结构，减少了线程之间的竞争，提高了垃圾收集的效率。</li>
+                        </ol>
+                        <div class="summary">ZGC作为一种低延迟垃圾收集器，为需要大堆内存和低停顿时间的Java应用提供了新的选择。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q19">
+                    <h2>JDK 11中对于Unicode 11的支持带来了哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>新增字符和脚本：</strong>Unicode 11在JDK 11中得到支持，包括新增的字符和脚本，使Java能够处理更多的语言和符号。</li>
+                            <li><strong>新的Unicode区块：</strong>JDK 11加入了对Unicode 11新增区块的支持，增强了字符处理的能力。</li>
+                            <li><strong>改进的字符属性：</strong>对字符属性方法进行了更新，以支持Unicode 11中定义的新属性和类别。</li>
+                            <li><strong>正则表达式的增强：</strong>JDK 11增强了对Unicode 11的支持，使得正则表达式可以匹配更多的Unicode字符和属性。</li>
+                            <li><strong>国际化和本地化的改进：</strong>支持Unicode 11意味着Java应用可以更好地进行国际化和本地化处理，支持更多语言和文化。</li>
+                        </ol>
+                        <div class="summary">通过支持Unicode 11，JDK 11在全球化和本地化方面的能力得到了加强，支持了更多语言和符号的处理。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q20">
+                    <h2>JDK 11中增强的集合API有哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>不可变集合的简化创建：</strong>通过List、Set和Map的of和copyOf方法，可以更简便地创建不可变集合。</li>
+                            <li><strong>增强的Stream API：</strong>JDK 11对Stream API进行了增强，如增加了新的操作和方法，提高了处理集合数据的灵活性和效率。</li>
+                            <li><strong>Optional类的改进：</strong>Optional类新增的ifPresentOrElse和or方法，为集合处理提供了更多的控制流选项。</li>
+                            <li><strong>集合转数组的改进：</strong>Collection接口中的toArray方法得到改进，现在可以更方便地转换集合到数组。</li>
+                            <li><strong>迭代器的新方法：</strong>增加了Iterator接口的新方法，如forEachRemaining，使迭代过程更加灵活和高效。</li>
+                        </ol>
+                        <div class="summary">JDK 11在集合API方面的增强，使得开发者在处理集合数据时更加高效和便捷，提升了Java编程的体验。</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

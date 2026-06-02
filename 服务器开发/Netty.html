@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netty 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #8b5cf6; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(139,92,246,0.14); color: #7c3aed; font-weight: 600; box-shadow: inset 3px 0 0 #8b5cf6; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #8b5cf6; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #8b5cf6; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #f5f3ff; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #8b5cf6; margin: 18px 0; }
+        .highlight strong { color: #7c3aed; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #8b5cf6; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(139,92,246,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(139,92,246,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Netty 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Netty的线程模型是如何工作的？</h2>
+            <p>Netty的线程模型基于主从Reactor多线程模型，其工作方式如下：</p>
+            <div class="highlight">
+                <p><strong>1、主从Reactor结构：</strong> Netty使用一个主Reactor负责监听服务端口的连接请求，多个从Reactor处理已经建立的连接的读写请求。</p>
+                <p><strong>2、事件和任务分离：</strong> Netty将事件处理（如连接、读、写）和实际的业务逻辑处理任务分离开，以提高处理效率。</p>
+                <p><strong>3、线程池：</strong> Netty利用线程池来处理不同的任务，例如，boss线程池负责接受新连接，worker线程池负责处理IO操作。</p>
+                <p><strong>4、异步处理：</strong> Netty采用异步非阻塞IO，使得网络通信更加高效。</p>
+            </div>
+
+            <h2 id="section-2">2. Netty中的ByteBuf和Java NIO中ByteBuffer有何不同？</h2>
+            <p>Netty中的ByteBuf和Java NIO中的ByteBuffer主要区别包括：</p>
+            <div class="highlight">
+                <p><strong>1、内存管理：</strong> ByteBuf提供了更加灵活的内存管理功能，如引用计数、池化等，而ByteBuffer没有这些功能。</p>
+                <p><strong>2、读写分离：</strong> ByteBuf实现了读写分离，有两个独立的索引分别用于读操作和写操作，而ByteBuffer用同一个索引。</p>
+                <p><strong>3、扩容机制：</strong> ByteBuf在写入数据超过容量时可以自动扩容，ByteBuffer则不会自动扩容。</p>
+            </div>
+
+            <h2 id="section-3">3. Netty的高性能体现在哪些方面？</h2>
+            <p>Netty的高性能主要体现在以下方面：</p>
+            <div class="highlight">
+                <p><strong>1、异步非阻塞IO：</strong> Netty基于NIO实现，支持异步非阻塞IO操作，大幅度提高IO处理的效率。</p>
+                <p><strong>2、内存管理：</strong> Netty的内存管理更加高效，如通过ByteBuf的使用减少内存复制和GC压力。</p>
+                <p><strong>3、线程模型：</strong> 主从Reactor多线程模型充分利用多核处理器的优势，提高并发处理能力。</p>
+            </div>
+
+            <h2 id="section-4">4. Netty如何解决JDK NIO中的空轮询Bug？</h2>
+            <p>Netty解决JDK NIO中空轮询Bug的方法包括：</p>
+            <div class="highlight">
+                <p><strong>1、检测空轮询：</strong> Netty通过记录轮询就绪事件的次数来检测空轮询。</p>
+                <p><strong>2、重新注册Selector：</strong> 当检测到空轮询时，Netty会重新创建Selector并将原有的通道注册到新的Selector上。</p>
+            </div>
+
+            <h2 id="section-5">5. Netty的零拷贝特性是怎样的？</h2>
+            <p>Netty的零拷贝特性包括：</p>
+            <div class="highlight">
+                <p><strong>1、CompositeByteBuf：</strong> 允许将多个ByteBuf组合为一个逻辑单元，避免在合并时的内存拷贝。</p>
+                <p><strong>2、FileRegion：</strong> 用于文件传输，能够直接将文件内容从文件系统缓存传输到网络，减少内存拷贝。</p>
+            </div>
+
+            <h2 id="section-6">6. Netty中的ChannelPipeline是什么？</h2>
+            <p>Netty中的ChannelPipeline是一个处理网络事件的处理器链：</p>
+            <div class="highlight">
+                <p><strong>1、处理器链：</strong> Pipeline中包含了一系列的ChannelHandler，这些Handler按照加入的顺序进行调用。</p>
+                <p><strong>2、事件传播：</strong> 网络事件会在Pipeline中按顺序传播，每个Handler可以处理事件或将事件传递给链中的下一个Handler。</p>
+            </div>
+
+            <h2 id="section-7">7. Netty如何保证消息的顺序性和完整性？</h2>
+            <p>Netty通过以下机制保证消息的顺序性和完整性：</p>
+            <div class="highlight">
+                <p><strong>1、Channel和EventLoop：</strong> 每个Channel都关联一个EventLoop，保证了每个Channel上的事件处理都是顺序的。</p>
+                <p><strong>2、消息编解码器：</strong> Netty提供了多种编解码器来确保消息的完整性和正确的序列化与反序列化。</p>
+            </div>
+
+            <h2 id="section-8">8. Netty的主要组件和它们的作用是什么？</h2>
+            <p>Netty的主要组件及其作用包括：</p>
+            <div class="highlight">
+                <p><strong>1、Bootstrap：</strong> 用于启动客户端或服务器，并初始化设置。</p>
+                <p><strong>2、Channel：</strong> 表示一个连接，可以进行读写操作。</p>
+                <p><strong>3、EventLoopGroup：</strong> 用于处理所有事件，如接受新连接、读/写数据。</p>
+                <p><strong>4、ChannelHandler：</strong> 处理入站和出站数据流。</p>
+                <p><strong>5、ChannelPipeline：</strong> 管理ChannelHandler链，用于处理网络事件。</p>
+                <p><strong>6、ByteBuf：</strong> Netty的数据容器，用于高效处理数据。</p>
+            </div>
+
+            <h2 id="section-9">9. Netty如何处理TCP粘包/拆包问题？</h2>
+            <p>Netty处理TCP粘包/拆包问题的策略包括：</p>
+            <div class="highlight">
+                <p><strong>1、定长消息解码器：</strong> 通过固定长度分割消息。</p>
+                <p><strong>2、行分隔符解码器：</strong> 使用特定的行结束标记分割消息。</p>
+                <p><strong>3、分隔符解码器：</strong> 使用自定义的分隔符来区分消息。</p>
+                <p><strong>4、基于长度的协议编解码器：</strong> 在消息头部添加长度字段，用于表示消息体的长度。</p>
+            </div>
+
+            <h2 id="section-10">10. EventLoop在Netty中的作用是什么？</h2>
+            <p>EventLoop在Netty中的作用包括：</p>
+            <div class="highlight">
+                <p><strong>1、处理所有注册到其上的Channel的IO事件。</strong></p>
+                <p><strong>2、负责执行用户定义的任务，如事件处理回调。</strong></p>
+                <p><strong>3、支持定时任务和调度。</strong></p>
+            </div>
+
+            <h2 id="section-11">11. Netty的ChannelHandler有哪些类型？</h2>
+            <p>Netty的ChannelHandler主要类型包括：</p>
+            <div class="highlight">
+                <p><strong>1、ChannelInboundHandler：</strong> 处理入站数据和事件。</p>
+                <p><strong>2、ChannelOutboundHandler：</strong> 处理出站数据和事件。</p>
+                <p><strong>3、ChannelDuplexHandler：</strong> 同时作为入站和出站处理器。</p>
+            </div>
+
+            <h2 id="section-12">12. Netty是如何实现高性能的异步非阻塞IO的？</h2>
+            <p>Netty实现高性能的异步非阻塞IO主要依赖于：</p>
+            <div class="highlight">
+                <p><strong>1、基于NIO的Channel和Selector，支持非阻塞的读写操作。</strong></p>
+                <p><strong>2、高效的线程模型和事件处理机制。</strong></p>
+                <p><strong>3、优化的内存管理和零拷贝技术。</strong></p>
+            </div>
+
+            <h2 id="section-13">13. Netty中如何实现SSL/TLS加密？</h2>
+            <p>在Netty中实现SSL/TLS加密的方法包括：</p>
+            <div class="highlight">
+                <p><strong>1、使用SslHandler，它处理加密和解密。</strong></p>
+                <p><strong>2、配置Netty的Pipeline以添加SslHandler。</strong></p>
+                <p><strong>3、使用Java的SSLContext或Netty提供的SslContext。</strong></p>
+            </div>
+
+            <h2 id="section-14">14. Netty如何提供HTTP/2支持？</h2>
+            <p>Netty提供HTTP/2支持的方式包括：</p>
+            <div class="highlight">
+                <p><strong>1、内置的HTTP/2编解码器。</strong></p>
+                <p><strong>2、支持HTTP/2的服务器和客户端的简化API。</strong></p>
+                <p><strong>3、对HTTP/2特有功能的支持，如流控制、头压缩。</strong></p>
+            </div>
+
+            <h2 id="section-15">15. Netty的线程模型是如何设计的？</h2>
+            <p>Netty的线程模型基于Reactor模式，其设计特点包括：</p>
+            <div class="highlight">
+                <p><strong>1、主从Reactor多线程模型：</strong> Netty使用一组主Reactor线程负责接受客户端的连接请求，一组从Reactor线程负责处理IO读写操作。</p>
+                <p><strong>2、线程池：</strong> Netty通过线程池有效地管理线程资源，提高系统性能。</p>
+                <p><strong>3、任务队列：</strong> 所有IO操作和业务逻辑处理都被封装成任务，提交到任务队列中，由线程池中的线程异步处理。</p>
+            </div>
+
+            <h2 id="section-16">16. Netty的零拷贝特性是什么，有什么优势？</h2>
+            <p>Netty的零拷贝特性指的是在网络数据传输过程中减少数据复制操作。其优势包括：</p>
+            <div class="highlight">
+                <p><strong>1、减少内存复制：</strong> 减少了内核空间到用户空间的数据复制，降低了内存的使用和系统的CPU消耗。</p>
+                <p><strong>2、提高数据处理效率：</strong> 直接在内存缓冲区上进行操作，避免了多次数据拷贝，提高了数据处理的速度。</p>
+                <p><strong>3、增加吞吐量：</strong> 减少数据拷贝操作，可以处理更多的数据请求，提高服务器的吞吐量。</p>
+            </div>
+
+            <h2 id="section-17">17. Netty如何处理TCP粘包/拆包问题？</h2>
+            <p>Netty处理TCP粘包/拆包问题的方式包括：</p>
+            <div class="highlight">
+                <p><strong>1、定长解码器：</strong> 通过固定长度的解码器避免粘包问题。</p>
+                <p><strong>2、行分隔解码器：</strong> 利用行分隔符来解决粘包和拆包的问题。</p>
+                <p><strong>3、分隔符解码器：</strong> 使用特定的分隔符来标记数据包的边界。</p>
+                <p><strong>4、长度字段解码器：</strong> 在数据包中添加长度字段来确定每个数据包的长度。</p>
+            </div>
+
+            <h2 id="section-18">18. Netty的ChannelPipeline和ChannelHandler是什么？</h2>
+            <p>在Netty中，ChannelPipeline和ChannelHandler是处理网络事件的核心组件：</p>
+            <div class="highlight">
+                <p><strong>1、ChannelPipeline：</strong> 是一个处理器链，用于处理或拦截Channel的入站事件和出站操作。</p>
+                <p><strong>2、ChannelHandler：</strong> 实际处理网络事件的处理器，可以添加到ChannelPipeline中。根据处理入站和出站数据的不同，分为ChannelInboundHandler和ChannelOutboundHandler。</p>
+            </div>
+
+            <h2 id="section-19">19. Netty如何优化内存使用，减少GC压力？</h2>
+            <p>Netty优化内存使用、减少GC压力的策略包括：</p>
+            <div class="highlight">
+                <p><strong>1、ByteBuf的池化：</strong> 重用ByteBuf实例，减少对象创建。</p>
+                <p><strong>2、使用DirectBuffer：</strong> 减少在JVM堆和本地内存间的数据拷贝。</p>
+                <p><strong>3、引用计数：</strong> ByteBuf通过引用计数来管理内存释放，避免过早GC。</p>
+                <p><strong>4、内存区域划分：</strong> 将内存划分为小块来管理，降低内存碎片化。</p>
+            </div>
+
+            <h2 id="section-20">20. Netty的Future和Promise有什么区别？</h2>
+            <p>Netty中Future和Promise的区别：</p>
+            <div class="highlight">
+                <p><strong>1、Future是一个只读接口，用于获取操作的结果。</strong></p>
+                <p><strong>2、Promise是可写的Future，用于设置操作的结果。</strong></p>
+                <p><strong>3、Promise可以被外部操作来完成或失败，而Future不行。</strong></p>
+            </div>
+
+            <h2 id="section-21">21. Netty中如何处理IO异常和断线重连？</h2>
+            <p>Netty中处理IO异常和断线重连的方法：</p>
+            <div class="highlight">
+                <p><strong>1、在ChannelHandler中捕获异常，并进行相应处理。</strong></p>
+                <p><strong>2、使用ChannelInboundHandlerAdapter监听连接状态变化来实现断线重连。</strong></p>
+                <p><strong>3、配置Bootstrap的重连逻辑，如使用backoff策略进行重连。</strong></p>
+            </div>
+
+            <h2 id="section-22">22. Netty中的水位线（Watermark）是什么，它如何工作？</h2>
+            <p>Netty中的水位线是一种流控制机制：</p>
+            <div class="highlight">
+                <p><strong>1、写水位线（write watermark）用于控制写入缓冲区的数据量。</strong></p>
+                <p><strong>2、当缓冲区数据量超过高水位线时，会停止读取数据，低于低水位线时恢复读取。</strong></p>
+                <p><strong>3、这种机制帮助避免OOM，并保证数据处理的平滑性。</strong></p>
+            </div>
+
+            <h2 id="section-23">23. Netty支持哪些序列化协议，如何选择？</h2>
+            <p>Netty支持的序列化协议包括：</p>
+            <div class="highlight">
+                <p><strong>1、Java自带的序列化。</strong></p>
+                <p><strong>2、Google的Protocol Buffers。</strong></p>
+                <p><strong>3、其他流行的序列化框架，如Kryo、Thrift等。</strong></p>
+                <p><strong>选择依据包括性能、跨语言支持、易用性等因素。</strong></p>
+            </div>
+
+            <h2 id="section-24">24. Netty中如何实现高性能日志处理？</h2>
+            <p>Netty实现高性能日志处理的方法：</p>
+            <div class="highlight">
+                <p><strong>1、使用异步日志记录，减少对IO线程的影响。</strong></p>
+                <p><strong>2、合理配置日志级别，避免不必要的日志记录开销。</strong></p>
+                <p><strong>3、利用Netty的内置日志API，如InternalLoggerFactory。</strong></p>
+            </div>
+
+            <h2 id="section-25">25. Netty的Reactor线程模型具体是怎样的？</h2>
+            <p>Netty的Reactor线程模型基于"主从Reactor"多线程模型，具体特点如下：</p>
+            <div class="highlight">
+                <p><strong>1、主Reactor负责接受客户端的连接请求：</strong> 主Reactor主要负责处理新的客户端连接。</p>
+                <p><strong>2、从Reactor负责处理已连接的客户端的读写请求：</strong> 一旦连接建立，后续的读写请求由从Reactor处理。</p>
+                <p><strong>3、线程分离：</strong> 连接接受和请求处理在不同的线程中进行，提高了处理效率，减少了IO阻塞的可能。</p>
+                <p><strong>4、高效利用多核CPU：</strong> 主从Reactor模型充分利用多核CPU资源，提高了并发处理能力。</p>
+            </div>
+
+            <h2 id="section-26">26. Netty中Channel和ChannelHandlerContext的区别和联系是什么？</h2>
+            <p>Channel和ChannelHandlerContext在Netty中的区别和联系包括：</p>
+            <div class="highlight">
+                <p><strong>1、Channel是网络通信的组件：</strong> 它代表了一个可以执行IO操作的通道，比如读写数据。</p>
+                <p><strong>2、ChannelHandlerContext代表ChannelHandler和其所在的ChannelPipeline之间的关联：</strong> 它允许ChannelHandler与其他Handler交互以及修改Pipeline。</p>
+                <p><strong>3、联系：</strong> ChannelHandlerContext使得Handler能够影响其所在的Pipeline和其他Handler，以及与其关联的Channel。</p>
+            </div>
+
+            <h2 id="section-27">27. Netty中实现自定义协议的编解码器？</h2>
+            <p>在Netty中实现自定义协议的编解码器的步骤包括：</p>
+            <div class="highlight">
+                <p><strong>1、继承ByteToMessageDecoder：</strong> 实现自定义解码逻辑，用于将接收到的字节转换为消息。</p>
+                <p><strong>2、继承MessageToByteEncoder：</strong> 实现自定义编码逻辑，用于将消息转换为字节。</p>
+                <p><strong>3、将自定义编解码器添加到ChannelPipeline：</strong> 在Pipeline中配置这些编解码器，以处理入站和出站的数据。</p>
+            </div>
+
+            <h2 id="section-28">28. Netty中的ChannelOption和AttributeKey有什么用途？</h2>
+            <p>Netty中ChannelOption和AttributeKey的用途：</p>
+            <div class="highlight">
+                <p><strong>1、ChannelOption：</strong> 用于配置Channel的参数，如连接超时、缓冲区大小等。</p>
+                <p><strong>2、AttributeKey：</strong> 用于在Channel中存储和获取自定义属性。</p>
+            </div>
+
+            <h2 id="section-29">29. Netty如何支持WebSocket，并处理WebSocket的特有问题？</h2>
+            <p>Netty支持WebSocket并处理其特有问题的方式：</p>
+            <div class="highlight">
+                <p><strong>1、提供WebSocketServerProtocolHandler来处理WebSocket协议的握手等。</strong></p>
+                <p><strong>2、通过编解码器如WebSocketFrameDecoder和WebSocketFrameEncoder处理WebSocket帧。</strong></p>
+                <p><strong>3、处理WebSocket的分片消息和控制帧。</strong></p>
+            </div>
+
+            <h2 id="section-30">30. Netty中的ByteBufAllocator是什么，有什么作用？</h2>
+            <p>Netty中的ByteBufAllocator是：</p>
+            <div class="highlight">
+                <p><strong>1、内存分配器，用于分配ByteBuf实例。</strong></p>
+                <p><strong>2、支持不同的内存分配策略，如池化和非池化。</strong></p>
+                <p><strong>3、提高内存使用效率，减少GC压力。</strong></p>
+            </div>
+
+            <h2 id="section-31">31. Netty中的ByteBuf是什么，与Java原生的ByteBuffer有什么区别？</h2>
+            <p>Netty中的ByteBuf是一种字节数据容器，它优化了缓冲区的性能和灵活性，与Java原生的ByteBuffer相比，有几个关键的区别：</p>
+            <div class="highlight">
+                <p><strong>1、读写索引分离：</strong> ByteBuf提供了两个独立的索引，一个用于读操作，另一个用于写操作。这种分离允许同时进行读写操作而无需调用flip方法。</p>
+                <p><strong>2、动态扩展：</strong> ByteBuf可以根据需要动态扩展其容量，而ByteBuffer的容量在创建时固定。</p>
+                <p><strong>3、引用计数：</strong> ByteBuf支持引用计数，可以有效地管理缓冲区的释放，避免内存泄漏。</p>
+                <p><strong>4、池化能力：</strong> Netty可以使用ByteBuf池来重用缓冲区，减少内存分配和垃圾收集的开销。</p>
+            </div>
+
+            <h2 id="section-32">32. Netty的事件循环组（EventLoopGroup）是如何工作的？</h2>
+            <p>Netty的EventLoopGroup是一种用于处理I/O操作的线程组。它的工作机制如下：</p>
+            <div class="highlight">
+                <p><strong>1、线程复用：</strong> EventLoopGroup包含一个或多个EventLoop，每个EventLoop都是一个单独的线程。</p>
+                <p><strong>2、任务调度：</strong> EventLoopGroup负责调度并处理连接、读写、超时等事件。</p>
+                <p><strong>3、选择器绑定：</strong> 每个EventLoop与一个选择器（Selector）绑定，用于监听网络事件。</p>
+                <p><strong>4、通道分配：</strong> 新建立的连接会被分配到一个EventLoop上，并始终由这个EventLoop处理。</p>
+            </div>
+
+            <h2 id="section-33">33. Netty的ChannelPipeline和ChannelHandler是什么，它们之间是如何交互的？</h2>
+            <p>Netty中的ChannelPipeline和ChannelHandler是数据处理的核心组件，它们的交互方式如下：</p>
+            <div class="highlight">
+                <p><strong>1、ChannelPipeline：</strong> 是一个ChannelHandler的链表，用于处理进出的数据流。</p>
+                <p><strong>2、ChannelHandler：</strong> 是一个接口，提供了处理I/O事件的方法。</p>
+                <p><strong>3、数据流处理：</strong> 当I/O事件发生时，事件会沿着ChannelPipeline传递。</p>
+                <p><strong>4、上下文对象：</strong> 每个ChannelHandler都可以访问与之关联的ChannelHandlerContext对象。</p>
+            </div>
+
+            <h2 id="section-34">34. Netty如何处理TCP粘包/拆包问题？</h2>
+            <p>Netty处理TCP粘包/拆包问题通常依赖于其提供的编解码器，主要方法包括：</p>
+            <div class="highlight">
+                <p><strong>1、定长解码器（FixedLengthFrameDecoder）：</strong> 通过固定长度来解决粘包/拆包问题。</p>
+                <p><strong>2、行分隔符解码器（LineBasedFrameDecoder）：</strong> 使用行分隔符来分割消息。</p>
+                <p><strong>3、分隔符解码器（DelimiterBasedFrameDecoder）：</strong> 可以自定义分隔符来拆分消息。</p>
+                <p><strong>4、长度字段解码器（LengthFieldBasedFrameDecoder）：</strong> 在消息体前添加长度字段。</p>
+            </div>
+
+            <h2 id="section-35">35. Netty的零拷贝特性是什么，它如何提高性能？</h2>
+            <p>Netty的零拷贝特性指的是在网络数据传输过程中减少数据复制操作。其优势包括：</p>
+            <div class="highlight">
+                <p><strong>1、减少内存复制：</strong> 减少了内核空间到用户空间的数据复制，降低了内存的使用和系统的CPU消耗。</p>
+                <p><strong>2、提高数据处理效率：</strong> 直接在内存缓冲区上进行操作，避免了多次数据拷贝。</p>
+                <p><strong>3、增加吞吐量：</strong> 减少数据拷贝操作，可以处理更多的数据请求，提高服务器的吞吐量。</p>
+            </div>
+
+        </div>
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </aside>
+    </div>
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('h2');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = headings[0] ? headings[0].getAttribute('id') : '';
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                    link.scrollIntoView({ block: 'nearest' });
+                }
+            });
+        }
+        function updateScrollState() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const button = document.getElementById('back-to-top');
+            const scrollTop = contentWrapper ? contentWrapper.scrollTop : window.scrollY;
+            if (scrollTop > 300) { button.classList.add('visible'); } else { button.classList.remove('visible'); }
+            highlightCurrentSection();
+        }
+        function bindScrollSpy() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const scrollTarget = contentWrapper || window;
+            scrollTarget.addEventListener('scroll', updateScrollState);
+            document.querySelectorAll('.toc-list a').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (!target || !contentWrapper) return;
+                    event.preventDefault();
+                    contentWrapper.scrollTo({ top: target.offsetTop - 16, behavior: 'smooth' });
+                });
+            });
+            updateScrollState();
+        }
+        function scrollToTop() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            if (contentWrapper) { contentWrapper.scrollTo({ top: 0, behavior: 'smooth' }); } else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        }
+        document.addEventListener('DOMContentLoaded', function() { generateToc(); bindScrollSpy(); });
+    </script>
+</body>
+</html>

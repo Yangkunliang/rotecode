@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring源码</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #5cb85c; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #e8f5e9; color: #5cb85c; }
+        .toc-list a.active { background: #5cb85c; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #5cb85c; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #e8f5e9; padding: 15px; border-radius: 6px; margin-top: 15px; color: #2e7d32; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #5cb85c; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #4cae4c; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>Spring源码</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring框架中的Bean生命周期是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>实例化Bean：</strong>首先创建Bean的实例。</li>
+                            <li><strong>设置属性值：</strong>Spring框架通过反射机制注入属性。</li>
+                            <li><strong>调用BeanNameAware的setBeanName()：</strong>如果Bean实现了BeanNameAware接口，Spring将Bean的ID传给setBeanName()方法。</li>
+                            <li><strong>调用BeanFactoryAware的setBeanFactory()：</strong>如果Bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory()方法，将BeanFactory容器实例传入。</li>
+                            <li><strong>调用ApplicationContextAware的setApplicationContext()：</strong>如果Bean实现了ApplicationContextAware接口，此方法将被调用，传入当前的ApplicationContext。</li>
+                            <li><strong>BeanPostProcessor的前置处理：</strong>BeforeInitialization方法被调用。</li>
+                            <li><strong>调用InitializingBean的afterPropertiesSet()：</strong>如果Bean实现了InitializingBean接口，Spring将调用其afterPropertiesSet()方法。</li>
+                            <li><strong>定义的init方法：</strong>如果Bean定义了init方法，该方法将被调用。</li>
+                            <li><strong>BeanPostProcessor的后置处理：</strong>AfterInitialization方法被调用。</li>
+                            <li><strong>Bean的使用：</strong>此时，Bean已准备就绪，可以被应用程序使用。</li>
+                            <li><strong>调用DisposableBean的destroy()：</strong>如果Bean实现了DisposableBean接口，当容器关闭时，destroy()方法将被调用。</li>
+                            <li><strong>定义的destroy方法：</strong>如果Bean定义了destroy方法，该方法将被调用。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring中的依赖注入是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>通过构造器注入：</strong>Spring通过类的构造器参数注入依赖。</li>
+                            <li><strong>通过Setter方法注入：</strong>依赖可以通过Bean的Setter方法被注入。</li>
+                            <li><strong>基于注解的注入：</strong>使用注解（如@Autowired）直接在属性、构造器或方法上注入依赖。</li>
+                            <li><strong>XML文件注入：</strong>在Spring的XML配置文件中定义Bean及其依赖。</li>
+                        </ol>
+                        <div class="summary">这种机制减少了代码间的耦合度，使得组件更易于测试和维护。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Spring框架中AOP的概念。</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>切面（Aspect）：</strong>横切关注点的模块化，比如日志、安全等。</li>
+                            <li><strong>连接点（Join Point）：</strong>程序执行过程中的某个特定点，如方法调用或异常抛出。</li>
+                            <li><strong>通知（Advice）：</strong>在切面的某个特定连接点上执行的动作。</li>
+                            <li><strong>切点（Pointcut）：</strong>匹配连接点的表达式。</li>
+                            <li><strong>引入（Introduction）：</strong>向现有类添加新方法或属性。</li>
+                            <li><strong>目标对象（Target Object）：</strong>被一个或多个切面通知的对象。</li>
+                            <li><strong>织入（Weaving）：</strong>把切面与其他应用类型或对象连接起来，创建一个被通知的对象。</li>
+                        </ol>
+                        <div class="summary">这些概念共同工作，为Spring应用提供强大的编程方式以处理共性问题。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Spring框架中的事务管理是如何实现的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>声明式事务管理：</strong>使用注解或XML配置来管理事务，是最常用的方式。</li>
+                            <li><strong>编程式事务管理：</strong>使用编程的方式直接管理事务，给予开发者更大的控制，但不如声明式事务简洁。</li>
+                            <li><strong>事务传播行为：</strong>Spring定义了多种事务传播行为，如REQUIRED、REQUIRES_NEW等，控制事务的创建和嵌套方式。</li>
+                            <li><strong>事务隔离级别：</strong>Spring支持多种事务隔离级别，帮助解决事务中常见的问题，如脏读、不可重复读、幻读等。</li>
+                            <li><strong>回滚规则：</strong>Spring允许自定义事务回滚的规则。</li>
+                        </ol>
+                        <div class="summary">这些特性使得Spring在事务管理方面非常灵活和强大。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring MVC流程。</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>请求到达DispatcherServlet：</strong>所有请求首先到达中央控制器DispatcherServlet。</li>
+                            <li><strong>请求映射：</strong>DispatcherServlet调用HandlerMapping确定请求的处理器。</li>
+                            <li><strong>调用处理器：</strong>处理器接收请求并返回ModelAndView对象。</li>
+                            <li><strong>视图解析：</strong>DispatcherServlet调用ViewResolver来解析Handler返回的视图。</li>
+                            <li><strong>返回响应：</strong>视图负责渲染并返回给客户端。</li>
+                        </ol>
+                        <div class="summary">Spring MVC通过这种流程提供了一个灵活、解耦的方式来开发Web应用。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Spring Boot与Spring有什么区别？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>自动配置：</strong>Spring Boot自动配置项目，简化了配置过程。</li>
+                            <li><strong>独立运行：</strong>Spring Boot应用可以独立运行，不需要外部Servlet容器。</li>
+                            <li><strong>内嵌服务器：</strong>提供内嵌的Tomcat、Jetty或Undertow服务器。</li>
+                            <li><strong>无需XML配置：</strong>Spring Boot减少了对XML配置的依赖，更多使用注解和Java配置。</li>
+                            <li><strong>微服务支持：</strong>为构建微服务提供了强大的支持。</li>
+                        </ol>
+                        <div class="summary">Spring Boot是基于Spring的框架，旨在简化Spring应用的初始搭建及开发过程。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Spring Cloud与Spring Boot有什么关系？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>基于Spring Boot：</strong>Spring Cloud建立在Spring Boot的基础上，利用其特性来简化分布式系统开发。</li>
+                            <li><strong>微服务工具集：</strong>Spring Cloud为微服务架构提供了一整套的解决方案，如服务发现、配置管理、消息路由等。</li>
+                            <li><strong>依赖管理：</strong>Spring Cloud依赖Spring Boot来管理各种依赖的版本。</li>
+                            <li><strong>增强的分布式系统支持：</strong>通过Spring Cloud，Spring Boot应用可以更容易地构建为分布式系统的一部分。</li>
+                        </ol>
+                        <div class="summary">Spring Cloud与Spring Boot共同提供了一个全面且一致的开发体验，用于构建现代的、可伸缩的微服务应用。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring Security中的认证和授权机制是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>认证过程：</strong>认证是确认用户身份的过程。Spring Security支持多种认证方式，如表单登录、LDAP、OAuth2等。</li>
+                            <li><strong>授权过程：</strong>授权是决定用户是否有权执行特定操作的过程。Spring Security通过角色和权限来控制访问。</li>
+                            <li><strong>Security Filter Chain：</strong>请求经过一系列的安全过滤器，每个过滤器负责不同的安全检查。</li>
+                            <li><strong>UserDetailsService接口：</strong>用于根据用户名获取用户的详细信息。</li>
+                            <li><strong>PasswordEncoder接口：</strong>用于密码的加密和匹配。</li>
+                        </ol>
+                        <div class="summary">通过这些机制，Spring Security确保了应用的安全性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Spring中Bean的作用域有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Singleton：</strong>默认作用域，每个Spring容器中只有一个Bean实例。</li>
+                            <li><strong>Prototype：</strong>每次请求都会创建一个新的Bean实例。</li>
+                            <li><strong>Request：</strong>在一次HTTP请求中，每个Bean都是一个新的实例。</li>
+                            <li><strong>Session：</strong>在一个HTTP会话中，每个Bean都是一个新的实例。</li>
+                            <li><strong>GlobalSession：</strong>在全局HTTP会话中，每个Bean都是一个新的实例，主要用于Portlet应用。</li>
+                            <li><strong>Application：</strong>在ServletContext生命周期内，Bean为单例。</li>
+                            <li><strong>WebSocket：</strong>在WebSocket生命周期内，Bean为单例。</li>
+                        </ol>
+                        <div class="summary">这些作用域提供了在不同情况下使用Bean的灵活性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Spring框架中的IoC（控制反转）是什么意思？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>控制权转移：</strong>将对象创建和管理的控制权从程序代码转移给框架。</li>
+                            <li><strong>依赖注入：</strong>IoC的一种实现方式，Spring框架通过依赖注入将组件彼此连接起来。</li>
+                            <li><strong>减少耦合：</strong>IoC使得代码之间的耦合度降低，提高了代码的可测试性和可维护性。</li>
+                        </ol>
+                        <div class="summary">IoC（控制反转）是Spring框架的核心概念。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Spring Data JPA的工作原理。</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Repository接口：</strong>开发者只需定义接口，Spring Data JPA会自动实现。</li>
+                            <li><strong>查询方法命名解析：</strong>通过方法名解析查询逻辑。</li>
+                            <li><strong>实体管理：</strong>自动处理实体类到数据库表的映射。</li>
+                            <li><strong>事务管理：</strong>提供声明式事务管理。</li>
+                            <li><strong>集成Hibernate：</strong>可与Hibernate等ORM框架无缝集成。</li>
+                        </ol>
+                        <div class="summary">Spring Data JPA为开发者提供了一个强大且易用的数据访问层。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Spring Boot中的自动配置是如何实现的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@EnableAutoConfiguration注解：</strong>Spring Boot应用加上此注解来启用自动配置。</li>
+                            <li><strong>条件注解：</strong>如@ConditionalOnClass、@ConditionalOnMissingBean等，根据环境条件决定是否进行自动配置。</li>
+                            <li><strong>配置类：</strong>提供默认的配置，如果用户没有定义自己的配置，则使用这些默认值。</li>
+                            <li><strong>外部配置：</strong>通过application.properties或application.yml文件提供的配置。</li>
+                        </ol>
+                        <div class="summary">这些机制使得在Spring Boot中配置项目变得简单快捷。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>Spring Cloud中的服务发现和注册机制。</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>服务注册：</strong>微服务启动时，将自己的信息注册到服务注册中心。</li>
+                            <li><strong>服务发现：</strong>应用通过服务注册中心来查找需要调用的服务的位置。</li>
+                            <li><strong>负载均衡：</strong>在客户端实现负载均衡，选择一个合适的服务实例进行调用。</li>
+                            <li><strong>常见实现：</strong>如Eureka、Consul和Zookeeper等。</li>
+                        </ol>
+                        <div class="summary">这种机制允许微服务实例动态注册和发现，增加了系统的弹性和可伸缩性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q14">
+                    <h2>Spring中的事件和事件监听器是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>事件（Event）：</strong>继承自ApplicationEvent的类，代表应用中发生的事件。</li>
+                            <li><strong>事件发布：</strong>通过ApplicationEventPublisher发布事件。</li>
+                            <li><strong>事件监听器（EventListener）：</strong>实现ApplicationListener接口或使用@EventListener注解，用于处理特定类型的事件。</li>
+                            <li><strong>异步处理：</strong>可以通过@Async注解使事件监听器异步处理事件。</li>
+                        </ol>
+                        <div class="summary">这种机制使得应用组件间的通信更加灵活和解耦。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q15">
+                    <h2>Spring框架中的事务传播行为有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>REQUIRED：</strong>如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务。</li>
+                            <li><strong>SUPPORTS：</strong>如果当前存在事务，则加入该事务；如果没有，则以非事务方式执行。</li>
+                            <li><strong>MANDATORY：</strong>如果当前存在事务，则加入该事务；如果没有，则抛出异常。</li>
+                            <li><strong>REQUIRES_NEW：</strong>总是创建一个新的事务，如果当前存在事务，则挂起当前事务。</li>
+                            <li><strong>NOT_SUPPORTED：</strong>总是非事务地执行，如果当前存在事务，则挂起当前事务。</li>
+                            <li><strong>NEVER：</strong>总是非事务地执行，如果当前存在事务，则抛出异常。</li>
+                            <li><strong>NESTED：</strong>如果当前存在事务，则在嵌套事务内执行；如果没有，则行为同REQUIRED。</li>
+                        </ol>
+                        <div class="summary">这些行为为事务管理提供了灵活性，适应不同的业务场景。</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

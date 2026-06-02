@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Druid</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #fff0e6; color: #FF5000; }
+        .toc-list a.active { background: #FF5000; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #fff0e6; padding: 15px; border-radius: 6px; margin-top: 15px; color: #d4380d; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #FF5000; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #e64a00; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>Druid</h1>
+
+                <div class="question" id="q1">
+                    <h2>Druid是什么？它有哪些主要功能？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>数据库连接池：</strong>Druid是阿里巴巴开源的数据库连接池，是目前最优秀的连接池之一。</li>
+                            <li><strong>实时监控：</strong>提供强大的实时监控功能，可以监控SQL执行时间、连接池状态等。</li>
+                            <li><strong>SQL解析：</strong>支持SQL解析，可以进行SQL注入防御。</li>
+                            <li><strong>日志记录：</strong>记录SQL执行日志，帮助分析性能问题。</li>
+                            <li><strong>密码加密：</strong>支持数据库密码加密功能，提高安全性。</li>
+                        </ol>
+                        <div class="summary">Druid不仅是一个高效的数据库连接池，还提供了强大的监控和扩展功能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Druid连接池的工作原理是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>连接池初始化：</strong>启动时创建指定数量的连接，保存在连接池中。</li>
+                            <li><strong>获取连接：</strong>请求到来时，从连接池获取一个可用连接。</li>
+                            <li><strong>使用连接：</strong>业务代码使用连接执行SQL操作。</li>
+                            <li><strong>归还连接：</strong>使用完毕后，连接归还到连接池供后续请求使用。</li>
+                            <li><strong>连接回收：</strong>定期回收长时间未使用的连接，保持连接池健康。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Druid有哪些核心配置参数？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>initialSize：</strong>初始化连接数量。</li>
+                            <li><strong>maxActive：</strong>最大活跃连接数。</li>
+                            <li><strong>minIdle：</strong>最小空闲连接数。</li>
+                            <li><strong>maxWait：</strong>获取连接最大等待时间（毫秒）。</li>
+                            <li><strong>timeBetweenEvictionRunsMillis：</strong>连接检测间隔时间。</li>
+                            <li><strong>minEvictableIdleTimeMillis：</strong>连接最小空闲时间。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Druid的监控功能有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>SQL监控：</strong>监控每条SQL的执行时间、次数、并发数等。</li>
+                            <li><strong>连接池监控：</strong>监控连接池的连接数、空闲数、活动数等。</li>
+                            <li><strong>Web应用监控：</strong>监控URL请求、Spring Bean方法调用等。</li>
+                            <li><strong>SQL防火墙：</strong>防止SQL注入攻击。</li>
+                            <li><strong>监控页面：</strong>提供可视化的监控页面。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Druid如何实现SQL监控？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>配置StatFilter：</strong>在数据源配置中添加StatFilter启用SQL统计。</li>
+                            <li><strong>慢SQL记录：</strong>通过logSlowSql配置记录慢查询SQL。</li>
+                            <li><strong>合并SQL：</strong>通过mergeSql配置合并相同SQL。</li>
+                            <li><strong>监控页面：</strong>访问/druid/index.html查看监控数据。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Druid的密码加密功能如何实现？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>生成密钥：</strong>使用com.alibaba.druid.filter.config.ConfigTools生成公钥和私钥。</li>
+                            <li><strong>配置加密：</strong>在数据源配置中使用config.decrypt=true启用加密。</li>
+                            <li><strong>公钥配置：</strong>配置公钥publicKey属性。</li>
+                            <li><strong>密码加密：</strong>将加密后的密码配置到数据库密码字段。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Druid的WallFilter（SQL防火墙）有什么作用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>SQL注入防御：</strong>防止SQL注入攻击。</li>
+                            <li><strong>语法检查：</strong>检查SQL语句的语法和语义。</li>
+                            <li><strong>权限控制：</strong>控制允许执行的SQL类型（如SELECT、INSERT等）。</li>
+                            <li><strong>多数据源支持：</strong>支持对不同的数据源配置不同的防火墙规则。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Druid连接池的优势有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>性能优秀：</strong>比其他连接池性能更优。</li>
+                            <li><strong>监控完善：</strong>提供强大的实时监控功能。</li>
+                            <li><strong>稳定性好：</strong>经过大量生产环境验证。</li>
+                            <li><strong>扩展性强：</strong>支持自定义Filter，方便扩展功能。</li>
+                            <li><strong>配置灵活：</strong>提供丰富的配置选项。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Druid如何与Spring集成使用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>添加依赖：</strong>在pom.xml中添加druid依赖。</li>
+                            <li><strong>配置数据源：</strong>在application.yml或配置类中配置Druid数据源。</li>
+                            <li><strong>启用监控：</strong>配置StatViewServlet和WebStatFilter启用监控。</li>
+                            <li><strong>配置监控页面：</strong>配置允许访问监控页面的IP和账号。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Druid的连接泄漏检测功能如何使用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>配置泄漏检测：</strong>通过removeAbandoned配置启用连接泄漏检测。</li>
+                            <li><strong>超时时间：</strong>通过removeAbandonedTimeout设置超时时间。</li>
+                            <li><strong>日志输出：</strong>通过logAbandoned设置是否输出日志。</li>
+                            <li><strong>自动回收：</strong>超过时间未归还的连接将被自动回收。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Druid支持哪些数据库？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>主流数据库：</strong>支持MySQL、Oracle、PostgreSQL、SQL Server等主流数据库。</li>
+                            <li><strong>国产数据库：</strong>支持达梦、人大金仓等国产数据库。</li>
+                            <li><strong>其他数据库：</strong>支持DB2、MongoDB、Hive等。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

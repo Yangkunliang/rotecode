@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 中 LeetCode 热门算法精讲</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Java 中 LeetCode 热门算法精讲</h1>
+
+            <h2 id="section-1">1. 在Java中，如何实现快速排序算法？</h2>
+            <div class="highlight">
+                <p><strong>1、选择基准值：</strong>  在数组中选择一个元素作为基准值，常见的方法是选择第一个元素或者中间的元素。</p>
+                <p><strong>2、分区操作：</strong>  将数组分为两个部分，左边部分所有元素小于基准值，右边部分所有元素大于基准值。</p>
+                <p><strong>3、递归排序：</strong>  对左右两个部分分别进行递归排序。</p>
+                <p><strong>4、合并结果：</strong>  由于在分区过程中元素已经被重新排列，所以不需要额外的合并操作。</p>
+                <p><strong>5、选择合适的基准值：</strong>  基准值的选择会影响算法的性能，理想情况下应该选择中位数作为基准值。</p>
+            </div>
+
+            <h2 id="section-2">2. Java中如何使用二分查找算法查找元素？</h2>
+            <div class="highlight">
+                <p><strong>1、初始化边界：</strong>  设定查找范围的起始和结束索引。</p>
+                <p><strong>2、计算中间索引：</strong>  在每次循环中计算起始和结束索引之间的中间索引。</p>
+                <p><strong>3、比较中间元素：</strong>  将中间索引的元素与目标值比较。</p>
+                <p><strong>4、调整搜索范围：</strong>  如果中间元素小于目标值，则在中间索引的右侧继续搜索；如果大于目标值，在左侧搜索。</p>
+                <p><strong>5、重复查找：</strong>  直到找到目标值或搜索范围为空。</p>
+            </div>
+
+            <h2 id="section-3">3. 如何在Java中实现链表的反转？</h2>
+            <div class="highlight">
+                <p><strong>1、初始化三个指针：</strong>  当前节点指针、前一个节点指针和后一个节点指针。</p>
+                <p><strong>2、遍历链表：</strong>  在遍历过程中，逐个节点进行反转操作。</p>
+                <p><strong>3、反转指针：</strong>  将当前节点的下一个节点指向前一个节点，实现反转。</p>
+                <p><strong>4、移动指针：</strong>  前一个节点和当前节点指针都向前移动一个节点。</p>
+                <p><strong>5、处理新的头节点：</strong>  遍历结束后，将头节点指向最后一个处理的节点。</p>
+            </div>
+
+            <h2 id="section-4">4. Java中实现动态规划解决背包问题的基本思路是什么？</h2>
+            <div class="highlight">
+                <p><strong>1、定义状态：</strong>  设定动态规划数组，表示在不同条件下的最优解。</p>
+                <p><strong>2、状态转移方程：</strong>  根据问题特性，定义如何从已知的状态推导出未知的状态。</p>
+                <p><strong>3、初始化状态：</strong>  通常需要初始化动态规划数组的边界值。</p>
+                <p><strong>4、填充动态规划表：</strong>  按顺序计算动态规划表中的每个值。</p>
+                <p><strong>5、解决问题：</strong>  根据动态规划表的最终状态，得到问题的解。</p>
+            </div>
+
+            <h2 id="section-5">5. Java中如何实现数组中的元素去重？</h2>
+            <div class="highlight">
+                <p><strong>1、使用HashSet：</strong>  利用HashSet的特性，可以自动去除重复元素。</p>
+                <p><strong>2、遍历数组：</strong>  将数组中的每个元素添加到HashSet中，重复的元素不会被加入。</p>
+                <p><strong>3、转换为数组：</strong>  将HashSet转换回数组或列表，得到去重后的结果。</p>
+                <p><strong>4、保持顺序：</strong>  如果需要保持原数组的顺序，可以使用LinkedHashSet代替HashSet。</p>
+                <p><strong>5、考虑空间复杂度：</strong>  使用HashSet去重虽然简单，但会增加空间复杂度。</p>
+            </div>
+
+            <h2 id="section-6">6. 在Java中，如何寻找两个数组的交集？</h2>
+            <div class="highlight">
+                <p><strong>1、使用HashSet存储：</strong>  利用HashSet可以快速查找和存储不重复的元素。</p>
+                <p><strong>2、存储第一个数组：</strong>  遍历第一个数组，将其元素存储到HashSet中。</p>
+                <p><strong>3、查找交集：</strong>  遍历第二个数组，检查每个元素是否在HashSet中。</p>
+                <p><strong>4、去重复：</strong>  交集中的元素自然去重，因为HashSet不存储重复元素。</p>
+            </div>
+
+            <h2 id="section-7">7. Java中如何判断链表中是否有环？</h2>
+            <div class="highlight">
+                <p><strong>1、使用快慢指针：</strong>  定义两个指针，一个每次移动一步，另一个每次移动两步。</p>
+                <p><strong>2、移动指针：</strong>  同时移动快慢指针，并检查它们是否相遇。</p>
+                <p><strong>3、检测环：</strong>  如果快指针与慢指针相遇，则链表存在环。</p>
+                <p><strong>4、考虑边界情况：</strong>  确保在移动指针时不会出现空指针异常。</p>
+                <p><strong>5、时间复杂度分析：</strong>  此方法的时间复杂度为O(n)，空间复杂度为O(1)。</p>
+            </div>
+
+            <h2 id="section-8">8. Java中实现二叉树的深度优先搜索(DFS)有哪些方法？</h2>
+            <div class="highlight">
+                <p><strong>1、递归实现：</strong>  利用递归的方式，可以简洁地实现DFS。</p>
+                <p><strong>2、栈的使用：</strong>  使用栈来模拟递归过程，手动管理节点的遍历。</p>
+                <p><strong>3、前序遍历：</strong>  DFS的一种，访问根节点，然后遍历左子树和右子树。</p>
+                <p><strong>4、中序遍历：</strong>  先遍历左子树，访问根节点，后遍历右子树。</p>
+                <p><strong>5、后序遍历：</strong>  先遍历左右子树，最后访问根节点。</p>
+            </div>
+
+            <h2 id="section-9">9. Java中如何实现堆排序算法？</h2>
+            <div class="highlight">
+                <p><strong>1、构建最大堆：</strong>  从最后一个非叶子节点开始，对每个节点进行下沉操作。</p>
+                <p><strong>2、交换堆顶元素：</strong>  将堆顶元素（最大值）与数组最后一个元素交换。</p>
+                <p><strong>3、重新调整堆：</strong>  对堆顶元素进行下沉操作，重新调整为最大堆。</p>
+                <p><strong>4、重复过程：</strong>  循环进行交换和调整步骤，直到堆的大小为1。</p>
+                <p><strong>5、稳定性和复杂度：</strong>  堆排序不是稳定的排序算法，时间复杂度为O(n log n)。</p>
+            </div>
+
+            <h2 id="section-10">10. 在Java中，如何找出数组中第k大的元素？</h2>
+            <div class="highlight">
+                <p><strong>1、排序后选择：</strong>  将数组排序，然后选择第k个位置的元素。</p>
+                <p><strong>2、使用优先队列：</strong>  维护一个大小为k的最小堆，堆顶就是第k大的元素。</p>
+                <p><strong>3、快速选择：</strong>  类似于快速排序的分区思想，直到找到第k大的元素。</p>
+                <p><strong>4、分治法：</strong>  使用分治法递归求解，将问题分解成更小的子问题。</p>
+                <p><strong>5、复杂度考虑：</strong>  不同方法的时间复杂度和空间复杂度不同，应根据实际情况选择。</p>
+            </div>
+
+            <h2 id="section-11">11. Java中如何实现图的深度优先搜索(DFS)？</h2>
+            <div class="highlight">
+                <p><strong>1、使用栈或递归：</strong>  DFS可以通过栈或递归实现。</p>
+                <p><strong>2、标记已访问：</strong>  访问一个节点时，需要标记为已访问，避免重复访问。</p>
+                <p><strong>3、遍历邻接节点：</strong>  对当前节点的所有未访问邻接节点递归执行DFS。</p>
+                <p><strong>4、探索路径：</strong>  深入每一个可能的分支，直到达到末端或已访问过的节点。</p>
+                <p><strong>5、应用范围：</strong>  DFS适用于需要探索所有可能路径的问题，如路径搜索、连通性检测。</p>
+            </div>
+
+            <h2 id="section-12">12. Java中如何利用动态规划求解斐波那契数列？</h2>
+            <div class="highlight">
+                <p><strong>1、定义状态：</strong>  将斐波那契数列的每一项看作一个状态。</p>
+                <p><strong>2、状态转移方程：</strong>  状态转移方程为F(n) = F(n-1) + F(n-2)。</p>
+                <p><strong>3、初始化状态：</strong>  初始化斐波那契数列的前两个数字，通常F(0) = 0, F(1) = 1。</p>
+                <p><strong>4、计算后续值：</strong>  使用循环或递归根据状态转移方程计算后续值。</p>
+                <p><strong>5、优化存储：</strong>  使用变量而非数组存储中间状态，减少空间复杂度。</p>
+            </div>
+
+            <h2 id="section-13">13. Java中如何利用贪心算法解决会议室预定问题？</h2>
+            <div class="highlight">
+                <p><strong>1、排序会议：</strong>  首先按照会议结束时间对会议进行排序。</p>
+                <p><strong>2、选择会议：</strong>  从排好序的会议列表中选择结束时间最早的会议。</p>
+                <p><strong>3、更新当前时间：</strong>  选择会议后，更新当前时间为该会议的结束时间。</p>
+                <p><strong>4、重复选择：</strong>  继续选择结束时间早于或等于当前时间的会议。</p>
+                <p><strong>5、考虑重叠：</strong>  在选择会议时，确保会议时间不与已选会议重叠。</p>
+            </div>
+
+            <h2 id="section-14">14. Java中如何使用回溯算法解决八皇后问题？</h2>
+            <div class="highlight">
+                <p><strong>1、定义棋盘：</strong>  初始化一个棋盘，用于记录皇后的位置。</p>
+                <p><strong>2、放置皇后：</strong>  逐行放置皇后，并检查是否冲突。</p>
+                <p><strong>3、检查冲突：</strong>  验证当前放置的皇后是否与已放置的皇后在同一列、同一行或对角线上。</p>
+                <p><strong>4、回溯：</strong>  如果发现冲突，则回溯到上一行，移动皇后的位置。</p>
+                <p><strong>5、找到解：</strong>  重复这个过程，直到找到所有可能的解。</p>
+            </div>
+
+            <h2 id="section-15">15. Java中如何实现数组的旋转？</h2>
+            <div class="highlight">
+                <p><strong>1、确定旋转次数：</strong>  根据需要旋转的次数确定实际旋转的步数。</p>
+                <p><strong>2、反转整个数组：</strong>  先将整个数组反转。</p>
+                <p><strong>3、反转部分数组：</strong>  根据旋转次数将数组分为两部分，并分别反转这两部分。</p>
+                <p><strong>4、合并结果：</strong>  两部分反转后再组合起来，就完成了数组的旋转。</p>
+                <p><strong>5、优化空间：</strong>  可以通过多种方法实现数组旋转，选择合适的方法以优化时间和空间复杂度。</p>
+            </div>
+
+            <h2 id="section-16">16. Java中如何找出数组中的众数（出现次数超过一半的元素）？</h2>
+            <div class="highlight">
+                <p><strong>1、摩尔投票法：</strong>  初始化候选众数为第一个元素，计数为1。</p>
+                <p><strong>2、遍历数组：</strong>  对数组中的每个元素，如果计数为0，则更新候选众数。</p>
+                <p><strong>3、增减计数：</strong>  如果当前元素等于候选众数，计数加1；否则减1。</p>
+                <p><strong>4、找到候选者：</strong>  遍历完成后，候选者即为所求众数。</p>
+                <p><strong>5、验证众数：</strong>  遍历数组验证候选众数是否真的出现次数超过一半。</p>
+            </div>
+
+            <h2 id="section-17">17. Java中如何实现二叉树的层序遍历？</h2>
+            <div class="highlight">
+                <p><strong>1、使用队列：</strong>  利用队列先进先出的特性来进行层序遍历。</p>
+                <p><strong>2、根节点入队：</strong>  首先将根节点放入队列。</p>
+                <p><strong>3、节点出队遍历：</strong>  节点出队时，访问该节点，并将其左右子节点依次入队。</p>
+                <p><strong>4、重复过程：</strong>  继续上述过程，直到队列为空。</p>
+                <p><strong>5、按层访问：</strong>  每次循环遍历一层的节点，确保按层序访问二叉树。</p>
+            </div>
+
+            <h2 id="section-18">18. Java中如何实现最长公共子序列（LCS）算法？</h2>
+            <div class="highlight">
+                <p><strong>1、定义动态规划表：</strong>  创建一个二维数组dp，用于存储子问题的解。</p>
+                <p><strong>2、初始化边界：</strong>  dp数组的第一行和第一列初始化为0。</p>
+                <p><strong>3、填表计算：</strong>  遍历两个字符串，根据字符是否相等来更新dp表的值。</p>
+                <p><strong>4、回溯构造序列：</strong>  从dp表的右下角开始回溯，构造LCS。</p>
+                <p><strong>5、优化空间复杂度：</strong>  可以通过滚动数组等方法减少空间复杂度。</p>
+            </div>
+
+            <h2 id="section-19">19. Java中如何使用归并排序算法对数组进行排序？</h2>
+            <div class="highlight">
+                <p><strong>1、分解数组：</strong>  将数组分解成越来越小的子数组，直至每个子数组只有一个元素。</p>
+                <p><strong>2、合并排序：</strong>  将分解后的数组两两合并，同时进行排序。</p>
+                <p><strong>3、递归实现：</strong>  分解和合并的过程通过递归实现。</p>
+                <p><strong>4、辅助空间：</strong>  合并过程需要额外的空间来存储临时数组。</p>
+                <p><strong>5、稳定排序：</strong>  归并排序是一种稳定的排序算法，适合处理大数据量排序。</p>
+            </div>
+
+            <h2 id="section-20">20. Java中如何找到二叉搜索树中第k小的元素？</h2>
+            <div class="highlight">
+                <p><strong>1、中序遍历：</strong>  利用二叉搜索树中序遍历结果为递增序列的特性。</p>
+                <p><strong>2、计数访问：</strong>  在遍历过程中计数，记录访问的元素个数。</p>
+                <p><strong>3、找到第k个元素：</strong>  当计数达到k时，当前遍历的元素即为所求。</p>
+                <p><strong>4、递归或迭代：</strong>  可以使用递归或迭代方式进行中序遍历。</p>
+                <p><strong>5、时间复杂度：</strong>  此方法的时间复杂度为O(n)，其中n是树中的节点数。</p>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTop = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+            backToTop.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

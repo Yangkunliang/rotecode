@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>并发编程 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>并发编程 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. 什么是进程和线程？</h2>
+            <p>进程和线程的区别：</p>
+            <div class="highlight">
+                <p><strong>1、进程：</strong> 资源分配的基本单位，拥有独立的地址空间。</p>
+                <p><strong>2、线程：</strong> CPU调度的基本单位，是进程内的执行路径。</p>
+                <p><strong>3、资源：</strong> 进程间资源独立，线程共享进程资源。</p>
+                <p><strong>4、开销：</strong> 线程创建销毁开销远小于进程。</p>
+            </div>
+
+            <h2 id="section-2">2. 为什么要使用多线程？</h2>
+            <p>多线程的优势：</p>
+            <div class="highlight">
+                <p><strong>1、提高CPU利用率：</strong> 充分利用多核CPU资源。</p>
+                <p><strong>2、提高响应速度：</strong> 后台处理不影响主线程响应。</p>
+                <p><strong>3、简化编程模型：</strong> 将复杂任务分解为独立线程。</p>
+                <p><strong>4、资源复用：</strong> 线程可共享进程资源。</p>
+            </div>
+
+            <h2 id="section-3">3. 线程的状态有哪些？</h2>
+            <p>线程的生命周期状态：</p>
+            <div class="highlight">
+                <p><strong>1、NEW：</strong> 初始状态，创建但未启动。</p>
+                <p><strong>2、RUNNABLE：</strong> 可运行状态，可能正在运行或等待CPU。</p>
+                <p><strong>3、BLOCKED：</strong> 阻塞状态，等待获取锁。</p>
+                <p><strong>4、WAITING：</strong> 无限期等待，等待其他线程通知。</p>
+                <p><strong>5、TIMED_WAITING：</strong> 有限期等待，一定时间后自动返回。</p>
+                <p><strong>6、TERMINATED：</strong> 终止状态，线程执行完毕。</p>
+            </div>
+
+            <h2 id="section-4">4. sleep()和wait()的区别？</h2>
+            <p>sleep和wait的区别：</p>
+            <div class="highlight">
+                <p><strong>1、所属类：</strong> sleep是Thread的方法，wait是Object的方法。</p>
+                <p><strong>2、释放锁：</strong> sleep不释放锁，wait释放锁。</p>
+                <p><strong>3、使用场景：</strong> sleep用于线程暂停，wait用于线程间通信。</p>
+                <p><strong>4、恢复方式：</strong> sleep超时自动恢复，wait需要notify唤醒。</p>
+            </div>
+
+            <h2 id="section-5">5. synchronized关键字的作用？</h2>
+            <p>synchronized同步关键字：</p>
+            <div class="highlight">
+                <p><strong>1、修饰实例方法：</strong> 锁定当前对象，同一实例方法互斥。</p>
+                <p><strong>2、修饰静态方法：</strong> 锁定当前类对象，整个类的实例互斥。</p>
+                <p><strong>3、修饰代码块：</strong> 锁定指定对象，只对代码块内代码同步。</p>
+                <p><strong>4、可重入：</strong> synchronized是可重入锁，同一线程可多次获取。</p>
+            </div>
+
+            <h2 id="section-6">6. synchronized和Lock的区别？</h2>
+            <p>synchronized和Lock的区别：</p>
+            <div class="highlight">
+                <p><strong>1、获取方式：</strong> synchronized自动获取释放锁，Lock需手动lock/unlock。</p>
+                <p><strong>2、等待可中断：</strong> Lock可中断等待，synchronized不行。</p>
+                <p><strong>3、锁类型：</strong> Lock支持公平锁和非公平锁。</p>
+                <p><strong>4、条件变量：</strong> Lock有Condition，可分组唤醒线程。</p>
+            </div>
+
+            <h2 id="section-7">7. volatile关键字的作用？</h2>
+            <p>volatile的作用：</p>
+            <div class="highlight">
+                <p><strong>1、可见性：</strong> 保证变量对所有线程可见，修改立即写回主存。</p>
+                <p><strong>2、禁止重排序：</strong> 防止CPU指令重排序，保证有序性。</p>
+                <p><strong>3、不能保证原子性：</strong> volatile不能替代synchronized。</p>
+                <p><strong>4、适用场景：</strong> 状态标记量、单例模式double check。</p>
+            </div>
+
+            <h2 id="section-8">8. 什么是线程安全？</h2>
+            <p>线程安全的概念：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 多个线程访问同一对象时，结果始终正确。</p>
+                <p><strong>2、不可变：</strong> 不可变对象一定是线程安全的。</p>
+                <p><strong>3、绝对线程安全：</strong> 任何情况下都线程安全。</p>
+                <p><strong>4、相对线程安全：</strong> 大部分方法需要同步才能线程安全。</p>
+            </div>
+
+            <h2 id="section-9">9. 什么是死锁？</h2>
+            <p>死锁的概念和条件：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 多个线程相互等待对方持有的资源而无法推进。</p>
+                <p><strong>2、互斥条件：</strong> 资源一次只能被一个线程持有。</p>
+                <p><strong>3、持有并等待：</strong> 线程持有资源同时等待其他资源。</p>
+                <p><strong>4、不可抢占：</strong> 已分配资源不能被强制释放。</p>
+                <p><strong>5、循环等待：</strong> 形成资源-线程循环链。</p>
+            </div>
+
+            <h2 id="section-10">10. 如何避免死锁？</h2>
+            <p>死锁的预防措施：</p>
+            <div class="highlight">
+                <p><strong>1、破坏持有并等待：</strong> 一次申请所有资源。</p>
+                <p><strong>2、破坏不可抢占：</strong> 已获取部分资源时可释放。</p>
+                <p><strong>3、破坏循环等待：</strong> 按固定顺序获取资源。</p>
+                <p><strong>4、设置超时：</strong> 使用Lock.tryLock()设置超时。</p>
+            </div>
+
+            <h2 id="section-11">11. ThreadLocal是什么？</h2>
+            <p>ThreadLocal线程本地变量：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 为每个线程提供独立的变量副本。</p>
+                <p><strong>2、实现：</strong> 每个线程有ThreadLocalMap存储变量。</p>
+                <p><strong>3、用途：</strong> 解决数据库连接、Session等线程安全问题。</p>
+                <p><strong>4、注意：</strong> 使用完后要调用remove()防止内存泄漏。</p>
+            </div>
+
+            <h2 id="section-12">12. 什么是CAS？</h2>
+            <p>CAS（Compare-And-Swap）原理：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 乐观锁实现，无锁并发编程。</p>
+                <p><strong>2、原理：</strong> 三个值：内存位置V、预期值A、新值B，V=A时才会更新。</p>
+                <p><strong>3、原子性：</strong> CPU提供硬件级别原子指令。</p>
+                <p><strong>4、问题：</strong> 存在ABA问题、循环开销大、只能保证一个变量。</p>
+            </div>
+
+            <h2 id="section-13">13. ReentrantLock的实现原理？</h2>
+            <p>ReentrantLock可重入锁原理：</p>
+            <div class="highlight">
+                <p><strong>1、继承：</strong> 实现了Lock接口，继承AQS。</p>
+                <p><strong>2、计数器：</strong> 内部使用state计数器记录重入次数。</p>
+                <p><strong>3、重入实现：</strong> 获取锁时state+1，释放时state-1。</p>
+                <p><strong>4、公平锁：</strong> 公平版按等待顺序获取锁。</p>
+            </div>
+
+            <h2 id="section-14">14. 什么是AQS？</h2>
+            <p>AbstractQueuedSynchronizer（AQS）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Java并发包的核心基础框架。</p>
+                <p><strong>2、核心思想：</strong> 基于FIFO双向队列和int类型state实现同步。</p>
+                <p><strong>3、模板方法：</strong> 提供acquire、release等模板方法。</p>
+                <p><strong>4、子类实现：</strong> 子类实现tryAcquire、tryRelease等方法。</p>
+            </div>
+
+            <h2 id="section-15">15. 什么是Condition？</h2>
+            <p>Condition条件变量：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 配合Lock使用，实现等待/通知模式。</p>
+                <p><strong>2、await：</strong> 当前线程等待，同时释放锁。</p>
+                <p><strong>3、signal：</strong> 唤醒一个等待线程。</p>
+                <p><strong>4、signalAll：</strong> 唤醒所有等待线程。</p>
+            </div>
+
+            <h2 id="section-16">16. 什么是阻塞队列？</h2>
+            <p>阻塞队列（BlockingQueue）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 支持阻塞操作的队列。</p>
+                <p><strong>2、offer：</strong> 队列满时阻塞等待。</p>
+                <p><strong>3、poll：</strong> 队列空时阻塞等待。</p>
+                <p><strong>4、实现：</strong> ArrayBlockingQueue、LinkedBlockingQueue等。</p>
+            </div>
+
+            <h2 id="section-17">17. 什么是线程池？</h2>
+            <p>线程池的作用和好处：</p>
+            <div class="highlight">
+                <p><strong>1、复用：</strong> 复用线程，减少线程创建销毁开销。</p>
+                <p><strong>2、管理：</strong> 控制并发数量，避免过多线程耗尽资源。</p>
+                <p><strong>3、参数：</strong> corePoolSize、maximumPoolSize、keepAliveTime等。</p>
+                <p><strong>4、拒绝策略：</strong> 队列满时的处理策略。</p>
+            </div>
+
+            <h2 id="section-18">18. 线程池的工作流程？</h2>
+            <p>线程池处理任务流程：</p>
+            <div class="highlight">
+                <p><strong>1、判断核心线程：</strong> 核心线程未满则创建新线程执行任务。</p>
+                <p><strong>2、判断队列：</strong> 核心线程满则加入等待队列。</p>
+                <p><strong>3、判断最大线程：</strong> 队列满且未达最大线程则创建新线程。</p>
+                <p><strong>4、执行拒绝策略：</strong> 达到最大线程数且队列满则执行拒绝策略。</p>
+            </div>
+
+            <h2 id="section-19">19. 线程池的类型有哪些？</h2>
+            <p>常用线程池类型：</p>
+            <div class="highlight">
+                <p><strong>1、FixedThreadPool：</strong> 固定大小的线程池。</p>
+                <p><strong>2、CachedThreadPool：</strong> 可缓存的线程池，线程数量动态增长。</p>
+                <p><strong>3、SingleThreadExecutor：</strong> 单线程的线程池。</p>
+                <p><strong>4、ScheduledThreadPool：</strong> 定时调度的线程池。</p>
+                <p><strong>5、ForkJoinPool：</strong> 分治思想的线程池，适合计算密集型。</p>
+            </div>
+
+            <h2 id="section-20">20. execute()和submit()的区别？</h2>
+            <p>execute和submit的区别：</p>
+            <div class="highlight">
+                <p><strong>1、返回值：</strong> execute无返回值，submit返回Future。</p>
+                <p><strong>2、异常处理：</strong> execute异常直接抛出，submit可捕获Future。</p>
+                <p><strong>3、用途：</strong> execute用于执行Runnable，submit两者都行。</p>
+                <p><strong>4、推荐：</strong> 通常推荐使用submit()。</p>
+            </div>
+
+            <h2 id="section-21">21. 什么是CountDownLatch？</h2>
+            <p>CountDownLatch倒计时门闩：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 一种同步辅助，允许一个或多个线程等待。</p>
+                <p><strong>2、countDown：</strong> 计数减1操作。</p>
+                <p><strong>3、await：</strong> 等待计数归零。</p>
+                <p><strong>4、特点：</strong> 计数不能重置，一次性使用。</p>
+            </div>
+
+            <h2 id="section-22">22. 什么是CyclicBarrier？</h2>
+            <p>CyclicBarrier循环栅栏：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 等待所有线程到达后再一起继续执行。</p>
+                <p><strong>2、await：</strong> 线程到达时等待。</p>
+                <p><strong>3、重置：</strong> 计数器归零后自动重置，可循环使用。</p>
+                <p><strong>4、应用：</strong> 多线程计算最后汇总结果。</p>
+            </div>
+
+            <h2 id="section-23">23. 什么是Semaphore？</h2>
+            <p>Semaphore信号量：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 控制同时访问特定资源的线程数量。</p>
+                <p><strong>2、acquire：</strong> 获取一个许可。</p>
+                <p><strong>3、release：</strong> 释放一个许可。</p>
+                <p><strong>4、应用：</strong> 限流、连接池等场景。</p>
+            </div>
+
+            <h2 id="section-24">24. 什么是Exchanger？</h2>
+            <p>Exchanger交换器：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 两个线程间交换数据的同步工具。</p>
+                <p><strong>2、exchange：</strong> 线程到达时交换数据。</p>
+                <p><strong>3、超时：</strong> 可设置超时时间。</p>
+                <p><strong>4、应用：</strong> 遗传算法、数据结构填充等。</p>
+            </div>
+
+            <h2 id="section-25">25. 什么是Phaser？</h2>
+            <p>Phaser多阶段栅栏：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> Java7引入，支持多阶段并发控制。</p>
+                <p><strong>2、动态注册：</strong> 支持动态添加和移除参与者。</p>
+                <p><strong>3、arriveAndAwaitAdvance：</strong> 到达并等待其他参与者。</p>
+                <p><strong>4、应用：</strong> 复杂的多阶段任务。</p>
+            </div>
+
+            <h2 id="section-26">26. 如何保证线程安全？</h2>
+            <p>线程安全保证方法：</p>
+            <div class="highlight">
+                <p><strong>1、synchronized：</strong> 同步方法或代码块。</p>
+                <p><strong>2、Lock：</strong> 显示锁实现同步。</p>
+                <p><strong>3、volatile：</strong> 保证可见性和有序性。</p>
+                <p><strong>4、原子类：</strong> AtomicInteger等原子类保证原子操作。</p>
+                <p><strong>5、不可变对象：</strong> 使用不可变对象避免并发问题。</p>
+            </div>
+
+            <h2 id="section-27">27. ConcurrentHashMap如何保证线程安全？</h2>
+            <p>ConcurrentHashMap线程安全机制：</p>
+            <div class="highlight">
+                <p><strong>1JDK1.7：</strong> Segment数组，每个Segment类似HashMap加锁。</p>
+                <p><strong>2JDK1.8：</strong> 使用CAS+synchronized对每个数组节点加锁。</p>
+                <p><strong>3、CAS：</strong> 无锁并发更新数组元素。</p>
+                <p><strong>4、synchronized：</strong> 对头节点加锁，保证原子性。</p>
+            </div>
+
+            <h2 id="section-28">28. CopyOnWriteArrayList是什么？</h2>
+            <p>CopyOnWriteArrayList特点：</p>
+            <div class="highlight">
+                <p><strong>1、写入复制：</strong> 写入时复制整个数组。</p>
+                <p><strong>2、读操作：</strong> 读操作不需要加锁。</p>
+                <p><strong>3、适用场景：</strong> 读多写少的并发场景。</p>
+                <p><strong>4、缺点：</strong> 写操作开销大，不适合写多场景。</p>
+            </div>
+
+            <h2 id="section-29">29. 什么是伪共享？如何避免？</h2>
+            <p>伪共享问题：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 同一缓存行的多个变量被不同线程修改。</p>
+                <p><strong>2、影响：</strong> 导致缓存行失效，降低性能。</p>
+                <p><strong>3、避免方法：</strong> 使用填充使变量独占缓存行。</p>
+                <p><strong>4、@Contended：</strong> JDK8提供注解自动填充。</p>
+            </div>
+
+            <h2 id="section-30">30. Java内存模型是什么？</h2>
+            <p>Java Memory Model（JMM）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 定义了线程和主内存之间的抽象关系。</p>
+                <p><strong>2、主内存：</strong> 所有变量存储在主内存。</p>
+                <p><strong>3、工作内存：</strong> 每个线程独有的工作内存。</p>
+                <p><strong>4、交互：</strong> 线程操作变量前从主内存复制到工作内存。</p>
+            </div>
+
+            <h2 id="section-31">31. happens-before原则是什么？</h2>
+            <p>happens-before规则：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 保证前一个操作对后一个操作可见。</p>
+                <p><strong>2、程序顺序：</strong> 单线程中前一个操作happens-before后一个。</p>
+                <p><strong>3、监视器锁：</strong> 解锁happens-before加锁。</p>
+                <p><strong>4、volatile：</strong> 写happens-before读。</p>
+            </div>
+
+            <h2 id="section-32">32. 什么是线程中断？</h2>
+            <p>线程中断机制：</p>
+            <div class="highlight">
+                <p><strong>1、interrupt：</strong> 中断目标线程，设置中断标志。</p>
+                <p><strong>2、isInterrupted：</strong> 判断是否被中断，不清除标志。</p>
+                <p><strong>3、interrupted：</strong> 判断并清除中断标志。</p>
+                <p><strong>4、响应：</strong> 线程需主动检查中断状态并处理。</p>
+            </div>
+
+            <h2 id="section-33">33. 如何停止一个线程？</h2>
+            <p>线程停止的正确方式：</p>
+            <div class="highlight">
+                <p><strong>1、volatile标志：</strong> 使用volatile boolean标志控制循环。</p>
+                <p><strong>2、interrupt：</strong> 使用中断标志配合isInterrupted检查。</p>
+                <p><strong>3、return：</strong> 配合return停止线程。</p>
+                <p><strong>4、不推荐：</strong> stop、suspend、resume已废弃。</p>
+            </div>
+
+            <h2 id="section-34">34. 什么是守护线程？</h2>
+            <p>守护线程（Daemon Thread）：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 为用户线程提供服务的线程。</p>
+                <p><strong>2、setDaemon：</strong> 将线程设置为守护线程。</p>
+                <p><strong>3、特点：</strong>  JVM中所有用户线程结束，守护线程自动终止。</p>
+                <p><strong>4、示例：</strong> 垃圾回收线程是典型的守护线程。</p>
+            </div>
+
+            <h2 id="section-35">35. 并发编程最佳实践？</h2>
+            <p>并发编程建议：</p>
+            <div class="highlight">
+                <p><strong>1、最小化同步范围：</strong> 尽量缩小synchronized代码块。</p>
+                <p><strong>2、优先使用volatile：</strong> 能用volatile就不用synchronized。</p>
+                <p><strong>3、使用线程池：</strong> 不要手动创建线程，使用线程池。</p>
+                <p><strong>4、减少锁竞争：</strong> 考虑锁分段、读写分离等优化。</p>
+                <p><strong>5、避免锁顺序死锁：</strong> 固定锁获取顺序。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

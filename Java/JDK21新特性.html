@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDK 21 新特性</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        .sidebar h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #9C27B0;
+        }
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .toc-list a:hover {
+            background: #f3e5f5;
+            color: #9C27B0;
+        }
+        .toc-list a.active {
+            background: #9C27B0;
+            color: #fff;
+        }
+        .content-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px 40px;
+            background: #fff;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .question {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .question h2 {
+            color: #333;
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #9C27B0;
+        }
+        .answer {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .answer ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .answer li {
+            margin-bottom: 8px;
+        }
+        .summary {
+            background: #f3e5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #6a1b9a;
+            font-size: 14px;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #9C27B0;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+        }
+        .back-to-top:hover {
+            background: #7B1FA2;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content-wrapper {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>JDK 21 新特性</h1>
+
+                <div class="question" id="q1">
+                    <h2>JDK 21中引入的外部函数和内存API具体是什么，它们有什么用途？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21引入的外部函数和内存API是一部分Project Panama的努力，旨在提高Java和本地代码之间的互操作性。</li>
+                            <li><strong>外部函数API（Foreign Function API）：</strong>允许Java程序直接调用本地库中的函数，无需使用JNI（Java Native Interface）。这样可以简化开发过程，并提高性能。</li>
+                            <li><strong>内存API（Memory API）：</strong>提供了一种管理本地内存的高效方法，包括分配、访问和释放本地内存。这使得在Java中处理本地内存变得更加安全和容易。</li>
+                            <li><strong>用途：</strong>这些API主要用于需要直接与本地库交互的高性能应用，如数值计算、大数据处理和实时系统。</li>
+                            <li><strong>改进点：</strong>相比于传统的JNI，新API使用更简洁，性能更优，且更易于维护和调试。</li>
+                        </ol>
+                        <div class="summary">这些特性在提高Java与本地代码互操作性的同时，也大幅简化了开发过程，提高了运行效率。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>JDK 21中的模式匹配改进包括哪些方面？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>模式匹配是JDK 21中的一个重要特性，它旨在简化Java中的条件表达式，使代码更易读写。</li>
+                            <li><strong>增强的instanceof：</strong>改进后的instanceof关键字允许直接在条件判断中进行类型转换和赋值，减少了冗余代码。</li>
+                            <li><strong>switch表达式：</strong>模式匹配在switch表达式中得到加强，可以匹配类型、枚举或复合模式，使得switch语句的功能更加强大和灵活。</li>
+                            <li><strong>记录模式（Record Pattern）：</strong>允许在模式匹配中直接解构记录类型（record），简化了对复杂数据结构的处理。</li>
+                            <li><strong>模式匹配的API：</strong>JDK 21引入了专门的API支持模式匹配，提高了模式匹配的灵活性和可用性。</li>
+                        </ol>
+                        <div class="summary">这些改进使得Java的模式匹配更加强大和灵活，简化了许多常见编程任务的处理。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>JDK 21对虚拟线程的支持如何实现的，它带来了哪些好处？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>虚拟线程是JDK 21的一大亮点，旨在提高Java应用的并发性能，简化并发编程模型。</li>
+                            <li><strong>实现机制：</strong>虚拟线程与传统线程相比，拥有极轻量级的实现，它们在操作系统线程上多路复用，减少了线程创建和销毁的开销。</li>
+                            <li><strong>简化并发编程：</strong>虚拟线程的引入使得开发者可以像编写顺序代码一样编写并发程序，极大降低了并发编程的复杂性。</li>
+                            <li><strong>提高性能：</strong>由于虚拟线程的开销极低，可以创建数百万个虚拟线程而不会消耗大量资源，从而提高了应用的响应性和吞吐量。</li>
+                            <li><strong>与现有API的集成：</strong>虚拟线程被设计为与现有的Java并发框架无缝集成，保持了向后兼容性。</li>
+                        </ol>
+                        <div class="summary">虚拟线程大幅降低了并发编程的复杂度，同时提高了应用程序的性能和可伸缩性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>JDK 21中新的安全特性有哪些，它们如何增强Java的安全性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21增加了多项安全特性，旨在加强Java平台的安全性和稳定性。</li>
+                            <li><strong>加密改进：</strong>引入了更多现代加密算法的支持，如更安全的哈希算法和加密协议，增强了数据的加密处理能力。</li>
+                            <li><strong>安全API的增强：</strong>对安全相关的API进行了扩展和增强，提供了更多的安全功能，如改进的身份验证和授权机制。</li>
+                            <li><strong>安全修补和更新：</strong>JDK 21加强了对安全漏洞的修补能力，及时更新安全漏洞，降低了安全风险。</li>
+                            <li><strong>审计和监控：</strong>增加了更多的审计和监控功能，帮助开发者和管理员更好地监控和评估Java应用的安全状态。</li>
+                        </ol>
+                        <div class="summary">这些新的安全特性加强了Java平台的安全性，确保了应用的稳定和数据的安全。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>JDK 21中对泛型的改进有哪些，这些改进如何影响Java的类型系统？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21中对泛型进行了改进，包括引入更灵活的类型推断机制，这些改进旨在提高Java类型系统的表达能力和开发者的编程体验。</li>
+                            <li><strong>类型推断的增强：</strong>引入了更加智能的类型推断算法，减少了在使用泛型时必须显式指定类型的场景，简化了代码编写。</li>
+                            <li><strong>泛型通配符的改进：</strong>对泛型通配符的使用进行了优化，使得开发者能更灵活地控制类型的上下界，提高了代码的可读性和灵活性。</li>
+                            <li><strong>泛型方法和类的改进：</strong>增强了泛型方法和类的功能，使其支持更复杂的类型操作，增加了编程的灵活性和表达力。</li>
+                            <li><strong>模式匹配与泛型的结合：</strong>在模式匹配中引入泛型支持，使得在进行模式匹配时可以更精确地控制类型信息。</li>
+                        </ol>
+                        <div class="summary">这些泛型改进提高了Java类型系统的表达力和开发者的编程体验，使得代码更加简洁和灵活。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>JDK 21中的Project Loom是什么？它如何改变Java的并发编程模型？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>Project Loom是JDK 21中的一个重大特性，旨在彻底改变Java的并发编程模型，通过引入虚拟线程（轻量级线程）来实现。</li>
+                            <li><strong>虚拟线程的引入：</strong>Project Loom通过虚拟线程减少了传统并发编程中的复杂性和资源消耗，使并发编程更为简单和高效。</li>
+                            <li><strong>改善阻塞问题：</strong>由于虚拟线程的数量可以非常庞大，它们能够在IO操作或锁等待时被挂起，大大减少了阻塞的影响。</li>
+                            <li><strong>与现有API的兼容：</strong>Project Loom设计之初就考虑到与现有的并发API如java.util.concurrent的兼容性，确保现有代码可以平滑迁移。</li>
+                            <li><strong>提升并发性能：</strong>通过减少线程切换的开销和提高系统的吞吐量，Project Loom显著提升了Java应用的并发性能。</li>
+                        </ol>
+                        <div class="summary">Project Loom通过引入虚拟线程，大幅简化了并发编程的模型，提高了开发效率和程序运行的性能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>JDK 21中新增的HTTP Client API有哪些特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>在JDK 21中，HTTP Client API得到了增强，提供了更多的功能和改进，以支持现代HTTP协议的需求。</li>
+                            <li><strong>HTTP/2和HTTP/3支持：</strong>新的HTTP Client API原生支持HTTP/2和HTTP/3，提高了通信效率和性能。</li>
+                            <li><strong>异步API：</strong>支持异步请求处理，允许开发者以非阻塞的方式发送请求和接收响应，提高了应用程序的响应性。</li>
+                            <li><strong>WebSocket支持：</strong>集成了对WebSocket的支持，使得建立持久化的双向通信变得更加容易和可靠。</li>
+                            <li><strong>易用性和灵活性：</strong>提供了一个简洁的API，使得创建HTTP请求和处理响应更为简单。同时，它提供了灵活的配置选项，以满足不同场景的需求。</li>
+                        </ol>
+                        <div class="summary">这些特性使得新的HTTP Client API更加强大和灵活，能够满足现代应用程序对HTTP通信的复杂需求。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>JDK 21中的Sealed Classes特性是什么？它们如何影响Java的类设计？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>Sealed Classes是JDK 21中引入的一个特性，旨在提供更精细的控制类的继承结构，从而增加Java语言的表达能力和安全性。</li>
+                            <li><strong>控制继承：</strong>Sealed Classes允许类创建者明确指定哪些其他类可以继承该类，限制了继承结构，避免了无意义的扩展。</li>
+                            <li><strong>提高安全性：</strong>通过限制哪些类可以继承sealed class，可以减少不安全或不必要的继承，从而提高了代码的安全性和稳定性。</li>
+                            <li><strong>模式匹配的优化：</strong>Sealed Classes与模式匹配结合使用时，可以提供完整的类型检查，避免在模式匹配中出现遗漏的情况。</li>
+                            <li><strong>增强的类型系统：</strong>Sealed Classes加强了Java的类型系统，使得类的设计更加明确和严格，有助于构建更加可靠和易于维护的应用。</li>
+                        </ol>
+                        <div class="summary">通过引入sealed classes，Java的类设计变得更加严格和清晰，有助于构建结构更加合理且易于维护的系统。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>在JDK 21中，Record类有哪些新特性和改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>Record类在JDK 21中得到了进一步的改进和增强，旨在提供更加简洁高效的数据载体实现。</li>
+                            <li><strong>构造函数的灵活性：</strong>Record类现在支持更灵活的构造函数定义，包括自定义的构造逻辑和参数验证，提高了其使用的灵活性。</li>
+                            <li><strong>序列化的改进：</strong>Record类的序列化机制得到了优化，确保了更高效和安全的数据传输。</li>
+                            <li><strong>模式匹配的集成：</strong>Record类与模式匹配的集成得到加强，使得在进行类型匹配和解构时更加方便和直观。</li>
+                            <li><strong>API的扩展：</strong>Record类的API得到了扩展，增加了更多的工具方法，使得操作Record类更加便捷。</li>
+                        </ol>
+                        <div class="summary">Record类的这些改进增强了其在数据建模和处理中的能力，使其成为处理不可变数据的首选方式。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>JDK 21中的Project Valhalla是什么，它如何优化Java的性能？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>Project Valhalla是JDK 21中的一个长期项目，旨在引入内联类（Inline Classes）等特性，以优化Java的性能。</li>
+                            <li><strong>内联类的概念：</strong>内联类允许在不牺牲抽象的情况下，提高数据处理的效率，通过减少对象的堆分配来提高性能。</li>
+                            <li><strong>避免装箱拆箱操作：</strong>内联类减少了Java中的自动装箱拆箱操作，减轻了垃圾收集器的压力，提高了性能。</li>
+                            <li><strong>内存布局的优化：</strong>内联类优化了数据的内存布局，减少了内存占用和访问延迟，提高了数据处理速度。</li>
+                            <li><strong>泛型的改进：</strong>Project Valhalla还旨在改进Java的泛型系统，使其能够支持原始类型，进一步提高性能。</li>
+                        </ol>
+                        <div class="summary">Project Valhalla通过内联类和泛型的改进，旨在大幅优化Java的性能，特别是在数据密集型应用中。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>JDK 21中如何改进枚举的功能和灵活性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21中对枚举进行了改进，增加了其功能和灵活性，使得枚举在Java中的应用更加强大和便捷。</li>
+                            <li><strong>模式匹配的支持：</strong>枚举现在支持模式匹配，使得在switch表达式或其他模式匹配结构中使用枚举变得更加灵活和强大。</li>
+                            <li><strong>增加了方法和属性：</strong>在枚举中可以更灵活地添加方法和属性，使得枚举不仅限于简单的常量列表，而是可以携带更丰富的信息和行为。</li>
+                            <li><strong>更好的类型推断：</strong>JDK 21对枚举的类型推断进行了改进，使得在使用枚举时代码更加简洁明了。</li>
+                            <li><strong>与Record类的整合：</strong>枚举可以更方便地与Record类整合，提供了一种更结构化和类型安全的方式来定义枚举的数据。</li>
+                        </ol>
+                        <div class="summary">通过这些改进，枚举在Java中变得更加功能丰富和灵活，可以更好地适应复杂的编程需求。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>JDK 21的新特性中，对Java语言的哪些部分进行了现代化改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21致力于对Java语言进行现代化改进，包括语法糖、API更新和性能优化等多个方面。</li>
+                            <li><strong>语法糖的增加：</strong>引入了更多的语法糖，如模式匹配和记录类型，简化了代码的编写和理解。</li>
+                            <li><strong>API的现代化：</strong>更新和扩展了核心API，例如集合、流和日期时间API，使其更加强大和易用。</li>
+                            <li><strong>性能优化：</strong>通过改进JVM的性能，如垃圾收集和JIT编译优化，提高了Java应用的运行效率。</li>
+                            <li><strong>安全性增强：</strong>加强了Java平台的安全特性，包括加密算法的更新和安全漏洞的修补。</li>
+                        </ol>
+                        <div class="summary">这些现代化改进使Java语言和平台更加强大、灵活和高效，满足了当今软件开发的需求。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>JDK 21中的架构无关性特性是如何实现的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21强调了架构无关性，确保Java应用可以在不同的硬件和操作系统上无缝运行。</li>
+                            <li><strong>跨平台二进制兼容：</strong>通过JVM的改进，加强了对各种硬件架构的支持，确保Java字节码可以在不同平台上运行而无需重新编译。</li>
+                            <li><strong>自适应运行时优化：</strong>JVM现在能够根据运行的硬件特性自动优化性能，如利用特定处理器的指令集。</li>
+                            <li><strong>统一的API：</strong>在JDK层面提供统一的API，隐藏了底层硬件的差异，使得开发者可以编写一次代码，在多个平台上运行。</li>
+                            <li><strong>模块化和层次化：</strong>JDK的模块化结构进一步提高了代码的可移植性和可维护性，有助于在不同的系统架构上进行快速部署。</li>
+                        </ol>
+                        <div class="summary">这些特性加强了Java在不同平台上的兼容性和性能，保持了其作为一种跨平台编程语言的地位。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q14">
+                    <h2>JDK 21中增加的数据类是什么？它们提供了哪些优势？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>数据类是JDK 21中引入的一个新概念，旨在简化在Java中创建持有数据的不可变类的过程。</li>
+                            <li><strong>简化的类定义：</strong>数据类允许开发者通过简洁的语法定义类，自动为属性生成getter方法、equals、hashCode和toString方法。</li>
+                            <li><strong>不可变性：</strong>数据类默认是不可变的，这有助于提高应用的线程安全性和可靠性。</li>
+                            <li><strong>减少样板代码：</strong>使用数据类可以大幅减少需要编写的样板代码，提高开发效率和代码的可读性。</li>
+                            <li><strong>增强的类型安全：</strong>数据类强化了Java的类型系统，使得代码更加安全和健壮，减少了运行时错误。</li>
+                        </ol>
+                        <div class="summary">数据类为Java开发者提供了一种简洁、高效且类型安全的方式来定义不可变的数据持有对象。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q15">
+                    <h2>JDK 21对云原生应用的支持有哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21加强了对云原生应用的支持，通过提供与容器技术更好的集成和优化资源管理。</li>
+                            <li><strong>容器感知JVM：</strong>JVM现在更好地与容器技术（如Docker和Kubernetes）集成，能够自适应容器分配的资源，如CPU和内存限制。</li>
+                            <li><strong>改进的启动时间：</strong>针对云原生环境优化了JVM的启动时间，提高了在容器化部署中的启动速度和效率。</li>
+                            <li><strong>微服务优化：</strong>JDK 21提供了更多微服务开发的工具和API，支持更高效地构建和部署微服务架构。</li>
+                            <li><strong>更好的监控和管理：</strong>引入了更多的监控和管理功能，帮助云原生应用更好地在云环境中进行性能监控和资源管理。</li>
+                        </ol>
+                        <div class="summary">这些特性使得JDK 21成为开发和部署云原生应用的一个强大平台，提高了效率和可靠性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q16">
+                    <h2>JDK 21中的性能监控和诊断工具有哪些新功能？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>在JDK 21中，性能监控和诊断工具得到了显著增强，提供了更多的功能来帮助开发者优化和诊断Java应用。</li>
+                            <li><strong>增强的JFR（Java Flight Recorder）：</strong>JFR现在提供了更深入的数据收集和分析能力，帮助开发者更精确地识别性能瓶颈。</li>
+                            <li><strong>改进的JVM工具接口：</strong>JVM的工具接口得到了增强，提供了更多的监控和管理能力，使得与JVM的交互更为高效和直观。</li>
+                            <li><strong>新的诊断命令：</strong>引入了新的诊断命令和选项，使得对运行中的Java应用进行故障排查和性能分析更加容易。</li>
+                            <li><strong>可视化工具的集成：</strong>增强了与可视化工具的集成，如JConsole和VisualVM，提供了更加丰富的图形界面来监控和分析应用性能。</li>
+                        </ol>
+                        <div class="summary">这些新功能提高了Java应用的监控和诊断能力，帮助开发者更有效地管理和优化应用性能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q17">
+                    <h2>JDK 21中对类加载器的改进有哪些，这些改进带来了哪些好处？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>在JDK 21中，类加载器经过改进，以提高性能、增强安全性和提供更好的模块化支持。</li>
+                            <li><strong>性能优化：</strong>类加载器的性能得到了显著提升，通过优化类加载过程中的缓存和并发处理，减少了应用启动和运行时的开销。</li>
+                            <li><strong>安全性增强：</strong>加强了类加载器的安全性，提供了更严格的安全检查和隔离机制，防止恶意代码的加载。</li>
+                            <li><strong>模块化支持：</strong>改进了对模块化的支持，使类加载器能够更好地处理模块化Java应用，促进了更清晰的依赖管理。</li>
+                            <li><strong>更灵活的API：</strong>提供了更灵活的类加载器API，使开发者能够更容易地创建和管理自定义类加载器，以满足特定的应用需求。</li>
+                        </ol>
+                        <div class="summary">这些改进使类加载器更加高效、安全且易于管理，有助于提高Java应用的整体性能和可靠性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q18">
+                    <h2>JDK 21如何加强对异步编程的支持？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21通过引入新的API和语言特性，加强了对异步编程的支持，使开发者能够更容易地编写高性能的异步应用。</li>
+                            <li><strong>改进的CompletableFuture API：</strong>CompletableFuture API得到了进一步的增强，提供了更多的功能和灵活性来支持复杂的异步编程场景。</li>
+                            <li><strong>虚拟线程的引入：</strong>虚拟线程（轻量级线程）的引入降低了并发编程的复杂性，使得开发者可以用近乎同步的方式来编写异步代码。</li>
+                            <li><strong>响应式编程支持：</strong>JDK 21增加了对响应式编程模型的支持，通过Flow API等机制，使得构建响应式应用更加直接和高效。</li>
+                            <li><strong>集成更多异步I/O操作：</strong>强化了异步I/O操作的支持，如异步文件和网络I/O，提高了I/O操作的性能和效率。</li>
+                        </ol>
+                        <div class="summary">这些增强使Java在处理异步编程和并发任务时更加强大和灵活，提高了应用的性能和响应性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q19">
+                    <h2>JDK 21对代码压缩和优化有哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21在代码压缩和优化方面引入了新特性，以减少应用的内存占用并提高运行效率。</li>
+                            <li><strong>更智能的JIT编译器：</strong>JIT编译器的优化更加智能，可以更有效地识别和优化常用代码路径，提高应用性能。</li>
+                            <li><strong>代码压缩：</strong>引入了更先进的代码压缩技术，减少了Java应用在内存中的占用，同时降低了类加载的开销。</li>
+                            <li><strong>垃圾收集优化：</strong>垃圾收集器得到了改进，特别是在处理大型应用时，可以更高效地回收内存，减少停顿时间。</li>
+                            <li><strong>Ahead-of-Time (AOT) 编译：</strong>支持AOT编译，可以在应用运行之前预先编译Java代码，降低JIT编译的开销，提高应用启动速度。</li>
+                        </ol>
+                        <div class="summary">这些特性共同提高了Java应用的性能，尤其是在内存使用和执行效率方面，有助于构建更高效的Java应用。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q20">
+                    <h2>JDK 21在支持机器学习和AI方面有哪些新进展？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21针对机器学习和AI应用的需求，提供了更强大的支持和优化，以便更好地在Java平台上进行这些领域的开发。</li>
+                            <li><strong>专为AI优化的库：</strong>引入了新的库和API，专门为AI和机器学习任务优化，提高了数据处理和计算的效率。</li>
+                            <li><strong>与主流框架的集成：</strong>加强了与主流机器学习和AI框架的集成，如TensorFlow和PyTorch，使得在Java中使用这些框架更加方便。</li>
+                            <li><strong>并行和分布式计算：</strong>优化了Java的并行和分布式计算能力，特别是对于大规模的机器学习模型和数据集处理，提高了处理速度和效率。</li>
+                            <li><strong>增强的数学和统计功能：</strong>在JDK中增加了更多的数学和统计功能，支持复杂的数学计算和数据分析，满足AI应用的需求。</li>
+                        </ol>
+                        <div class="summary">这些进展使Java成为开发和部署机器学习及AI应用的一个更加强大和灵活的平台，满足了这些领域日益增长的需求。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q21">
+                    <h2>JDK 21中对异常处理机制有哪些新的改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21对异常处理机制进行了改进，以提高代码的可读性并简化错误处理流程。</li>
+                            <li><strong>改进的try-with-resources：</strong>try-with-resources语句得到了优化，使其更加灵活，不再要求资源对象必须在try语句中声明和初始化。</li>
+                            <li><strong>多异常捕获的优化：</strong>多异常捕获机制经过优化，允许更精细的异常处理，减少了代码的重复和复杂性。</li>
+                            <li><strong>异常链的改善：</strong>提供了更好的异常链支持，使得在处理嵌套异常时，能够更清晰地追踪到原始异常。</li>
+                            <li><strong>条件异常处理：</strong>引入了条件异常处理的概念，允许在捕获异常时根据条件进行更灵活的处理。</li>
+                        </ol>
+                        <div class="summary">这些改进使得异常处理更加灵活和高效，有助于开发者编写更清晰、更健壮的错误处理代码。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q22">
+                    <h2>JDK 21中新增的注解处理功能有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>概述：</strong>JDK 21增加了注解处理的新功能，以支持更复杂和灵活的注解处理场景。</li>
+                            <li><strong>重复注解的增强：</strong>改进了对重复注解的支持，使得同一注解可以在同一个声明上多次使用，提高了注解的表达能力。</li>
+                            <li><strong>类型注解的扩展：</strong>扩展了类型注解的应用范围，允许在更多的类型上使用注解，如泛型类型、类型参数和数组类型。</li>
+                            <li><strong>注解处理API的增强：</strong>注解处理API得到了增强，提供了更多的工具和方法来分析和处理注解信息。</li>
+                            <li><strong>编译时注解处理：</strong>强化了编译时注解处理的功能，使得开发者可以在编译阶段进行更复杂的代码生成和处理逻辑。</li>
+                        </ol>
+                        <div class="summary">这些新增的注解处理功能提高了Java的元编程能力，使得开发者可以更灵活地使用注解来驱动代码生成和处理。</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

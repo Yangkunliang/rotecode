@@ -21,7 +21,59 @@
         <nav class="nav-menu">
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🗄️</span>
+                    <span class="icon">☕</span>
+                    <span class="nav-label">Java</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#" onclick="openTab('java-basic', '基础知识', 35, event)" data-page="java-basic" data-count="35">
+                        基础知识 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('jvm', 'JVM', 35, event)" data-page="jvm" data-count="35">
+                        JVM <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('javajuc', '并发编程', 35, event)" data-page="javajuc" data-count="35">
+                        并发编程 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-thread', '多线程', 35, event)" data-page="java-thread" data-count="35">
+                        多线程 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-nio', 'NIO', 20, event)" data-page="java-nio" data-count="20">
+                        NIO <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-design', '设计模式', 19, event)" data-page="java-design" data-count="19">
+                        设计模式 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-jdk-features', '各版本JDK新特性', 15, event)" data-page="java-jdk-features" data-count="15">
+                        各版本JDK新特性 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-network', '网络协议', 20, event)" data-page="java-network" data-count="20">
+                        网络协议 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-lock', 'Java锁', 20, event)" data-page="java-lock" data-count="20">
+                        Java锁 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-algorithm', '算法&数据结构', 20, event)" data-page="java-algorithm" data-count="20">
+                        算法&数据结构 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('java-leetcode', '热门算法', 20, event)" data-page="java-leetcode" data-count="20">
+                        热门算法 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('jdk11', 'JDK11新特性', 22, event)" data-page="jdk11" data-count="22">
+                        JDK11新特性 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('jdk17', 'JDK17新特性', 22, event)" data-page="jdk17" data-count="22">
+                        JDK17新特性 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('jdk21', 'JDK21新特性', 22, event)" data-page="jdk21" data-count="22">
+                        JDK21新特性 <span class="badge">✓</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">�️</span>
                     <span class="nav-label">数据库</span>
                     <span class="arrow">›</span>
                 </div>
@@ -61,32 +113,56 @@
 
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🔍</span>
-                    <span class="nav-label">搜索引擎</span>
+                    <span class="icon">🌱</span>
+                    <span class="nav-label">Spring全家桶</span>
                     <span class="arrow">›</span>
                 </div>
                 <div class="submenu">
-                    <a class="submenu-item" href="#" onclick="openTab('elasticsearch', 'ElasticSearch', 40, event)" data-page="elasticsearch" data-count="40">
-                        ElasticSearch <span class="badge">✓</span>
+                    <a class="submenu-item" href="#" onclick="openTab('spring-source', 'Spring源码', 15, event)" data-page="spring-source" data-count="15">
+                        Spring源码 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('springmvc-source', 'SpringMVC源码', 16, event)" data-page="springmvc-source" data-count="16">
+                        SpringMVC源码 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('springboot-source', 'SpringBoot源码', 11, event)" data-page="springboot-source" data-count="11">
+                        SpringBoot源码 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('springcloud-source', 'SpringCloud源码', 10, event)" data-page="springcloud-source" data-count="10">
+                        SpringCloud源码 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('springcloud-gateway', 'SpringCloud Gateway应用', 11, event)" data-page="springcloud-gateway" data-count="11">
+                        SpringCloud Gateway应用 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('springboot3', 'SpringBoot 3.x新特性', 12, event)" data-page="springboot3" data-count="12">
+                        SpringBoot 3.x新特性 <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('springdata-jpa', 'SpringData JPA', 13, event)" data-page="springdata-jpa" data-count="13">
+                        SpringData JPA <span class="badge">✓</span>
                     </a>
                 </div>
             </div>
 
             <div class="nav-item">
                 <div class="nav-title" onclick="toggleSubmenu(this)">
-                    <span class="icon">🔗</span>
-                    <span class="nav-label">分布式中间件</span>
+                    <span class="icon">🟠</span>
+                    <span class="nav-label">Alibaba全家桶</span>
                     <span class="arrow">›</span>
                 </div>
                 <div class="submenu">
-                    <a class="submenu-item" href="#" onclick="openTab('mycat', 'MyCat', 30, event)" data-page="mycat" data-count="30">
-                        MyCat <span class="badge">✓</span>
+                    <a class="submenu-item" href="#" onclick="openTab('dubbo', 'Dubbo', 13, event)" data-page="dubbo" data-count="13">
+                        Dubbo <span class="badge">✓</span>
                     </a>
-                    <a class="submenu-item" href="#" onclick="openTab('nacos', 'Nacos', 30, event)" data-page="nacos" data-count="30">
-                        Nacos <span class="badge">✓</span>
+                    <a class="submenu-item" href="#" onclick="openTab('sentinel', 'Sentinel', 14, event)" data-page="sentinel" data-count="14">
+                        Sentinel <span class="badge">✓</span>
                     </a>
-                    <a class="submenu-item" href="#" onclick="openTab('zookeeper', 'Zookeeper', 30, event)" data-page="zookeeper" data-count="30">
-                        Zookeeper <span class="badge">✓</span>
+                    <a class="submenu-item" href="#" onclick="openTab('springcloud-alibaba', 'SpringCloud Alibaba', 12, event)" data-page="springcloud-alibaba" data-count="12">
+                        SpringCloud Alibaba <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('druid', 'Druid', 11, event)" data-page="druid" data-count="11">
+                        Druid <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('seata', 'Seata', 12, event)" data-page="seata" data-count="12">
+                        Seata <span class="badge">✓</span>
                     </a>
                 </div>
             </div>
@@ -109,6 +185,38 @@
                     </a>
                 </div>
             </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">�</span>
+                    <span class="nav-label">分布式中间件</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#" onclick="openTab('mycat', 'MyCat', 30, event)" data-page="mycat" data-count="30">
+                        MyCat <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('nacos', 'Nacos', 30, event)" data-page="nacos" data-count="30">
+                        Nacos <span class="badge">✓</span>
+                    </a>
+                    <a class="submenu-item" href="#" onclick="openTab('zookeeper', 'Zookeeper', 30, event)" data-page="zookeeper" data-count="30">
+                        Zookeeper <span class="badge">✓</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-title" onclick="toggleSubmenu(this)">
+                    <span class="icon">🔍</span>
+                    <span class="nav-label">搜索引擎</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="submenu">
+                    <a class="submenu-item" href="#" onclick="openTab('elasticsearch', 'ElasticSearch', 40, event)" data-page="elasticsearch" data-count="40">
+                        ElasticSearch <span class="badge">✓</span>
+                    </a>
+                </div>
+            </div>
         </nav>
 
         <div class="progress-summary">
@@ -126,11 +234,22 @@
     <main class="main-content">
         <header class="header">
             <h2 id="page-title">面试背题系统</h2>
-            <button class="learned-btn" id="learned-btn" onclick="markCurrentPageLearned()" hidden>标记今日学完</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索页面或技术点..." oninput="handleSearch(this.value)">
+                <span class="search-icon">🔍</span>
+            </div>
         </header>
 
-        <div class="tab-bar" id="tab-bar"></div>
+        <div class="tab-strip">
+            <div class="tab-bar" id="tab-bar"></div>
+            <div class="tab-actions" id="tab-actions" hidden>
+                <button class="learned-btn" id="learned-btn" onclick="markCurrentPageLearned()" hidden>标记今日已学</button>
+                <button class="tab-action-btn" onclick="closeOtherTabs()">关闭其他</button>
+                <button class="tab-action-btn danger" onclick="closeAllTabs()">全部关闭</button>
+            </div>
+        </div>
         <div class="content-area" id="content-area">
+            <div id="search-results-container" class="search-results-container" style="display: none;"></div>
             <div class="welcome-section">
                 <h1>📚 面试背题系统</h1>
                 <p class="subtitle">选择左侧菜单中的分类开始学习</p>
@@ -152,7 +271,7 @@
 
                 <div class="quick-start">
                     <h3>🚀 快速开始</h3>
-                    <p>点击左侧「数据库」菜单，选择想学习的主题即可开始刷题</p>
+                    <p>点击左侧菜单，选择想学习的主题即可开始刷题</p>
                 </div>
 
                 <section class="study-calendar">
@@ -188,8 +307,230 @@
             zookeeper: '分布式中间件/Zookeeper.html',
             nginx: '服务器开发/Nginx.html',
             netty: '服务器开发/Netty.html',
-            linux: '服务器开发/Linux.html'
+            linux: '服务器开发/Linux.html',
+            'java-basic': 'Java/基础知识.html',
+            jvm: 'Java/JVM.html',
+            javajuc: 'Java/并发编程.html',
+            'java-thread': 'Java/多线程.html',
+            'java-nio': 'Java/NIO.html',
+            'java-design': 'Java/设计模式.html',
+            'java-jdk-features': 'Java/各版本JDK新特性.html',
+            'java-network': 'Java/网络协议.html',
+            'java-lock': 'Java/Java锁.html',
+            'java-algorithm': 'Java/算法&数据结构.html',
+            'java-leetcode': 'Java/热门算法.html',
+            jdk11: 'Java/JDK11新特性.html',
+            jdk17: 'Java/JDK17新特性.html',
+            jdk21: 'Java/JDK21新特性.html',
+            'spring-source': 'Spring全家桶/Spring源码.html',
+            'springmvc-source': 'Spring全家桶/SpringMVC源码.html',
+            'springboot-source': 'Spring全家桶/SpringBoot源码.html',
+            'springcloud-source': 'Spring全家桶/SpringCloud源码.html',
+            'springcloud-gateway': 'Spring全家桶/SpringCloud Gateway应用.html',
+            springboot3: 'Spring全家桶/SpringBoot 3.x新特性.html',
+            'springdata-jpa': 'Spring全家桶/SpringData JPA.html',
+            dubbo: 'alibaba全家桶/Dubbo.html',
+            sentinel: 'alibaba全家桶/Sentinel.html',
+            'springcloud-alibaba': 'alibaba全家桶/SpringCloud Alibaba.html',
+            druid: 'alibaba全家桶/Druid.html',
+            seata: 'alibaba全家桶/Seata.html'
         };
+
+        const categories = [
+            { name: 'Java', icon: '☕', order: 1 },
+            { name: '数据库', icon: '🗄️', order: 2 },
+            { name: 'Spring全家桶', icon: '🌱', order: 3 },
+            { name: 'Alibaba全家桶', icon: '🟠', order: 4 },
+            { name: '服务器开发', icon: '🖥️', order: 5 },
+            { name: '分布式中间件', icon: '🔗', order: 6 },
+            { name: '搜索引擎', icon: '🔍', order: 7 }
+        ];
+
+        const pageMetadata = [
+            { id: 'java-basic', title: '基础知识', category: 'Java', count: 35 },
+            { id: 'jvm', title: 'JVM', category: 'Java', count: 35 },
+            { id: 'javajuc', title: '并发编程', category: 'Java', count: 35 },
+            { id: 'java-thread', title: '多线程', category: 'Java', count: 35 },
+            { id: 'java-nio', title: 'NIO', category: 'Java', count: 20 },
+            { id: 'java-design', title: '设计模式', category: 'Java', count: 19 },
+            { id: 'java-jdk-features', title: '各版本JDK新特性', category: 'Java', count: 15 },
+            { id: 'java-network', title: '网络协议', category: 'Java', count: 20 },
+            { id: 'java-lock', title: 'Java锁', category: 'Java', count: 20 },
+            { id: 'java-algorithm', title: '算法&数据结构', category: 'Java', count: 30 },
+            { id: 'java-leetcode', title: '热门算法', category: 'Java', count: 25 },
+            { id: 'jdk11', title: 'JDK11新特性', category: 'Java', count: 22 },
+            { id: 'jdk17', title: 'JDK17新特性', category: 'Java', count: 20 },
+            { id: 'jdk21', title: 'JDK21新特性', category: 'Java', count: 18 },
+            { id: 'mysql', title: 'MySQL', category: '数据库', count: 19 },
+            { id: 'redis', title: 'Redis', category: '数据库', count: 25 },
+            { id: 'mongodb', title: 'MongoDB', category: '数据库', count: 30 },
+            { id: 'oracle', title: 'Oracle', category: '数据库', count: 36 },
+            { id: 'postgresql', title: 'PostgreSQL', category: '数据库', count: 22 },
+            { id: 'memcached', title: 'Memcached', category: '数据库', count: 30 },
+            { id: 'mybatis', title: 'MyBatis', category: '数据库', count: 21 },
+            { id: 'mybatis-plus', title: 'Mybatis-Plus', category: '数据库', count: 20 },
+            { id: 'sqlite', title: 'SQLite', category: '数据库', count: 18 },
+            { id: 'sqlserver', title: 'SQLServer', category: '数据库', count: 24 },
+            { id: 'spring-source', title: 'Spring源码', category: 'Spring全家桶', count: 15 },
+            { id: 'springmvc-source', title: 'SpringMVC源码', category: 'Spring全家桶', count: 16 },
+            { id: 'springboot-source', title: 'SpringBoot源码', category: 'Spring全家桶', count: 11 },
+            { id: 'springcloud-source', title: 'SpringCloud源码', category: 'Spring全家桶', count: 10 },
+            { id: 'springcloud-gateway', title: 'SpringCloud Gateway应用', category: 'Spring全家桶', count: 11 },
+            { id: 'springboot3', title: 'SpringBoot 3.x新特性', category: 'Spring全家桶', count: 12 },
+            { id: 'springdata-jpa', title: 'SpringData JPA', category: 'Spring全家桶', count: 13 },
+            { id: 'dubbo', title: 'Dubbo', category: 'Alibaba全家桶', count: 13 },
+            { id: 'sentinel', title: 'Sentinel', category: 'Alibaba全家桶', count: 14 },
+            { id: 'springcloud-alibaba', title: 'SpringCloud Alibaba', category: 'Alibaba全家桶', count: 12 },
+            { id: 'druid', title: 'Druid', category: 'Alibaba全家桶', count: 11 },
+            { id: 'seata', title: 'Seata', category: 'Alibaba全家桶', count: 12 },
+            { id: 'nginx', title: 'Nginx', category: '服务器开发', count: 35 },
+            { id: 'netty', title: 'Netty', category: '服务器开发', count: 35 },
+            { id: 'linux', title: 'Linux', category: '服务器开发', count: 35 },
+            { id: 'mycat', title: 'MyCat', category: '分布式中间件', count: 30 },
+            { id: 'nacos', title: 'Nacos', category: '分布式中间件', count: 30 },
+            { id: 'zookeeper', title: 'Zookeeper', category: '分布式中间件', count: 30 },
+            { id: 'elasticsearch', title: 'ElasticSearch', category: '搜索引擎', count: 40 }
+        ];
+
+        function getCategoryIcon(categoryName) {
+            const category = categories.find(c => c.name === categoryName);
+            return category ? category.icon : '📄';
+        }
+
+        function handleSearch(query) {
+            const container = document.getElementById('search-results-container');
+            const welcomeSection = document.querySelector('.welcome-section');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            if (!query.trim()) {
+                container.style.display = 'none';
+                if (activePageId && document.getElementById('content-' + activePageId)) {
+                    tabContents.forEach(content => {
+                        content.style.display = content.id === 'content-' + activePageId ? 'block' : 'none';
+                    });
+                    if (welcomeSection) welcomeSection.style.display = 'none';
+                } else if (welcomeSection) {
+                    welcomeSection.style.display = 'block';
+                }
+                return;
+            }
+
+            const results = pageMetadata.filter(page => {
+                const searchLower = query.toLowerCase();
+                return (
+                    page.title.toLowerCase().includes(searchLower) ||
+                    page.category.toLowerCase().includes(searchLower) ||
+                    page.id.toLowerCase().includes(searchLower)
+                );
+            });
+
+            container.innerHTML = '';
+            const resultsDiv = document.createElement('div');
+            resultsDiv.className = 'search-results';
+
+            if (results.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = `未找到包含 "${query}" 的页面，请尝试其他关键词`;
+                resultsDiv.appendChild(noResults);
+            } else {
+                const title = document.createElement('h3');
+                title.style.marginBottom = '12px';
+                title.style.color = '#1e293b';
+                title.textContent = `找到 ${results.length} 个相关页面`;
+                resultsDiv.appendChild(title);
+
+                results.forEach(page => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.onclick = function(e) {
+                        openSearchResult(page.id, page.title, page.count, e);
+                    };
+
+                    const icon = document.createElement('span');
+                    icon.className = 'search-result-icon';
+                    icon.textContent = getCategoryIcon(page.category);
+
+                    const info = document.createElement('div');
+                    info.className = 'search-result-info';
+
+                    const itemTitle = document.createElement('div');
+                    itemTitle.className = 'search-result-title';
+                    itemTitle.textContent = page.title;
+
+                    const path = document.createElement('div');
+                    path.className = 'search-result-path';
+                    path.textContent = page.category;
+
+                    info.appendChild(itemTitle);
+                    info.appendChild(path);
+
+                    const count = document.createElement('span');
+                    count.className = 'search-result-count';
+                    count.textContent = `${page.count} 题`;
+
+                    item.appendChild(icon);
+                    item.appendChild(info);
+                    item.appendChild(count);
+
+                    resultsDiv.appendChild(item);
+                });
+            }
+
+            container.appendChild(resultsDiv);
+            container.style.display = 'block';
+            if (welcomeSection) welcomeSection.style.display = 'none';
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+            });
+        }
+
+        function generateSidebar() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.innerHTML = '';
+
+            categories.sort((a, b) => a.order - b.order).forEach(category => {
+                const pages = pageMetadata.filter(page => page.category === category.name);
+                if (pages.length === 0) return;
+
+                const navItem = document.createElement('div');
+                navItem.className = 'nav-item';
+
+                const navTitle = document.createElement('div');
+                navTitle.className = 'nav-title';
+                navTitle.onclick = () => toggleSubmenu(navTitle);
+                navTitle.innerHTML = `
+                    <span class="icon">${category.icon}</span>
+                    <span class="nav-label">${category.name}</span>
+                    <span class="arrow">›</span>
+                `;
+
+                const submenu = document.createElement('div');
+                submenu.className = 'submenu';
+
+                pages.forEach(page => {
+                    const link = document.createElement('a');
+                    link.className = 'submenu-item';
+                    link.href = '#';
+                    link.dataset.page = page.id;
+                    link.dataset.count = page.count;
+                    link.onclick = (e) => openTab(page.id, page.title, page.count, e);
+                    link.innerHTML = `${page.title} <span class="badge">✓</span>`;
+                    submenu.appendChild(link);
+                });
+
+                navItem.appendChild(navTitle);
+                navItem.appendChild(submenu);
+                navMenu.appendChild(navItem);
+            });
+        }
+
+        function openSearchResult(pageId, pageName, questionCount, event) {
+            event.preventDefault();
+            openTab(pageId, pageName, questionCount, event);
+            document.getElementById('search-input').value = '';
+            handleSearch('');
+        }
 
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
@@ -267,6 +608,7 @@
             openTabs[pageId] = { name: pageName, count: questionCount };
             
             switchTab(pageId);
+            updateTabActions();
         }
 
         function switchTab(pageId) {
@@ -320,6 +662,43 @@
             } else {
                 showWelcome();
             }
+
+            updateTabActions();
+        }
+
+        function closeOtherTabs() {
+            if (!activePageId) return;
+
+            Object.keys(openTabs).forEach(pageId => {
+                if (pageId === activePageId) return;
+                const tab = document.getElementById('tab-' + pageId);
+                const content = document.getElementById('content-' + pageId);
+                if (tab) tab.remove();
+                if (content) content.remove();
+                delete openTabs[pageId];
+            });
+
+            switchTab(activePageId);
+            updateTabActions();
+        }
+
+        function closeAllTabs() {
+            Object.keys(openTabs).forEach(pageId => {
+                const tab = document.getElementById('tab-' + pageId);
+                const content = document.getElementById('content-' + pageId);
+                if (tab) tab.remove();
+                if (content) content.remove();
+                delete openTabs[pageId];
+            });
+
+            showWelcome();
+            updateTabActions();
+        }
+
+        function updateTabActions() {
+            const tabActions = document.getElementById('tab-actions');
+            if (!tabActions) return;
+            tabActions.hidden = Object.keys(openTabs).length === 0;
         }
 
         function showWelcome() {
@@ -440,7 +819,7 @@
             const learned = getLearnedPages().find(item => item.pageId === pageId);
             button.hidden = false;
             button.classList.toggle('done', Boolean(learned));
-            button.textContent = learned ? '今日已学完 ✓' : '标记今日学完';
+            button.textContent = learned ? '今日已学 ✓' : '标记今日已学';
         }
 
         function updateLearnedNav() {
@@ -458,7 +837,7 @@
             const pages = getLearnedPages().sort((a, b) => b.completedAt.localeCompare(a.completedAt));
 
             if (pages.length === 0) {
-                calendarList.innerHTML = '<div class="empty-calendar">还没有学完记录。打开一个页面后点击“标记今日学完”。</div>';
+                calendarList.innerHTML = '<div class="empty-calendar">还没有已学记录。打开一个页面后点击“标记今日已学”。</div>';
                 return;
             }
 
@@ -527,6 +906,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            generateSidebar();
             updateOverviewStats();
             initWelcomeGrid();
             renderStudyCalendar();

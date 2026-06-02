@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringBoot 3.x新特性</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #4caf50; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #e8f5e9; color: #4caf50; }
+        .toc-list a.active { background: #4caf50; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #4caf50; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #e8f5e9; padding: 15px; border-radius: 6px; margin-top: 15px; color: #2e7d32; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #4caf50; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #43a047; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>SpringBoot 3.x新特性</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring Boot 3.0有哪些重大变化？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>最低JDK版本提升：</strong>Spring Boot 3.0要求最低JDK 17，不再支持JDK 8和11。</li>
+                            <li><strong>Jakarta EE迁移：</strong>从Java EE迁移到Jakarta EE API，javax.*包名全部改为jakarta.*。</li>
+                            <li><strong>GraalVM原生镜像支持：</strong>更好的支持GraalVM，可以将应用编译成原生镜像，大幅提升启动速度并降低内存占用。</li>
+                            <li><strong>Spring 6框架升级：</strong>基于Spring Framework 6.0，引入了更多的响应式编程特性和改进。</li>
+                            <li><strong>Micrometer 2.0：</strong>升级到Micrometer 2.0，提供更强大的指标监控能力。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring Boot 3.x对Jakarta EE的迁移具体包含哪些内容？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>包名变更：</strong>所有javax.*命名空间的类迁移到jakarta.*命名空间。</li>
+                            <li><strong>影响范围：</strong>包括Servlet、JDBC、JPA、Bean Validation等API的迁移。</li>
+                            <li><strong>第三方库兼容：</strong>需要确保项目使用的第三方库也支持Jakarta EE。</li>
+                            <li><strong>代码修改：</strong>现有的代码和XML配置中的javax.包引用需要更新为jakarta.。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Spring Boot 3.x中GraalVM原生镜像的支持带来了哪些优势？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>极速启动：</strong>原生镜像的启动时间可以从几秒降低到毫秒级别。</li>
+                            <li><strong>内存占用低：</strong>相比JVM，内存占用大幅减少，适合Serverless和容器化部署。</li>
+                            <li><strong>即时编译：</strong>无需预热，编译好的原生代码可以立即以最高性能运行。</li>
+                            <li><strong>AOT编译：</strong>通过Spring Boot的AOT（Ahead-of-Time）处理，优化应用的启动和运行时性能。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Spring Boot 3.x中的WebFlux有什么新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>响应式Web框架：</strong>继续强化WebFlux响应式编程模型。</li>
+                            <li><strong>更好的性能：</strong>在Spring 6的基础上，WebFlux的性能和稳定性都有提升。</li>
+                            <li><strong>简化配置：</strong>自动配置更加智能，减少了响应式应用的配置复杂度。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring Boot 3.x的AOT编译是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>AOT处理：</strong>在构建阶段进行的编译优化，可以提前生成优化的字节码和原生代码。</li>
+                            <li><strong>GraalVM集成：</strong>通过GraalVM将Spring Boot应用编译成原生镜像。</li>
+                            <li><strong>反射信息处理：</strong>AOT阶段会处理应用的反射使用情况，生成必要的配置文件。</li>
+                            <li><strong>启动优化：</strong>原生镜像消除了JVM启动时的类加载和即时编译开销。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Spring Boot 3.x如何提升了对容器化部署的支持？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>分层镜像：</strong>支持更高效的分层Docker镜像构建。</li>
+                            <li><strong>健康检查优化：</strong>提供更精确的健康检查端点。</li>
+                            <li><strong>环境变量绑定：</strong>增强了环境变量到配置属性的绑定。</li>
+                            <li><strong>原生镜像友好：</strong>配合GraalVM，容器内运行更加轻量。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Spring Boot 3.x的安全特性有哪些改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Spring Security 6.0：</strong>配合Spring Security 6.0，提供更细粒度的安全控制。</li>
+                            <li><strong>简化配置：</strong>安全配置的自动配置更加智能。</li>
+                            <li><strong>Jakarta EE支持：</strong>安全相关的API也迁移到jakarta.*命名空间。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring Boot 3.x中的自动配置有哪些改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>条件注解优化：</strong>自动配置使用的条件注解更加精确。</li>
+                            <li><strong>性能提升：</strong>自动配置的处理过程更加高效。</li>
+                            <li><strong>可观测性：</strong>自动配置过程提供更好的可观测性，便于调试。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Spring Boot 3.x如何处理观测性（Observability）方面的增强？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Micrometer 2.0：</strong>升级到Micrometer 2.0，提供更丰富的指标收集能力。</li>
+                            <li><strong>统一结构化日志：</strong>支持统一的日志结构，便于分析和追踪。</li>
+                            <li><strong>健康检查端点：</strong>增强的健康检查和数据展示。</li>
+                            <li><strong>分布式追踪：</strong>更好地与Zipkin、Jaeger等追踪系统集成。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>从Spring Boot 2.x升级到3.x需要注意哪些事项？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>JDK版本：</strong>必须升级到JDK 17或更高版本。</li>
+                            <li><strong>Jakarta EE迁移：</strong>所有javax.*需要改为jakarta.*。</li>
+                            <li><strong>依赖检查：</strong>检查所有第三方依赖是否支持Spring Boot 3.x和Jakarta EE。</li>
+                            <li><strong>配置迁移：</strong>检查并更新任何特定的Spring Boot 2.x配置。</li>
+                            <li><strong>测试验证：</strong>充分测试应用的各个方面，确保兼容性。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Spring Boot 3.x中DevTools有哪些改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>更快的重启：</strong>通过更智能的类加载策略，实现更快速的应用重启。</li>
+                            <li><strong>.LiveReload增强：</strong>页面热重载更加稳定和快速。</li>
+                            <li><strong>调试支持：</strong>改进了远程调试的体验。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Spring Boot 3.x对数据访问层有哪些增强？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>JDBC增强：</strong>JDBC操作支持更多的响应式特性。</li>
+                            <li><strong>R2DBC支持：</strong>更好地支持R2DBC进行响应式数据库访问。</li>
+                            <li><strong>Jakarta EE迁移：</strong>JPA和Hibernate等已迁移到Jakarta EE。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

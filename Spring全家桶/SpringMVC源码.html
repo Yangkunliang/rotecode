@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringMVC源码</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0ad4e; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #fff3e0; color: #f0ad4e; }
+        .toc-list a.active { background: #f0ad4e; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #f0ad4e; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #fff3e0; padding: 15px; border-radius: 6px; margin-top: 15px; color: #e65100; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #f0ad4e; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #ec971f; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>SpringMVC源码</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring MVC中的DispatcherServlet是什么，它如何工作？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>请求接收：</strong>接收HTTP请求，并将其转发到相应的处理器。</li>
+                            <li><strong>处理器映射：</strong>根据请求查找合适的Controller。</li>
+                            <li><strong>调用适当的处理器：</strong>执行处理器逻辑并返回ModelAndView对象。</li>
+                            <li><strong>视图渲染：</strong>将Model数据传递给视图层进行渲染。</li>
+                        </ol>
+                        <div class="summary">DispatcherServlet是Spring MVC中的核心组件，负责协调不同的请求处理器。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring MVC中的Controller注解是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>组件扫描：</strong>Spring自动检测并注册带有@Controller注解的类。</li>
+                            <li><strong>请求映射：</strong>通过@RequestMapping等注解将HTTP请求映射到对应的方法。</li>
+                            <li><strong>请求处理：</strong>处理HTTP请求，并返回适当的响应或视图名称。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Spring MVC如何处理表单提交？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>表单显示：</strong>使用@Controller方法显示表单。</li>
+                            <li><strong>数据绑定：</strong>将表单数据绑定到后端模型对象。</li>
+                            <li><strong>验证：</strong>应用验证逻辑检查表单数据的正确性。</li>
+                            <li><strong>提交处理：</strong>如果验证通过，处理表单提交逻辑。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Spring MVC中的ModelAndView是什么。</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Model：</strong>包含数据的Map，可以传递给视图。</li>
+                            <li><strong>View：</strong>视图名称，用于渲染响应。</li>
+                        </ol>
+                        <div class="summary">ModelAndView是Spring MVC中的一个概念，用于封装控制器方法的模型数据和视图信息。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring MVC中，拦截器（Interceptor）的作用是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>日志记录：</strong>记录请求信息。</li>
+                            <li><strong>权限检查：</strong>验证用户权限。</li>
+                            <li><strong>性能监控：</strong>监控请求处理时间。</li>
+                            <li><strong>通用行为：</strong>执行诸如语言或主题更改等通用任务。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Spring MVC中的视图解析器（View Resolver）是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>解析视图名称：</strong>根据控制器返回的视图名称找到对应的视图定义。</li>
+                            <li><strong>视图渲染：</strong>将模型数据传递给视图并进行渲染。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Spring MVC中的路径变量（Path Variable）和它的用途。</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>RESTful URL：</strong>实现RESTful服务中的资源标识。</li>
+                            <li><strong>动态内容获取：</strong>根据URL中的变量获取不同的内容。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring MVC中的@RequestParam注解是用来做什么的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>简化数据访问：</strong>直接访问请求中的参数，而无需手动解析。</li>
+                            <li><strong>类型转换：</strong>自动将请求参数转换为定义的方法参数类型。</li>
+                            <li><strong>可选和必需参数：</strong>可以定义参数是可选的还是必需的。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Spring MVC中，如何实现异常处理？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@ExceptionHandler：</strong>在控制器中使用此注解处理特定异常。</li>
+                            <li><strong>ControllerAdvice：</strong>创建全局异常处理器。</li>
+                            <li><strong>ResponseEntityExceptionHandler：</strong>提供预定义的异常处理逻辑。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Spring MVC中的重定向（Redirect）和转发（Forward）有什么区别？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>重定向（Redirect）：</strong>发送一个新的请求，URL会发生变化。</li>
+                            <li><strong>转发（Forward）：</strong>在服务器内部转发请求，URL不会发生变化。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Spring MVC中的静态资源处理。</h2>
+                    <div class="answer">
+                        <p>在Spring MVC中，静态资源处理指的是如何管理和服务像CSS、JavaScript和图片等静态资源。通常通过配置ResourceHandler来实现。</p>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Spring MVC和Spring Boot有什么区别？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Spring MVC：</strong>是一个Web框架，专注于构建Web应用程序。</li>
+                            <li><strong>Spring Boot：</strong>是基于Spring的约定优于配置的解决方案，旨在简化Spring应用的创建和开发过程。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>Spring MVC中的数据绑定是如何工作的？</h2>
+                    <div class="answer">
+                        <p>数据绑定在Spring MVC中是将请求参数（如表单数据）绑定到Java对象的过程。这是通过使用诸如@ModelAttribute等注解实现的。</p>
+                    </div>
+                </div>
+
+                <div class="question" id="q14">
+                    <h2>Spring MVC中的Content Negotiation是什么。</h2>
+                    <div class="answer">
+                        <p>Content Negotiation是Spring MVC中一种根据请求的Accept头部来确定返回哪种媒体类型（如JSON或XML）的机制。这有助于支持多种格式的响应。</p>
+                    </div>
+                </div>
+
+                <div class="question" id="q15">
+                    <h2>Spring MVC中的@RequestBody和@ResponseBody注解有什么作用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@RequestBody：</strong>用于将HTTP请求体中的JSON或XML数据绑定到控制器方法的参数。当客户端发送请求时，Spring将请求体中的数据反序列化为Java对象。这个注解常用于处理POST或PUT请求中的数据。</li>
+                            <li><strong>@ResponseBody：</strong>用于将控制器方法的返回值序列化为JSON或XML格式，并写入HTTP响应体。当控制器方法使用此注解时，Spring会自动将返回的Java对象序列化为响应体的格式（通常是JSON），这样客户端可以接收到格式化后的数据。</li>
+                        </ol>
+                        <div class="summary">这两个注解使得处理RESTful服务中的数据变得简单，提供了一种方便的方式来处理Web服务中的数据序列化和反序列化。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q16">
+                    <h2>Spring MVC的Model、ModelMap和ModelAndView有什么区别？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Model：</strong>一个接口，用于定义操作请求作用域对象的方法。它的主要作用是添加属性到请求作用域中。</li>
+                            <li><strong>ModelMap：</strong>是一个实现了Map接口的类，用于存储控制器处理方法处理后的属性，然后传递给视图层。</li>
+                            <li><strong>ModelAndView：</strong>是一个包含了模型数据和视图信息的容器。它不仅包括了模型数据，还指定了要渲染的视图名称。</li>
+                        </ol>
+                        <div class="summary">这三种方式各有特点，可以根据具体场景和开发者偏好选择使用。</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

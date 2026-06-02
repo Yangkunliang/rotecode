@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringCloud源码</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #00bcd4; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #e0f7fa; color: #00bcd4; }
+        .toc-list a.active { background: #00bcd4; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #00bcd4; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #e0f7fa; padding: 15px; border-radius: 6px; margin-top: 15px; color: #00838f; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #00bcd4; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #00acc1; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>SpringCloud源码</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring Cloud中断路器的原理及其作用是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>故障隔离机制：</strong>在微服务架构中，断路器作为一种故障隔离机制，当某个服务实例出现问题时，断路器会"断开"这个实例，防止故障蔓延到其他服务。</li>
+                            <li><strong>快速失败机制：</strong>当断路器打开时，对该服务的调用将会快速失败而不是等待，从而避免资源浪费和延迟。</li>
+                            <li><strong>服务降级：</strong>在断路器打开时，可以为用户提供备选的响应（服务降级），保证系统的可用性。</li>
+                            <li><strong>自动恢复：</strong>断路器可以配置自动尝试恢复关闭状态，如果调用成功，则关闭断路器；否则继续保持打开状态。</li>
+                        </ol>
+                        <div class="summary">这些机制共同使得Spring Cloud能够在分布式环境中提供更稳定和弹性的服务。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring Cloud与Spring Boot的关系是怎样的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>基础架构：</strong>Spring Boot为Spring Cloud提供了基础架构，包括自动配置、起步依赖等。</li>
+                            <li><strong>开发便利性：</strong>Spring Boot简化了基于Spring的应用开发，而Spring Cloud在此基础上提供了微服务开发的全套解决方案。</li>
+                            <li><strong>功能互补：</strong>Spring Boot专注于快速开发单个微服务，Spring Cloud则关注微服务之间的交互和治理。</li>
+                            <li><strong>版本兼容性：</strong>Spring Cloud和Spring Boot的版本通常是紧密配合的，确保兼容性和功能性。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Spring Cloud中如何实现服务发现？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用Eureka：</strong>Eureka是一个服务发现框架，可以作为服务注册中心，服务实例在启动时将自身注册到Eureka，供其他服务发现。</li>
+                            <li><strong>使用Consul：</strong>Consul提供了类似的服务发现功能，并支持健康检查。</li>
+                            <li><strong>使用Zookeeper：</strong>另一种选择是使用Zookeeper作为服务发现的基础设施。</li>
+                            <li><strong>客户端负载均衡：</strong>使用Ribbon或Feign实现客户端负载均衡，可以在服务消费者端进行服务实例的选择。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Spring Cloud中如何实现服务间的通信？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>REST API：</strong>使用Spring MVC或Spring WebFlux创建RESTful接口进行服务间通信。</li>
+                            <li><strong>Feign客户端：</strong>Feign是一个声明式的Web服务客户端，简化了HTTP客户端的使用。</li>
+                            <li><strong>Ribbon负载均衡：</strong>Ribbon可以结合Eureka使用，实现客户端负载均衡。</li>
+                            <li><strong>消息驱动通信：</strong>使用Spring Cloud Stream或Kafka、RabbitMQ等消息中间件实现异步的服务间通信。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring Cloud Config，它是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>配置服务器：</strong>Spring Cloud Config Server作为集中配置服务器，管理各种环境的配置文件。</li>
+                            <li><strong>配置存储：</strong>配置文件可以存储在Git、SVN或本地文件系统。</li>
+                            <li><strong>动态配置更新：</strong>客户端服务可以在运行时动态地从Config Server获取或刷新配置，无需重启。</li>
+                            <li><strong>环境适配：</strong>支持不同环境（开发、测试、生产）的配置管理，简化部署和维护。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Spring Cloud Gateway与Zuul的区别是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>性能：</strong>Spring Cloud Gateway基于WebFlux和Netty，性能通常优于Zuul。</li>
+                            <li><strong>异步非阻塞：</strong>Gateway使用异步非阻塞API，而Zuul使用的是阻塞API。</li>
+                            <li><strong>长期支持：</strong>Spring Cloud Gateway是Spring官方推荐的网关方案，逐渐取代Zuul。</li>
+                            <li><strong>路由功能：</strong>Gateway提供了更现代化的路由功能，例如Predicate和Filter的定制。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Spring Cloud Sleuth和Zipkin在微服务中的作用是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>分布式追踪：</strong>Sleuth提供了分布式追踪的功能，帮助追踪微服务环境中的请求流程。</li>
+                            <li><strong>日志关联：</strong>Sleuth通过在日志中添加Trace和Span ID来实现服务间日志的关联。</li>
+                            <li><strong>性能监控：</strong>结合Zipkin，可以收集和展示服务间调用的时序数据，帮助分析系统性能瓶颈。</li>
+                            <li><strong>问题定位：</strong>有助于在复杂的分布式系统中快速定位问题所在，改善服务的可靠性和响应时间。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring Cloud中如何实现服务限流？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用Hystrix：</strong>利用Hystrix提供的线程池和信号量机制实现限流。</li>
+                            <li><strong>使用Sentinel：</strong>Sentinel提供更丰富的限流策略，如QPS、线程数限制等。</li>
+                            <li><strong>自定义限流组件：</strong>可以根据业务需求实现自定义的限流组件。</li>
+                            <li><strong>网关限流：</strong>在Spring Cloud Gateway或Zuul网关中配置限流规则。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Spring Cloud中如何进行链路追踪？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>整合Sleuth：</strong>Sleuth为微服务提供了链路追踪的能力。</li>
+                            <li><strong>与Zipkin集成：</strong>将Sleuth与Zipkin集成，实现数据的收集和可视化。</li>
+                            <li><strong>传递Trace和Span：</strong>通过HTTP请求传递Trace ID和Span ID来标识请求链路。</li>
+                            <li><strong>数据分析：</strong>利用Zipkin进行链路数据分析，识别瓶颈和优化点。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Spring Cloud中的负载均衡有哪些实现方式？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Ribbon客户端负载均衡：</strong>在客户端使用Ribbon库，通过配置规则实现负载均衡。</li>
+                            <li><strong>Feign与Ribbon结合：</strong>使用Feign声明式客户端时，内部集成了Ribbon实现负载均衡。</li>
+                            <li><strong>Spring Cloud Gateway：</strong>网关层面也可以配置负载均衡规则。</li>
+                            <li><strong>服务发现集成：</strong>结合Eureka等服务发现组件，实现基于服务实例的负载均衡。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

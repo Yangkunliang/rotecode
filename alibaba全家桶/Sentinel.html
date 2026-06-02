@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #fff0e6; color: #FF5000; }
+        .toc-list a.active { background: #FF5000; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #FF5000; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #fff0e6; padding: 15px; border-radius: 6px; margin-top: 15px; color: #d4380d; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #FF5000; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #e64a00; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>Sentinel</h1>
+
+                <div class="question" id="q1">
+                    <h2>Sentinel是什么？它主要用于解决什么问题？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>流量控制：</strong>Sentinel是阿里巴巴开源的流量控制组件，主要用于处理分布式系统的流量控制。</li>
+                            <li><strong>熔断降级：</strong>当调用链路中某个服务出现故障或响应时间过长时，Sentinel可以自动进行熔断降级，防止故障蔓延。</li>
+                            <li><strong>系统负载保护：</strong>当系统的总体负载超过阈值时，Sentinel可以自动进行流量整形，保护系统不被压垮。</li>
+                            <li><strong>实时监控：</strong>提供实时监控和控制台，可以实时查看被保护服务的运行状态。</li>
+                        </ol>
+                        <div class="summary">Sentinel以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度帮助用户提升系统的稳定性和可用性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Sentinel与Hystrix的区别是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>社区活跃度：</strong>Sentinel由阿里巴巴开源，社区活跃度高，文档和示例丰富；Hystrix已进入维护模式。</li>
+                            <li><strong>功能完整性：</strong>Sentinel提供了更完整的流量控制、熔断降级和系统负载保护功能。</li>
+                            <li><strong>配置方式：</strong>Sentinel的配置更加灵活，支持通过控制台动态配置规则。</li>
+                            <li><strong>性能：</strong>Sentinel使用异步非阻塞模式，性能更优。</li>
+                            <li><strong>生态集成：</strong>Sentinel与Spring Cloud Alibaba有更好的集成。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Sentinel中的流量控制（Flow Control）有哪些策略？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>直接拒绝：</strong>当QPS超过阈值时，直接拒绝请求。</li>
+                            <li><strong>冷启动：</strong>允许系统预热一段时间，阈值从最小值逐渐增长到设定值。</li>
+                            <li><strong>匀速排队：</strong>让请求以匀速的方式通过，常用于处理突发的批量请求。</li>
+                            <li><strong>关联限流：</strong>当关联资源的QPS超过阈值时，限流当前资源。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Sentinel的熔断降级是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>慢调用比例：</strong>当资源的每秒请求数大于最小请求数，且慢调用的比例超过阈值时，触发熔断。</li>
+                            <li><strong>异常比例：</strong>当资源的每秒请求数大于最小请求数，且异常比例超过阈值时，触发熔断。</li>
+                            <li><strong>异常数：</strong>当资源的异常数超过阈值时，触发熔断。</li>
+                            <li><strong>恢复机制：</strong>熔断后会进入半开状态，如果后续请求成功，则会恢复正常。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Sentinel中的@SentinelResource注解有哪些属性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>value：</strong>资源名称，必需。</li>
+                            <li><strong>blockHandler：</strong>处理BlockException的方法名。</li>
+                            <li><strong>blockHandlerClass：</strong>blockHandler方法所在的类。</li>
+                            <li><strong>fallback：</strong>处理熔断降级的方法名。</li>
+                            <li><strong>fallbackClass：</strong>fallback方法所在的类。</li>
+                            <li><strong>exceptionsToIgnore：</strong>忽略的异常类型，不进行降级处理。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Sentinel的核心类有哪些？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Entry：</strong>表示一次资源访问的入口，使用try-with-resources方式。</li>
+                            <li><strong>Context：</strong>上下文对象，保存当前调用链的元数据。</li>
+                            <li><strong>Node：</strong>秒级监控数据统计节点。</li>
+                            <li><strong>ProcessorSlot：</strong>插槽接口，定义了各种资源检查和处理逻辑。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Sentinel如何实现实时监控？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>滑动窗口：</strong>Sentinel使用滑动窗口来统计秒级的请求数据。</li>
+                            <li><strong>异步推送：</strong>监控数据通过异步方式推送到控制台。</li>
+                            <li><strong>LogBase：</strong>将监控数据写入本地文件。</li>
+                            <li><strong>Client：</strong>通过HTTP请求将数据上报到控制台。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Sentinel中的热点参数限流是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>参数索引：</strong>通过参数索引指定要限流的参数。</li>
+                            <li><strong>参数值限流：</strong>针对特定参数值进行限流。</li>
+                            <li><strong>配置规则：</strong>可以配置参数值对应的限流阈值。</li>
+                            <li><strong>使用场景：</strong>适用于对接口的某些参数进行精细化流量控制。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Sentinel如何与Spring Cloud集成使用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>添加依赖：</strong>在项目中添加spring-cloud-starter-alibaba-sentinel依赖。</li>
+                            <li><strong>配置文件：</strong>配置Sentinel控制台地址等信息。</li>
+                            <li><strong>使用注解：</strong>在需要限流的方法上使用@SentinelResource注解。</li>
+                            <li><strong>控制台配置规则：</strong>通过Sentinel控制台动态配置限流规则。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Sentinel中的系统规则（System Rule）有哪些类型？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Load自适应：</strong>根据系统负载进行自适应保护，需要Linux系统。</li>
+                            <li><strong>RT：</strong>所有资源的平均响应时间超过阈值时触发流量控制。</li>
+                            <li><strong>线程数：</strong>当单机器的线程数超过阈值时触发流量控制。</li>
+                            <li><strong>QPS：</strong>当单机器的QPS超过阈值时触发流量控制。</li>
+                            <li><strong>CPU使用率：</strong>当CPU使用率超过阈值时触发流量控制。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Sentinel的滑动窗口算法是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>窗口划分：</strong>将时间线划分为固定大小的窗口。</li>
+                            <li><strong>窗口滑动：</strong>窗口随时间推移不断向前滑动。</li>
+                            <li><strong>统计计算：</strong>聚合当前滑动窗口内的所有请求数据进行统计。</li>
+                            <li><strong>精确控制：</strong>可以精确到毫秒级别的流量控制。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Sentinel如何实现服务熔断后的恢复？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>半开状态：</strong>熔断器打开后，经过一定时间会进入半开状态。</li>
+                            <li><strong>试探请求：</strong>半开状态下会放行一个试探请求。</li>
+                            <li><strong>结果判断：</strong>如果试探请求成功，则关闭熔断器；否则继续打开。</li>
+                            <li><strong>恢复时间：</strong>可以配置熔断恢复的时间窗口。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>Sentinel控制台有哪些功能？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>实时监控：</strong>查看资源的实时QPS、响应时间、通过量等。</li>
+                            <li><strong>规则配置：</strong>在线配置流控规则、熔断规则、系统规则等。</li>
+                            <li><strong>机器列表：</strong>查看已注册的应用节点信息。</li>
+                            <li><strong>动态规则：</strong>规则配置后会实时推送到应用节点生效。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q14">
+                    <h2>Sentinel中的网关限流有哪些类型？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>API维度：</strong>对API分组进行限流。</li>
+                            <li><strong>参数维度：</strong>对特定参数值进行限流。</li>
+                            <li><strong>自定义维度：</strong>通过自定义埋点实现更灵活的限流。</li>
+                            <li><strong>整合Gateway：</strong>提供与Spring Cloud Gateway的集成。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

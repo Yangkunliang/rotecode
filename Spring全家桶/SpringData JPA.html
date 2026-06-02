@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpringData JPA</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #fff; border-right: 1px solid #e0e0e0; padding: 20px; overflow-y: auto; position: fixed; height: 100vh; top: 0; left: 0; }
+        .sidebar h3 { color: #333; margin-bottom: 15px; font-size: 16px; padding-bottom: 10px; border-bottom: 2px solid #ff5722; }
+        .toc-list { list-style: none; padding: 0; margin: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { color: #666; text-decoration: none; font-size: 14px; display: block; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .toc-list a:hover { background: #fff3e0; color: #ff5722; }
+        .toc-list a.active { background: #ff5722; color: #fff; }
+        .content-wrapper { flex: 1; margin-left: 280px; padding: 30px 40px; background: #fff; min-height: 100vh; overflow-y: auto; }
+        .content { max-width: 900px; margin: 0 auto; }
+        .question { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .question h2 { color: #333; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #ff5722; }
+        .answer { color: #555; font-size: 15px; line-height: 1.8; }
+        .answer ol { margin: 10px 0; padding-left: 20px; }
+        .answer li { margin-bottom: 8px; }
+        .summary { background: #fff3e0; padding: 15px; border-radius: 6px; margin-top: 15px; color: #d84315; font-size: 14px; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #ff5722; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 20px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        .back-to-top:hover { background: #f4511e; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content-wrapper { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>SpringData JPA</h1>
+
+                <div class="question" id="q1">
+                    <h2>Spring Data JPA的工作原理是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Repository接口：</strong>开发者只需定义继承JpaRepository的接口，Spring Data JPA会根据接口自动生成实现类。</li>
+                            <li><strong>方法名解析：</strong>Spring Data JPA会根据方法名自动解析查询逻辑，如findByUsername会生成根据username查询的JPQL。</li>
+                            <li><strong>JPA Provider：</strong>底层使用Hibernate或其他JPA Provider来实现ORM映射。</li>
+                            <li><strong>实体管理：</strong>Spring Data JPA通过EntityManager管理实体对象，实现持久化操作。</li>
+                        </ol>
+                        <div class="summary">通过这些机制，Spring Data JPA大幅简化了数据访问层的代码编写。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>Spring Data JPA中Repository接口的层次结构是怎样的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>Repository：</strong>最基础的标记接口，没有任何方法。</li>
+                            <li><strong>CrudRepository：</strong>提供了基本的CRUD操作方法。</li>
+                            <li><strong>PagingAndSortingRepository：</strong>提供了分页和排序的方法。</li>
+                            <li><strong>JpaRepository：</strong>在PagingAndSortingRepository基础上添加了JPA特有的方法，如flush()和batch()操作。</li>
+                            <li><strong>自定义Repository：</strong>开发者可以定义自己的接口和方法，Spring Data JPA会自动实现。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>Spring Data JPA如何实现自定义查询？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>方法名查询：</strong>通过规范的方法名自动生成查询，如findByUsername。</li>
+                            <li><strong>@Query注解：</strong>使用JPQL或原生SQL进行自定义查询。</li>
+                            <li><strong>@Query with LIKE：</strong>在@Query中使用LIKE进行模糊查询。</li>
+                            <li><strong>使用Specification：</strong>Spring Data JPA提供了JpaSpecificationExecutor，支持动态查询。</li>
+                            <li><strong>自定义实现：</strong>定义一个接口和对应的实现类，在实现类中编写复杂的查询逻辑。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>Spring Data JPA中实体之间的关系如何映射？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@OneToOne：</strong>一对一关系映射。</li>
+                            <li><strong>@OneToMany和@ManyToOne：</strong>一对多和多对一关系。</li>
+                            <li><strong>@ManyToMany：</strong>多对多关系映射。</li>
+                            <li><strong>级联操作：</strong>通过cascade属性配置级联保存、删除等行为。</li>
+                            <li><strong>懒加载：</strong>通过fetch属性配置加载策略，如FetchType.LAZY。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>Spring Data JPA中如何实现分页和排序？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>PagingAndSortingRepository：</strong>继承这个接口即可获得分页和排序支持。</li>
+                            <li><strong>PageRequest：</strong>使用PageRequest.of(page, size)创建分页请求。</li>
+                            <li><strong>Sort：</strong>使用Sort.by()创建排序规则。</li>
+                            <li><strong>Page对象：</strong>返回的Page对象包含了分页信息和查询结果。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>Spring Data JPA中@Entity注解的作用是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>标记为实体：</strong>@Entity注解标记一个类为JPA实体，表示该类对应数据库中的一张表。</li>
+                            <li><strong>表名映射：</strong>默认情况下，实体名对应表名，也可以通过@Table注解指定具体表名。</li>
+                            <li><strong>生命周期管理：</strong>被@Entity注解的类会被EntityManager管理，支持CRUD操作。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>Spring Data JPA中如何处理实体主键的生成策略？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@GeneratedValue：</strong>配合@Id注解使用，配置主键的生成策略。</li>
+                            <li><strong>AUTO：</strong>由JPA自动选择合适的策略。</li>
+                            <li><strong>IDENTITY：</strong>由数据库自增生成，如MySQL的自增主键。</li>
+                            <li><strong>SEQUENCE：</strong>使用数据库序列生成，如Oracle。</li>
+                            <li><strong>TABLE：</strong>使用一张表来生成主键值。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>Spring Data JPA中的事务管理是如何工作的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@Transactional注解：</strong>在Repository或Service层方法上使用此注解来声明事务。</li>
+                            <li><strong>默认传播行为：</strong>Spring Data JPA的事务默认传播行为是REQUIRED。</li>
+                            <li><strong>只读事务：</strong>可以通过readOnly=true优化只读操作。</li>
+                            <li><strong>回滚规则：</strong>默认情况下，运行时异常会自动回滚。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>Spring Data JPA中如何实现懒加载？有什么需要注意的？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>fetch = FetchType.LAZY：</strong>在关联映射上使用此配置实现懒加载。</li>
+                            <li><strong>Open Session in View：</strong>需要配置Open Session in View模式以避免懒加载异常。</li>
+                            <li><strong>懒加载异常：</strong>如果在session关闭后访问懒加载属性，会抛出LazyInitializationException。</li>
+                            <li><strong>解决方案：</strong>可以使用@EntityGraph或JOIN FETCH来明确加载关联数据。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>Spring Data JPA与MyBatis的区别是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>ORM vs SQL映射：</strong>JPA是ORM框架，MyBatis是SQL映射框架。</li>
+                            <li><strong>开发方式：</strong>JPA自动生成SQL，MyBatis需要手写SQL。</li>
+                            <li><strong>灵活性：</strong>MyBatis对复杂查询和SQL优化更灵活，JPA开发更快捷。</li>
+                            <li><strong>数据库无关：</strong>JPA提供更好的数据库无关性。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>Spring Data JPA中如何实现条件查询？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>使用方法名查询：</strong>如findByUsernameAndEmail()。</li>
+                            <li><strong>使用@Query：</strong>自定义JPQL或原生SQL查询。</li>
+                            <li><strong>使用Specification：</strong>JpaSpecificationExecutor提供了强大的动态查询能力。</li>
+                            <li><strong>Example查询：</strong>使用Example对象进行动态查询。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>Spring Data JPA中的@Modifying注解有什么作用？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>标记修改操作：</strong>@Modifying注解用于标记修改、删除等更新操作。</li>
+                            <li><strong>配合@Query使用：</strong>通常与@Query一起使用来执行更新或删除操作。</li>
+                            <li><strong>事务要求：</strong>使用@Modifying的方法必须开启事务。</li>
+                            <li><strong>清除缓存：</strong>执行修改操作后，Spring Data JPA会自动清除相关的持久化缓存。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>Spring Data JPA中如何处理实体类的乐观锁？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>@Version注解：</strong>在实体类的版本字段上使用@Version注解。</li>
+                            <li><strong>自动版本控制：</strong>每次更新时，版本号自动递增。</li>
+                            <li><strong>乐观锁异常：</strong>如果并发更新，Spring Data JPA会抛出OptimisticLockingFailureException。</li>
+                            <li><strong>适用场景：</strong>适用于读多写少的场景，避免数据库级别的锁。</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

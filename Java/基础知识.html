@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java基础知识 面试题及答案整理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; padding: 8px; height: 100vh; overflow: hidden; }
+        .container { display: flex; gap: 10px; width: 100%; height: calc(100vh - 16px); overflow: hidden; }
+        .content-wrapper { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 18px; overflow-y: auto; }
+        .sidebar { width: 240px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 20px; }
+        .sidebar-card h3 { font-size: 14px; color: #1e293b; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #f97316; }
+        .toc-list { list-style: none; padding: 0; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a { display: block; padding: 8px 12px; color: #475569; text-decoration: none; font-size: 13px; border-radius: 6px; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .toc-list a:hover { background: #f1f5f9; color: #334155; }
+        .toc-list a.active { background: rgba(249,115,22,0.14); color: #c2410c; font-weight: 600; box-shadow: inset 3px 0 0 #f97316; }
+        h1 { font-size: 26px; color: #1e293b; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #f97316; }
+        h2 { font-size: 19px; color: #1e293b; margin-top: 35px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #f97316; }
+        h3 { font-size: 16px; color: #334155; margin-top: 22px; margin-bottom: 14px; }
+        p { margin-bottom: 14px; color: #475569; font-size: 14px; line-height: 1.8; }
+        ul, ol { margin: 14px 0 14px 28px; color: #475569; }
+        li { margin-bottom: 8px; font-size: 14px; }
+        .highlight { background: #fff7ed; padding: 15px 18px; border-radius: 8px; border-left: 4px solid #f97316; margin: 18px 0; }
+        .highlight strong { color: #c2410c; }
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+        .tag-success { background: #dcfce7; color: #166534; }
+        .tag-danger { background: #fee2e2; color: #991b1b; }
+        .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: #f97316; color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(249,115,22,0.4); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 100; }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(249,115,22,0.5); }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper" id="content">
+            <h1>Java基础知识 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Java的基本数据类型有哪些？</h2>
+            <p>Java的8种基本数据类型：</p>
+            <div class="highlight">
+                <p><strong>1、byte：</strong> 字节型，占1个字节，范围-128到127。</p>
+                <p><strong>2、short：</strong> 短整型，占2个字节，范围-32768到32767。</p>
+                <p><strong>3、int：</strong> 整型，占4个字节，范围约-21亿到21亿。</p>
+                <p><strong>4、long：</strong> 长整型，占8个字节。</p>
+                <p><strong>5、float：</strong> 单精度浮点型，占4个字节。</p>
+                <p><strong>6、double：</strong> 双精度浮点型，占8个字节。</p>
+                <p><strong>7、char：</strong> 字符型，占2个字节。</p>
+                <p><strong>8、boolean：</strong> 布尔型，true或false。</p>
+            </div>
+
+            <h2 id="section-2">2. String、StringBuilder、StringBuffer的区别？</h2>
+            <p>三者区别：</p>
+            <div class="highlight">
+                <p><strong>1、String：</strong> 不可变字符串，每次修改都会创建新对象。</p>
+                <p><strong>2、StringBuilder：</strong> 可变字符串，非线程安全，性能较好。</p>
+                <p><strong>3、StringBuffer：</strong> 可变字符串，线程安全，使用synchronized。</p>
+                <p><strong>4、使用建议：</strong> 多线程共享字符串用StringBuffer，单线程用StringBuilder。</p>
+            </div>
+
+            <h2 id="section-3">3. ==和equals的区别？</h2>
+            <p>==和equals的区别：</p>
+            <div class="highlight">
+                <p><strong>1、==：</strong> 比较的是引用地址，基础类型比较值。</p>
+                <p><strong>2、equals：</strong> 默认比较引用地址，可重写比较内容。</p>
+                <p><strong>3、String重写：</strong> String类重写了equals方法比较字符串内容。</p>
+                <p><strong>4、注意：</strong> equals需要和hashCode配合使用时需重写两者。</p>
+            </div>
+
+            <h2 id="section-4">4. Java的访问修饰符有哪些？</h2>
+            <p>Java访问修饰符：</p>
+            <div class="highlight">
+                <p><strong>1、private：</strong> 私有访问权限，仅同类可见。</p>
+                <p><strong>2、default：</strong> 默认访问权限，同包可见。</p>
+                <p><strong>3、protected：</strong> 受保护访问权限，同包及子类可见。</p>
+                <p><strong>4、public：</strong> 公共访问权限，所有地方可见。</p>
+            </div>
+
+            <h2 id="section-5">5. Java的三大特性是什么？</h2>
+            <p>面向对象三大特性：</p>
+            <div class="highlight">
+                <p><strong>1、封装：</strong> 把数据和操作数据的方法封装在类中。</p>
+                <p><strong>2、继承：</strong> 子类继承父类的属性和方法。</p>
+                <p><strong>3、多态：</strong> 同一个行为具有不同表现形式。包括重载和重写。</p>
+            </div>
+
+            <h2 id="section-6">6. 重载和重写的区别？</h2>
+            <p>重载和重写的区别：</p>
+            <div class="highlight">
+                <p><strong>1、重载（Overload）：</strong> 同一个类中，方法名相同但参数不同。</p>
+                <p><strong>2、重写（Override）：</strong> 子类重新实现父类的方法。</p>
+                <p><strong>3、编译时多态：</strong> 重载是编译时多态。</p>
+                <p><strong>4、运行时多态：</strong> 重写是运行时多态。</p>
+            </div>
+
+            <h2 id="section-7">7. 接口和抽象类的区别？</h2>
+            <p>接口和抽象类的区别：</p>
+            <div class="highlight">
+                <p><strong>1、继承：</strong> 类只能单继承抽象类，但可以实现多个接口。</p>
+                <p><strong>2、方法：</strong> 抽象类可以有具体方法，接口JDK7前只能是抽象方法。</p>
+                <p><strong>3、成员变量：</strong> 抽象类可以有各种类型成员，接口只能是public static final。</p>
+                <p><strong>4、使用场景：</strong> 抽象类用于is-a关系，接口用于can-do关系。</p>
+            </div>
+
+            <h2 id="section-8">8. Java异常处理机制？</h2>
+            <p>Java异常处理：</p>
+            <div class="highlight">
+                <p><strong>1、try：</strong> 尝试执行可能异常的代码。</p>
+                <p><strong>2、catch：</strong> 捕获并处理异常。</p>
+                <p><strong>3、finally：</strong> 无论是否异常都会执行的代码。</p>
+                <p><strong>4、throw：</strong> 抛出异常。</p>
+                <p><strong>5、throws：</strong> 声明方法可能抛出的异常。</p>
+            </div>
+
+            <h2 id="section-9">9. CheckedException和RuntimeException的区别？</h2>
+            <p>两种异常类型的区别：</p>
+            <div class="highlight">
+                <p><strong>1、CheckedException：</strong> 编译时异常，必须处理或声明抛出。</p>
+                <p><strong>2、RuntimeException：</strong> 运行时异常，可处理也可不处理。</p>
+                <p><strong>3、常见例子：</strong> IOException是Checked，NullPointerException是Runtime。</p>
+                <p><strong>4、建议：</strong> 积极处理CheckedException，RuntimeException通常表示程序错误。</p>
+            </div>
+
+            <h2 id="section-10">10. Java的集合框架有哪些？</h2>
+            <p>Java集合框架核心接口：</p>
+            <div class="highlight">
+                <p><strong>1、Collection：</strong> 单列集合根接口。</p>
+                <p><strong>2、List：</strong> 有序可重复集合，ArrayList、LinkedList、Vector。</p>
+                <p><strong>3、Set：</strong> 无序不可重复集合，HashSet、TreeSet、LinkedHashSet。</p>
+                <p><strong>4、Map：</strong> 双列集合键值对，HashMap、TreeMap、LinkedHashMap。</p>
+                <p><strong>5、Queue：</strong> 队列接口，PriorityQueue、LinkedList。</p>
+            </div>
+
+            <h2 id="section-11">11. ArrayList和LinkedList的区别？</h2>
+            <p>ArrayList和LinkedList对比：</p>
+            <div class="highlight">
+                <p><strong>1、数据结构：</strong> ArrayList使用数组，LinkedList使用双向链表。</p>
+                <p><strong>2、随机访问：</strong> ArrayList按索引访问快，LinkedList需要遍历。</p>
+                <p><strong>3、插入删除：</strong> LinkedList插入删除快，ArrayList可能需要移动元素。</p>
+                <p><strong>4、内存：</strong> ArrayList内存连续，LinkedList需要额外存储指针。</p>
+            </div>
+
+            <h2 id="section-12">12. HashMap的底层数据结构？</h2>
+            <p>HashMap底层实现：</p>
+            <div class="highlight">
+                <p><strong>1、JDK1.7：</strong> 数组+链表（Entry数组）。</p>
+                <p><strong>2、JDK1.8：</strong> 数组+链表+红黑树（Node数组+TreeNode）。</p>
+                <p><strong>3、扰动函数：</strong> hash()方法使用高低位异或减少碰撞。</p>
+                <p><strong>4、树化条件：</strong> 单链超过8且数组长度大于64时转为红黑树。</p>
+            </div>
+
+            <h2 id="section-13">13. HashMap的put过程？</h2>
+            <p>HashMap的put执行流程：</p>
+            <div class="highlight">
+                <p><strong>1、计算hash：</strong> 调用hash()计算key的hash值。</p>
+                <p><strong>2、定位索引：</strong> 根据hash计算数组索引位置。</p>
+                <p><strong>3、遍历链表/红黑树：</strong> 遍历该位置的链表或红黑树。</p>
+                <p><strong>4、插入或更新：</strong> 找到key则更新value，否则插入新节点。</p>
+                <p><strong>5、扩容判断：</strong> 插入后判断是否需要扩容。</p>
+            </div>
+
+            <h2 id="section-14">14. ConcurrentHashMap如何保证线程安全？</h2>
+            <p>ConcurrentHashMap线程安全机制：</p>
+            <div class="highlight">
+                <p><strong>1、JDK1.7：</strong> Segment数组+HashEntry，每个Segment独立加锁。</p>
+                <p><strong>2、JDK1.8：</strong> 使用CAS+synchronized对每个数组节点加锁。</p>
+                <p><strong>3、CAS：</strong> 使用CAS操作进行无锁并发。</p>
+                <p><strong>4、synchronized：</strong> 对头节点加锁，保证原子性操作。</p>
+            </div>
+
+            <h2 id="section-15">15. HashMap和Hashtable的区别？</h2>
+            <p>HashMap和Hashtable对比：</p>
+            <div class="highlight">
+                <p><strong>1、线程安全：</strong> Hashtable线程安全，HashMap非线程安全。</p>
+                <p><strong>2、null支持：</strong> HashMap允许key和value为null，Hashtable不允许。</p>
+                <p><strong>3、性能：</strong> HashMap性能更好。</p>
+                <p><strong>4、迭代器：</strong> HashMap使用fail-fast迭代器，Hashtable使用Enumerator。</p>
+            </div>
+
+            <h2 id="section-16">16. Java的IO流有哪些？</h2>
+            <p>Java IO流分类：</p>
+            <div class="highlight">
+                <p><strong>1、输入流/输出流：</strong> 按方向分为输入流和输出流。</p>
+                <p><strong>2、字节流/字符流：</strong> 按数据类型分为字节流和字符流。</p>
+                <p><strong>3、节点流/处理流：</strong> 节点流直接操作数据源，处理流包装其他流。</p>
+                <p><strong>4、缓冲流：</strong> BufferedInputStream、BufferedReader等提供缓冲功能。</p>
+            </div>
+
+            <h2 id="section-17">17. BIO、NIO、AIO的区别？</h2>
+            <p>三种IO模型对比：</p>
+            <div class="highlight">
+                <p><strong>1、BIO：</strong> 同步阻塞IO，线程等待IO完成。</p>
+                <p><strong>2、NIO：</strong> 同步非阻塞IO，使用Selector多路复用。</p>
+                <p><strong>3、AIO：</strong> 异步非阻塞IO，基于事件和回调。</p>
+                <p><strong>4、适用场景：</strong> BIO适合连接数少，NIO适合高并发，AIO适合长连接。</p>
+            </div>
+
+            <h2 id="section-18">18. Java的反射机制？</h2>
+            <p>Java反射机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 在运行时动态获取类信息和调用方法。</p>
+                <p><strong>2、Class类：</strong> 反射的核心，获取类信息。</p>
+                <p><strong>3、获取方式：</strong> Object.getClass()、Class.forName()、.class。</p>
+                <p><strong>4、用途：</strong> 框架、注解、动态代理都用到反射。</p>
+            </div>
+
+            <h2 id="section-19">19. Java的泛型有什么用？</h2>
+            <p>Java泛型的作用：</p>
+            <div class="highlight">
+                <p><strong>1、类型安全：</strong> 编译时检查类型，避免强制类型转换。</p>
+                <p><strong>2、代码复用：</strong> 编写通用代码，减少重复代码。</p>
+                <p><strong>3、泛型类：</strong> 类名后加<T>，如ArrayList<T>。</p>
+                <p><strong>4、泛型方法：</strong> 方法返回值前加<T>。</p>
+            </div>
+
+            <h2 id="section-20">20. Java注解的作用？</h2>
+            <p>Java注解的用途：</p>
+            <div class="highlight">
+                <p><strong>1、编译检查：</strong> 如@Override检查是否重写。</p>
+                <p><strong>2、代码生成：</strong> 如Lombok自动生成getter/setter。</p>
+                <p><strong>3、运行时处理：</strong> 如Spring注解进行依赖注入。</p>
+                <p><strong>4、自定义注解：</strong> @interface定义，配合反射使用。</p>
+            </div>
+
+            <h2 id="section-21">21. Java的序列化是什么？</h2>
+            <p>Java序列化机制：</p>
+            <div class="highlight">
+                <p><strong>1、概念：</strong> 将对象转换为字节流，便于存储和传输。</p>
+                <p><strong>2、实现：</strong> 类实现Serializable接口。</p>
+                <p><strong>3、serialVersionUID：</strong> 版本号，确保序列化兼容性。</p>
+                <p><strong>4、transient：</strong> 标记的字段不参与序列化。</p>
+            </div>
+
+            <h2 id="section-22">22. Java值传递还是引用传递？</h2>
+            <p>Java参数传递规则：</p>
+            <div class="highlight">
+                <p><strong>1、结论：</strong> Java只有值传递。</p>
+                <p><strong>2、基本类型：</strong> 传递的是值的副本。</p>
+                <p><strong>3、引用类型：</strong> 传递的是引用地址的副本。</p>
+                <p><strong>4、误解：</strong> 不是传递引用本身，而是引用的副本。</p>
+            </div>
+
+            <h2 id="section-23">23. 静态变量和实例变量的区别？</h2>
+            <p>两种变量类型的区别：</p>
+            <div class="highlight">
+                <p><strong>1、static：</strong> 静态变量属于类，所有对象共享。</p>
+                <p><strong>2、实例变量：</strong> 实例变量属于对象，每个对象独立。</p>
+                <p><strong>3、存储位置：</strong> 静态变量在方法区，实例变量在堆中。</p>
+                <p><strong>4、访问方式：</strong> 静态变量可通过类名访问，实例变量需通过对象访问。</p>
+            </div>
+
+            <h2 id="section-24">24. Java中final关键字的作用？</h2>
+            <p>final关键字用法：</p>
+            <div class="highlight">
+                <p><strong>1、修饰变量：</strong> 变量值不可改变，成为常量。</p>
+                <p><strong>2、修饰方法：</strong> 方法不可被重写。</p>
+                <p><strong>3、修饰类：</strong> 类不可被继承。</p>
+                <p><strong>4、修饰参数：</strong> 参数在方法内不可被修改。</p>
+            </div>
+
+            <h2 id="section-25">25. Java的内存区域划分？</h2>
+            <p>JVM内存区域：</p>
+            <div class="highlight">
+                <p><strong>1、堆（Heap）：</strong> 存储对象实例和数组，垃圾回收的主要区域。</p>
+                <p><strong>2、栈（Stack）：</strong> 存储局部变量、方法调用栈帧。</p>
+                <p><strong>3、方法区（Method Area）：</strong> 存储类信息、常量、静态变量。</p>
+                <p><strong>4、程序计数器：</strong> 记录当前线程执行的字节码行号。</p>
+                <p><strong>5、本地方法栈：</strong> 存储本地方法调用信息。</p>
+            </div>
+
+            <h2 id="section-26">26. Java的类加载机制？</h2>
+            <p>类加载过程：</p>
+            <div class="highlight">
+                <p><strong>1、加载：</strong> 将class文件加载到内存。</p>
+                <p><strong>2、验证：</strong> 验证字节码的正确性。</p>
+                <p><strong>3、准备：</strong> 为静态变量分配内存并初始化。</p>
+                <p><strong>4、解析：</strong> 将符号引用替换为直接引用。</p>
+                <p><strong>5、初始化：</strong> 执行静态代码块和静态变量赋值。</p>
+            </div>
+
+            <h2 id="section-27">27. Java的类加载器有哪些？</h2>
+            <p>三层类加载器：</p>
+            <div class="highlight">
+                <p><strong>1、Bootstrap ClassLoader：</strong> 加载JAVA_HOME/lib下核心类库。</p>
+                <p><strong>2、Extension ClassLoader：</strong> 加载JAVA_HOME/lib/ext下扩展类。</p>
+                <p><strong>3、App ClassLoader：</strong> 加载classpath下应用程序类。</p>
+                <p><strong>4、双亲委派：</strong> 类加载器优先委托给父加载器加载。</p>
+            </div>
+
+            <h2 id="section-28">28. 为什么HashMap数组长度是2的幂次？</h2>
+            <p>HashMap数组长度设计原因：</p>
+            <div class="highlight">
+                <p><strong>1、hash计算：</strong> index = (n-1) & hash，2的幂次时效率最高。</p>
+                <p><strong>2、位运算：</strong> (n-1)的二进制都是1，&运算分布均匀。</p>
+                <p><strong>3、扩容优化：</strong> 扩容时只需判断hash某一位是0还是1。</p>
+                <p><strong>4、性能：</strong> 减少hash碰撞，提高查询效率。</p>
+            </div>
+
+            <h2 id="section-29">29. Java创建对象的方式有哪些？</h2>
+            <p>Java创建对象的几种方式：</p>
+            <div class="highlight">
+                <p><strong>1、new：</strong> 最常用的创建方式。</p>
+                <p><strong>2、反射：</strong> Class.newInstance()或Constructor.newInstance()。</p>
+                <p><strong>3、clone：</strong> 实现Cloneable接口后调用clone()。</p>
+                <p><strong>4、反序列化：</strong> 从字节流恢复对象。</p>
+            </div>
+
+            <h2 id="section-30">30. Java8有哪些新特性？</h2>
+            <p>Java 8主要新特性：</p>
+            <div class="highlight">
+                <p><strong>1、Lambda表达式：</strong> 简洁的函数式编程语法。</p>
+                <p><strong>2、Stream API：</strong> 流式数据处理。</p>
+                <p><strong>3、Optional：</strong> 解决空指针问题。</p>
+                <p><strong>4、接口默认方法：</strong> 接口可以有默认实现。</p>
+                <p><strong>5、新的日期API：</strong> LocalDate、LocalDateTime等。</p>
+            </div>
+
+            <h2 id="section-31">31. Java中volatile的作用？</h2>
+            <p>volatile关键字作用：</p>
+            <div class="highlight">
+                <p><strong>1、可见性：</strong> 保证变量对所有线程可见。</p>
+                <p><strong>2、禁止重排序：</strong> 防止CPU对指令重排序。</p>
+                <p><strong>3、不能保证原子性：</strong> volatile不能替代synchronized。</p>
+                <p><strong>4、使用场景：</strong> 状态标记量、单例模式中的double check。</p>
+            </div>
+
+            <h2 id="section-32">32. Java的Object类有哪些方法？</h2>
+            <p>Object类的核心方法：</p>
+            <div class="highlight">
+                <p><strong>1、equals()：</strong> 判断对象是否相等。</p>
+                <p><strong>2、hashCode()：</strong> 返回对象哈希值。</p>
+                <p><strong>3、toString()：</strong> 返回对象字符串表示。</p>
+                <p><strong>4、clone()：</strong> 克隆对象。</p>
+                <p><strong>5、getClass()：</strong> 获取类对象。</p>
+                <p><strong>6、notify/notifyAll/wait：</strong> 多线程相关。</p>
+            </div>
+
+            <h2 id="section-33">33. 为什么HashMap线程不安全？</h2>
+            <p>HashMap线程不安全原因：</p>
+            <div class="highlight">
+                <p><strong>1、数据覆盖：</strong> 并发put可能导致数据覆盖。</p>
+                <p><strong>2、死循环：</strong> JDK1.7并发resize可能形成环形链表，导致死循环。</p>
+                <p><strong>3、数据丢失：</strong> 并发插入可能导致数据丢失。</p>
+                <p><strong>4、替代方案：</strong> 使用ConcurrentHashMap代替。</p>
+            </div>
+
+            <h2 id="section-34">34. Java中强引用、软引用、弱引用、虚引用？</h2>
+            <p>四种引用类型：</p>
+            <div class="highlight">
+                <p><strong>1、强引用：</strong> Object obj = new Object()，永不回收。</p>
+                <p><strong>2、软引用：</strong> 内存不足时回收，用于缓存。</p>
+                <p><strong>3、弱引用：</strong> 下次垃圾回收时回收，用于Map缓存。</p>
+                <p><strong>4、虚引用：</strong> 形同虚设，回收时收到通知。</p>
+            </div>
+
+            <h2 id="section-35">35. Java的自动拆箱装箱是什么？</h2>
+            <p>自动拆箱和装箱：</p>
+            <div class="highlight">
+                <p><strong>1、装箱：</strong> 基本类型自动转为包装类型，如int转Integer。</p>
+                <p><strong>2、拆箱：</strong> 包装类型自动转为基本类型，如Integer转int。</p>
+                <p><strong>3、缓存：</strong> Integer有缓存-128到127的对象。</p>
+                <p><strong>4、注意：</strong> 装箱过程可能创建新对象，影响性能。</p>
+            </div>
+
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>目录导航</h3>
+                <ul class="toc-list" id="toc-list"></ul>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function scrollToTop() {
+            document.getElementById('content').scrollTop = 0;
+        }
+
+        function setupScrollSpy() {
+            const content = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            content.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (content.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+
+                const backToTop = document.getElementById('backToTop');
+                if (content.scrollTop > 500) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+        }
+
+        generateToc();
+        setupScrollSpy();
+    </script>
+</body>
+</html>

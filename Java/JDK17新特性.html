@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDK 17 新特性</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        .sidebar h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2196F3;
+        }
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+        .toc-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .toc-list a:hover {
+            background: #e3f2fd;
+            color: #2196F3;
+        }
+        .toc-list a.active {
+            background: #2196F3;
+            color: #fff;
+        }
+        .content-wrapper {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px 40px;
+            background: #fff;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .question {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .question h2 {
+            color: #333;
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2196F3;
+        }
+        .answer {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .answer ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .answer li {
+            margin-bottom: 8px;
+        }
+        .summary {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            color: #1565c0;
+            font-size: 14px;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #2196F3;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+        }
+        .back-to-top:hover {
+            background: #1976D2;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content-wrapper {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>目录</h3>
+            <ul class="toc-list" id="toc-list"></ul>
+        </div>
+        <div class="content-wrapper" id="content">
+            <div class="content">
+                <h1>JDK 17 新特性</h1>
+
+                <div class="question" id="q1">
+                    <h2>JDK 17中的Pattern类增强了哪些功能？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>新增asMatchPredicate方法：</strong>JDK 17的Pattern类新增了asMatchPredicate方法，可以将正则表达式编译为Predicate，方便用于过滤集合中的字符串。</li>
+                            <li><strong>增强了Unicode属性支持：</strong>JDK 17中的Pattern类增强了对Unicode属性的支持，使得正则表达式可以更好地处理Unicode字符。</li>
+                            <li><strong>引入了新的转义语法：</strong>JDK 17引入了一种新的转义语法，可以更方便地转义正则表达式中的特殊字符，提高了正则表达式的可读性和可维护性。</li>
+                            <li><strong>优化了性能：</strong>JDK 17对Pattern类的底层实现进行了优化，提升了正则表达式匹配的性能和效率。</li>
+                            <li><strong>增加了对断言的支持：</strong>JDK 17中的Pattern类增加了对断言的支持，可以更灵活地进行正则表达式的匹配和处理。</li>
+                        </ol>
+                        <div class="summary">JDK 17中Pattern类的增强功能使得正则表达式的使用更加方便和强大，开发者可以更高效地处理字符串匹配和处理任务。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q2">
+                    <h2>JDK 17中的HTTP/2 Client有哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>提供了WebSocket支持：</strong>JDK 17中的HTTP/2 Client新增了对WebSocket的支持，使得开发者可以更方便地进行WebSocket通信。</li>
+                            <li><strong>增加了HTTP/2服务器推送的支持：</strong>HTTP/2 Client在JDK 17中增加了对HTTP/2服务器推送的支持，提高了与HTTP/2服务器之间的通信效率。</li>
+                            <li><strong>引入了响应体流的处理：</strong>JDK 17中的HTTP/2 Client引入了新的API，可以更好地处理响应体流，提高了对大型响应数据的处理性能。</li>
+                            <li><strong>增强了安全性：</strong>JDK 17中的HTTP/2 Client增强了对TLS版本和密码套件的支持，提升了通信的安全性。</li>
+                            <li><strong>优化了连接池管理：</strong>HTTP/2 Client在JDK 17中优化了连接池管理机制，提高了连接的复用率和资源利用率。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的HTTP/2 Client带来了多项新特性和改进，使得开发者可以更轻松地进行HTTP/2通信，并提高了通信效率和安全性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q3">
+                    <h2>JDK 17中的Sealed Classes和Interfaces有何用处？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>更严格的访问控制：</strong>JDK 17中的Sealed Classes和Interfaces可以限制哪些类可以实现或继承该类或接口，从而提供更严格的访问控制。</li>
+                            <li><strong>增强了代码安全性：</strong>使用Sealed Classes和Interfaces可以减少外部类对内部结构的访问，提高了代码的安全性和可维护性。</li>
+                            <li><strong>促进代码组织和结构：</strong>Sealed Classes和Interfaces可以帮助开发者更好地组织和结构化代码，使得代码更易于理解和维护。</li>
+                            <li><strong>支持模式匹配：</strong>JDK 17中的Sealed Classes和Interfaces对模式匹配提供了更好的支持，使得开发者可以更方便地进行模式匹配操作。</li>
+                            <li><strong>提高了性能：</strong>使用Sealed Classes和Interfaces可以减少运行时的类型检查和转换，提高了程序的性能和执行效率。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Sealed Classes和Interfaces为开发者提供了更严格的访问控制和更好的代码组织结构，有助于提高代码的安全性和性能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q4">
+                    <h2>JDK 17中的Vector API用于做什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>高性能并行计算：</strong>JDK 17中的Vector API提供了对SIMD指令集的支持，可以进行高性能的并行计算，加速数值计算和数据处理任务。</li>
+                            <li><strong>优化向量化操作：</strong>使用Vector API可以对循环中的向量化操作进行优化，提高了向量化代码的执行效率和性能。</li>
+                            <li><strong>简化并行代码编写：</strong>Vector API简化了并行代码的编写过程，提供了更高层次的抽象，使得开发者可以更轻松地编写并行化代码。</li>
+                            <li><strong>支持多种数据类型：</strong>Vector API支持多种数据类型的操作，包括整数、浮点数等，满足不同类型数据的并行处理需求。</li>
+                            <li><strong>提供了丰富的操作方法：</strong>JDK 17中的Vector API提供了丰富的操作方法，包括加减乘除、逻辑运算等，方便开发者进行复杂的向量化计算。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Vector API为开发者提供了强大的并行计算能力，可以加速数值计算和数据处理任务，同时简化了并行代码的编写过程。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q5">
+                    <h2>JDK 17中的静态嵌套类与内部类有何区别？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>作用域不同：</strong>静态嵌套类的作用域与普通类相同，而内部类的作用域限定在外部类之内。</li>
+                            <li><strong>访问外部类的方式：</strong>静态嵌套类可以直接访问外部类的静态成员和方法，而内部类可以访问外部类的所有成员和方法。</li>
+                            <li><strong>创建方式不同：</strong>创建静态嵌套类的实例不需要外部类的实例，而创建内部类的实例需要先创建外部类的实例。</li>
+                            <li><strong>内存占用不同：</strong>静态嵌套类的实例不会持有外部类的引用，占用的内存较少，而内部类的实例会持有外部类的引用，占用的内存较多。</li>
+                            <li><strong>使用场景不同：</strong>静态嵌套类适用于独立于外部类实例存在的情况，而内部类适用于需要访问外部类实例的情况。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的静态嵌套类与内部类在作用域、访问外部类的方式、创建方式、内存占用和使用场景等方面有明显的区别，开发者需要根据具体需求选择合适的类型来使用。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q6">
+                    <h2>JDK 17中的JEP 356引入了什么新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>引入了强制类初始化阶段的线程本地变量：</strong>JDK 17中的JEP 356引入了一种新的线程本地变量类型，可以在类初始化阶段使用，提高了并发编程的灵活性和性能。</li>
+                            <li><strong>增加了线程本地变量的生命周期管理：</strong>JEP 356对线程本地变量的生命周期管理进行了优化，提供了更好的线程本地变量清理机制，避免了内存泄漏问题。</li>
+                            <li><strong>支持对线程本地变量的访问控制：</strong>JDK 17中的JEP 356引入了对线程本地变量的访问控制机制，可以限制对线程本地变量的访问权限，提高了代码的安全性和可维护性。</li>
+                            <li><strong>优化了线程本地变量的性能：</strong>JEP 356对线程本地变量的底层实现进行了优化，提高了线程本地变量的访问和操作性能。</li>
+                            <li><strong>提供了更多的线程本地变量操作方法：</strong>JDK 17中的JEP 356提供了丰富的线程本地变量操作方法，包括设置、获取、清理等，方便开发者进行线程本地变量的管理和使用。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的JEP 356引入了一系列新特性和改进，使得线程本地变量的管理更加灵活、安全和高效。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q7">
+                    <h2>JDK 17中的Foreign Function & Memory API有何用处？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>与本地代码的无缝集成：</strong>JDK 17中的Foreign Function & Memory API可以与本地代码无缝集成，实现Java与本地代码的互操作性。</li>
+                            <li><strong>操作非托管内存：</strong>使用Foreign Function & Memory API可以直接操作非托管内存，实现高效的内存管理和数据处理。</li>
+                            <li><strong>支持C语言函数调用：</strong>API支持调用C语言函数，可以方便地调用本地库中的函数，拓展了Java的功能范围。</li>
+                            <li><strong>提供了内存访问权限控制：</strong>Foreign Function & Memory API提供了对内存访问权限的控制，保证了内存操作的安全性和可靠性。</li>
+                            <li><strong>增强了本地代码的性能：</strong>使用Foreign Function & Memory API可以优化本地代码的性能，提高程序的执行效率和响应速度。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Foreign Function & Memory API为Java开发者提供了与本地代码无缝集成的能力，可以实现更高效的内存管理和操作，同时拓展了Java在系统编程和底层操作方面的功能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q8">
+                    <h2>JDK 17中的Deprecation API用于做什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>标记废弃的API：</strong>JDK 17中的Deprecation API可以标记废弃的API，提示开发者使用新的替代方案，提高代码的可维护性和更新迭代性。</li>
+                            <li><strong>提供了废弃API的详细信息：</strong>Deprecation API提供了废弃API的详细信息，包括废弃原因、建议替代方案等，方便开发者进行迁移和更新。</li>
+                            <li><strong>支持自定义废弃注解：</strong>JDK 17中的Deprecation API支持开发者自定义废弃注解，可以根据项目需求定义不同的废弃标记，增强了灵活性。</li>
+                            <li><strong>提供了废弃API的版本管理：</strong>Deprecation API提供了对废弃API的版本管理功能，可以根据版本号进行废弃API的管理和迁移。</li>
+                            <li><strong>支持IDE集成：</strong>Deprecation API支持IDE集成，可以在开发过程中及时发现和处理废弃API的使用，减少代码中潜在的问题。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Deprecation API为开发者提供了标记、管理和迁移废弃API的功能，有助于提高代码的可维护性和更新迭代性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q9">
+                    <h2>JDK 17中的JEP 387带来了哪些语言级别的改进？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>扩展了switch表达式的功能：</strong>JDK 17中的JEP 387扩展了switch表达式的功能，支持使用箭头标识符和多个case标签，提高了代码的可读性和灵活性。</li>
+                            <li><strong>增加了新的模式匹配语法：</strong>JEP 387引入了新的模式匹配语法，使得开发者可以更方便地进行类型模式匹配和模式变量的提取操作。</li>
+                            <li><strong>引入了标签语句：</strong>JDK 17中的JEP 387引入了标签语句，可以在代码中使用标签对语句进行命名和控制流操作，增强了代码的结构化和可控性。</li>
+                            <li><strong>支持嵌套的switch表达式：</strong>JEP 387允许嵌套使用switch表达式，提供了更灵活的代码组织方式，使得代码更易于理解和维护。</li>
+                            <li><strong>提供了新的流程控制方式：</strong>JDK 17中的JEP 387提供了新的流程控制方式，包括增强的条件表达式和新的控制流语法，为开发者提供了更多的编程选择。</li>
+                        </ol>
+                        <div class="summary">JEP 387带来了多项语言级别的改进，包括对switch表达式的功能扩展、模式匹配语法的引入、标签语句的支持等，提高了Java语言的表达能力和编程效率。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q10">
+                    <h2>JDK 17中的Memory Access API有何特点？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>直接操作内存：</strong>JDK 17中的Memory Access API允许开发者直接操作内存，包括读取和写入内存中的数据，提供了更灵活的内存管理方式。</li>
+                            <li><strong>支持不同数据类型的内存操作：</strong>API支持对不同数据类型的内存进行操作，包括原始数据类型、对象引用等，满足了不同场景下的内存操作需求。</li>
+                            <li><strong>提供了内存屏障操作：</strong>Memory Access API提供了内存屏障操作，可以控制内存访问的顺序和一致性，保证了多线程环境下的数据可靠性。</li>
+                            <li><strong>优化了内存访问性能：</strong>API对内存访问的底层实现进行了优化，提高了内存操作的性能和效率，减少了不必要的内存开销。</li>
+                            <li><strong>支持对非托管内存的操作：</strong>Memory Access API支持对非托管内存的操作，可以直接与本地代码进行交互，拓展了Java在底层系统编程方面的能力。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Memory Access API为开发者提供了直接操作内存的能力，包括内存读写、内存屏障操作等，有助于优化内存管理和提高程序性能。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q11">
+                    <h2>JDK 17中的静态方法引入了哪些新特性？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>允许在接口中定义静态方法：</strong>JDK 17允许在接口中定义静态方法，提供了更灵活的接口设计方式，可以直接调用接口中的静态方法。</li>
+                            <li><strong>支持私有静态方法：</strong>JDK 17中的静态方法支持私有化，可以在接口或类中定义私有静态方法，增强了代码的封装性和安全性。</li>
+                            <li><strong>提供了默认静态方法实现：</strong>接口中的默认方法现在也可以是静态方法，提供了更多的默认行为选择，使得接口的实现更加灵活。</li>
+                            <li><strong>静态方法可以直接通过接口名调用：</strong>在JDK 17中，可以通过接口名直接调用接口中的静态方法，不再需要通过实现类或对象调用。</li>
+                            <li><strong>静态方法的重写和继承：</strong>静态方法可以被子接口或实现类重写和继承，为接口的继承关系提供了更多的扩展性和复用性。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的静态方法引入了多项新特性，包括在接口中定义静态方法、支持私有静态方法、提供默认静态方法实现等，增强了Java中静态方法的功能和灵活性。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q12">
+                    <h2>JDK 17中的Foreign-Memory Access API有何优势？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>直接操作非托管内存：</strong>JDK 17中的Foreign-Memory Access API允许直接操作非托管内存，提供了更高效的内存管理方式，适用于需要高性能和低延迟的场景。</li>
+                            <li><strong>跨语言互操作性：</strong>API支持与本地代码进行无缝集成，可以在Java程序中直接调用本地代码中的非托管内存，实现跨语言互操作性。</li>
+                            <li><strong>支持内存布局和对齐控制：</strong>Foreign-Memory Access API提供了对内存布局和对齐方式的控制，可以优化内存访问的性能和效率。</li>
+                            <li><strong>提供了直接内存访问方法：</strong>API提供了直接访问非托管内存的方法，包括读取和写入非托管内存中的数据，减少了数据复制和转换的开销。</li>
+                            <li><strong>增强了内存操作的安全性：</strong>Foreign-Memory Access API提供了内存操作的安全检查机制，避免了对无效内存地址的访问，提高了程序的稳定性和可靠性。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Foreign-Memory Access API为开发者提供了直接操作非托管内存的能力，具有高性能、跨语言互操作性和安全性等优势，适用于需要对内存进行细粒度控制和优化的场景。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q13">
+                    <h2>JDK 17中的Vector API有哪些优势？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>提供了SIMD指令集的支持：</strong>JDK 17中的Vector API提供了对SIMD指令集的支持，可以实现高效的并行计算和数据处理，提高程序的性能和执行速度。</li>
+                            <li><strong>优化了向量化操作：</strong>API优化了向量化操作的实现方式，提高了向量化代码的执行效率和性能，适用于大规模数据的处理和计算任务。</li>
+                            <li><strong>简化了并行代码的编写：</strong>Vector API简化了并行代码的编写过程，提供了更高层次的抽象，使得开发者可以更轻松地编写高效的并行化代码。</li>
+                            <li><strong>支持多种数据类型的操作：</strong>Vector API支持多种数据类型的操作，包括整数、浮点数等，满足不同类型数据的并行处理需求。</li>
+                            <li><strong>提供了丰富的操作方法：</strong>JDK 17中的Vector API提供了丰富的操作方法，包括加减乘除、逻辑运算等，方便开发者进行复杂的向量化计算。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Vector API具有对SIMD指令集的支持、优化的向量化操作、简化的并行代码编写、多数据类型支持和丰富的操作方法等优势，适用于高性能并行计算和数据处理任务。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q14">
+                    <h2>JDK 17中的Pattern Matching for switch有何优势？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>简化了代码逻辑：</strong>JDK 17中的Pattern Matching for switch简化了对变量类型的检查和转换逻辑，减少了代码中的重复和冗余。</li>
+                            <li><strong>提高了代码可读性：</strong>使用Pattern Matching for switch可以更清晰地表达对变量类型的匹配和处理逻辑，提高了代码的可读性和可维护性。</li>
+                            <li><strong>增加了编译时类型检查：</strong>API提供了编译时类型检查的功能，可以在编译阶段捕获类型匹配错误，减少了运行时错误的发生。</li>
+                            <li><strong>支持模式变量的提取：</strong>Pattern Matching for switch支持在匹配模式中提取模式变量，方便开发者获取匹配模式中的关键信息。</li>
+                            <li><strong>扩展了switch表达式的功能：</strong>API扩展了switch表达式的功能，支持更多的模式匹配操作，适用于更复杂的匹配需求。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Pattern Matching for switch提供了简化代码、提高可读性、编译时类型检查、模式变量提取和扩展switch表达式功能等优势，有助于提高代码的质量和开发效率。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q15">
+                    <h2>JDK 17中的Records是什么？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>简化数据模型定义：</strong>JDK 17中的Records提供了一种简洁的方式来定义不可变的数据模型，减少了冗余的代码和样板代码。</li>
+                            <li><strong>自动生成访问器方法：</strong>Records自动生成访问器方法（getter）、equals、hashCode和toString方法，提高了代码的可读性和可维护性。</li>
+                            <li><strong>支持模式匹配：</strong>Records支持模式匹配语法，可以更方便地进行模式匹配操作，如switch表达式中的模式匹配。</li>
+                            <li><strong>保证不可变性：</strong>Records默认是不可变的，属性值一旦初始化就无法修改，保证了数据的不可变性和安全性。</li>
+                            <li><strong>提高代码的简洁性：</strong>使用Records可以将复杂的数据模型定义简化为一行代码，提高了代码的简洁性和可读性。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Records为开发者提供了一种简单、可读、不可变的数据模型定义方式，有助于提高代码的质量和开发效率。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q16">
+                    <h2>JDK 17中的Pattern Matching for instanceof有何优势？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>简化了类型检查：</strong>JDK 17中的Pattern Matching for instanceof简化了对对象类型的检查和转换逻辑，减少了代码中的冗余和重复。</li>
+                            <li><strong>提高了代码可读性：</strong>使用Pattern Matching for instanceof可以更清晰地表达对对象类型的匹配和处理逻辑，提高了代码的可读性和可维护性。</li>
+                            <li><strong>增加了编译时类型检查：</strong>API提供了编译时类型检查的功能，可以在编译阶段捕获类型匹配错误，减少了运行时错误的发生。</li>
+                            <li><strong>支持模式变量的提取：</strong>Pattern Matching for instanceof支持在匹配模式中提取模式变量，方便开发者获取匹配模式中的关键信息。</li>
+                            <li><strong>扩展了instanceof操作符的功能：</strong>API扩展了instanceof操作符的功能，支持更多的模式匹配操作，适用于更复杂的匹配需求。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Pattern Matching for instanceof提供了简化类型检查、提高可读性、编译时类型检查、模式变量提取和扩展instanceof操作符功能等优势，有助于提高代码的质量和开发效率。</div>
+                    </div>
+                </div>
+
+                <div class="question" id="q17">
+                    <h2>JDK 17中的Deprecate the Applet API是什么意思？</h2>
+                    <div class="answer">
+                        <ol>
+                            <li><strong>标记为废弃：</strong>JDK 17中的Deprecate the Applet API将Applet API标记为废弃，意味着该API不再推荐使用，建议开发者使用替代方案。</li>
+                            <li><strong>推荐使用替代技术：</strong>API废弃后，推荐开发者使用替代的技术和方案，如JavaFX、Swing等，提高了应用程序的兼容性和性能。</li>
+                            <li><strong>向后兼容性考虑：</strong>废弃Applet API时考虑了向后兼容性，尽量保证现有代码可以继续运行，但不推荐新项目使用该API。</li>
+                            <li><strong>提供了废弃API的详细信息：</strong>Deprecate the Applet API提供了废弃API的详细信息，包括废弃原因、建议替代方案等，方便开发者进行迁移和更新。</li>
+                            <li><strong>增强了安全性和性能：</strong>废弃Applet API可以增强应用程序的安全性和性能，减少了安全风险和不必要的资源开销。</li>
+                        </ol>
+                        <div class="summary">JDK 17中的Deprecate the Applet API标记了Applet API为废弃，推荐开发者使用替代方案，有助于提高应用程序的兼容性、安全性和性能。</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" id="backToTop">↑</button>
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function initScrollSpy() {
+            const contentWrapper = document.getElementById('content');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sections = document.querySelectorAll('h2');
+
+            contentWrapper.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (contentWrapper.scrollTop >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        function initBackToTop() {
+            const contentWrapper = document.getElementById('content');
+            const backToTopBtn = document.getElementById('backToTop');
+
+            contentWrapper.addEventListener('scroll', () => {
+                if (contentWrapper.scrollTop > 300) {
+                    backToTopBtn.style.display = 'flex';
+                } else {
+                    backToTopBtn.style.display = 'none';
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateToc();
+            initScrollSpy();
+            initBackToTop();
+        });
+    </script>
+</body>
+</html>

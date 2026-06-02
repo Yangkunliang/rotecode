@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacos 面试题及答案整理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 8px;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            height: calc(100vh - 16px);
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .sidebar-card h3 {
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 8px 12px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .toc-list a.active {
+            background: rgba(74, 222, 128, 0.14);
+            color: #15803d;
+            font-weight: 600;
+            box-shadow: inset 3px 0 0 #4ade80;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4ade80;
+        }
+
+        h2 {
+            font-size: 19px;
+            color: #1e293b;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 4px solid #4ade80;
+        }
+
+        h3 {
+            font-size: 16px;
+            color: #334155;
+            margin-top: 22px;
+            margin-bottom: 14px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin: 14px 0 14px 28px;
+            color: #475569;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 13px;
+            color: #e11d48;
+        }
+
+        .highlight {
+            background: #f0fdf4;
+            padding: 15px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #4ade80;
+            margin: 18px 0;
+        }
+
+        .highlight strong {
+            color: #166534;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: #4ade80;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.5);
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Nacos 面试题及答案整理</h1>
+
+            <h2 id="section-1">1. Nacos的核心功能有哪些？</h2>
+            <p>Nacos的核心功能主要包括以下几点：</p>
+            <ul>
+                <li><strong>服务发现与注册：</strong>Nacos支持服务的注册与发现，允许服务实例在Nacos中注册，并被客户端发现和调用。</li>
+                <li><strong>配置管理：</strong>提供动态的配置服务，支持配置的集中存储、版本控制和动态更新。</li>
+                <li><strong>服务健康检查：</strong>Nacos实现服务健康检查，确保只有健康的实例被发现和调用。</li>
+                <li><strong>动态路由和负载均衡：</strong>支持动态路由策略和负载均衡，在提供服务时能根据实际情况进行智能调整。</li>
+                <li><strong>集群管理和分组：</strong>支持服务的集群管理和分组功能，方便进行大规模服务管理和隔离。</li>
+            </ul>
+
+            <h2 id="section-2">2. Nacos在服务注册与发现中是如何保证高可用性的？</h2>
+            <p>Nacos在服务注册与发现中保证高可用性的方法包括：</p>
+            <ul>
+                <li><strong>集群部署：</strong>通过集群部署，确保Nacos服务器的高可用性。</li>
+                <li><strong>数据一致性：</strong>使用数据一致性协议（如Raft）来确保集群中数据的一致性。</li>
+                <li><strong>故障检测与自动转移：</strong>实现故障检测机制，并在发现节点不可用时自动进行故障转移。</li>
+                <li><strong>客户端负载均衡：</strong>Nacos客户端实现本地缓存和负载均衡，即使部分节点不可用，也能保证服务的正常发现和调用。</li>
+            </ul>
+
+            <h2 id="section-3">3. Nacos的配置管理功能具体包括哪些方面？</h2>
+            <p>Nacos的配置管理功能主要包括以下方面：</p>
+            <ul>
+                <li><strong>集中式配置存储：</strong>提供一个中心化的配置存储服务，方便统一管理。</li>
+                <li><strong>版本控制与管理：</strong>支持配置的版本控制，可以追踪配置的变更历史。</li>
+                <li><strong>动态配置更新：</strong>支持配置的动态更新，不需要重启服务即可实时生效。</li>
+                <li><strong>多环境配置：</strong>支持多环境配置管理，例如开发环境、测试环境和生产环境的配置隔离。</li>
+                <li><strong>配置变更监听：</strong>客户端可以监听配置变更，一旦配置发生变化，可以立即响应。</li>
+            </ul>
+
+            <h2 id="section-4">4. Nacos在处理大规模服务实例时的策略是什么？</h2>
+            <p>Nacos处理大规模服务实例的策略包括：</p>
+            <ul>
+                <li><strong>分片存储：</strong>对服务实例进行分片存储，减少单个节点的压力。</li>
+                <li><strong>增量推送：</strong>在服务实例变更时采用增量推送机制，而不是全量推送，减少网络传输和处理开销。</li>
+                <li><strong>服务分组和隔离：</strong>通过服务分组和隔离，有效管理和控制大量的服务实例。</li>
+                <li><strong>负载均衡与容错：</strong>实现负载均衡和容错机制，保证服务的稳定性和可靠性。</li>
+            </ul>
+
+            <h2 id="section-5">5. Nacos的健康检查机制是如何工作的？</h2>
+            <p>Nacos的健康检查机制工作方式：</p>
+            <ul>
+                <li><strong>心跳机制：</strong>服务实例定期向Nacos发送心跳，以证明自己是健康的。</li>
+                <li><strong>健康检查策略：</strong>Nacos支持多种健康检查策略，如HTTP、TCP或自定义脚本。</li>
+                <li><strong>故障自动摘除：</strong>如果服务实例未按预期发送心跳或健康检查失败，Nacos会自动将其摘除出服务列表。</li>
+                <li><strong>故障恢复：</strong>当服务实例恢复正常后，可以自动重新注册到服务列表中。</li>
+            </ul>
+
+            <h2 id="section-6">6. Nacos支持哪些数据一致性协议？</h2>
+            <p>Nacos支持的数据一致性协议主要包括：</p>
+            <ul>
+                <li><strong>Raft协议：</strong>Nacos使用Raft协议来确保集群中数据的一致性。</li>
+                <li><strong>Distro协议：</strong>对于服务发现功能，Nacos实现了基于分布式的Distro协议，用于在服务节点间高效同步数据。</li>
+            </ul>
+
+            <h2 id="section-7">7. Nacos如何实现服务的动态路由和灰度发布？</h2>
+            <p>Nacos实现服务的动态路由和灰度发布的方法包括：</p>
+            <ul>
+                <li><strong>路由规则配置：</strong>Nacos允许用户配置自定义的路由规则，根据请求的不同参数路由到不同的服务实例。</li>
+                <li><strong>权重和标签：</strong>支持为服务实例设置权重和标签，进行细粒度的流量控制和路由。</li>
+                <li><strong>灰度发布：</strong>通过灰度发布功能，可以逐步推出新功能或配置，逐渐扩大影响范围，减少风险。</li>
+            </ul>
+
+            <h2 id="section-8">8. Nacos的服务注册和发现机制是如何工作的？</h2>
+            <p>Nacos的服务注册和发现机制工作原理如下：</p>
+            <ul>
+                <li><strong>服务注册：</strong>服务提供者在启动时将自己的服务信息注册到Nacos服务器。</li>
+                <li><strong>服务存储：</strong>Nacos服务器存储服务信息，包括服务名称、地址等。</li>
+                <li><strong>服务发现：</strong>服务消费者通过Nacos客户端查询服务信息，并获取服务提供者地址。</li>
+                <li><strong>负载均衡：</strong>Nacos客户端实现负载均衡，确保请求均匀分配到各个服务提供者。</li>
+            </ul>
+
+            <h2 id="section-9">9. Nacos如何实现配置管理？</h2>
+            <p>Nacos实现配置管理的方式包括：</p>
+            <ul>
+                <li><strong>配置存储：</strong>在Nacos服务器上存储应用的配置信息。</li>
+                <li><strong>动态更新：</strong>支持配置信息的动态更新，无需重启服务。</li>
+                <li><strong>配置版本控制：</strong>提供配置版本管理，支持配置变更的历史追踪。</li>
+                <li><strong>配置分组和命名空间：</strong>支持配置的分组和命名空间管理，方便不同环境和应用的配置隔离。</li>
+            </ul>
+
+            <h2 id="section-10">10. Nacos在微服务架构中的作用是什么？</h2>
+            <p>Nacos在微服务架构中的作用主要包括：</p>
+            <ul>
+                <li><strong>服务注册与发现：</strong>为微服务提供服务注册和发现机制，实现服务间的动态发现和负载均衡。</li>
+                <li><strong>配置管理：</strong>提供动态的配置管理功能，帮助微服务应对快速变化的配置需求。</li>
+                <li><strong>服务健康检查：</strong>监控服务状态，确保服务健康和稳定运行。</li>
+            </ul>
+
+            <h2 id="section-11">11. Nacos的集群管理是如何实现的？</h2>
+            <p>Nacos的集群管理实现方式如下：</p>
+            <ul>
+                <li><strong>集群部署：</strong>支持多节点的集群部署，提高系统的可用性和扩展性。</li>
+                <li><strong>故障转移：</strong>当集群中的一个节点故障时，能够自动进行故障转移。</li>
+                <li><strong>数据同步：</strong>在集群节点间同步数据，保证数据的一致性。</li>
+                <li><strong>负载均衡：</strong>集群中的请求按负载情况进行均衡分配。</li>
+            </ul>
+
+            <h2 id="section-12">12. Nacos与其他服务注册中心（如Eureka、Consul）的区别是什么？</h2>
+            <p>Nacos与其他服务注册中心的主要区别包括：</p>
+            <ul>
+                <li><strong>配置管理：</strong>Nacos不仅支持服务发现，还提供了强大的配置管理功能，而Eureka和Consul主要聚焦于服务发现。</li>
+                <li><strong>数据一致性：</strong>Nacos支持CP和AP模式的灵活切换，而Eureka主要是AP模式，Consul支持CP模式。</li>
+                <li><strong>社区和生态：</strong>Nacos作为阿里巴巴开源项目，与Spring Cloud等生态集成更加紧密。</li>
+            </ul>
+
+            <h2 id="section-13">13. Nacos的安全机制包括哪些方面？</h2>
+            <p>Nacos的安全机制主要包括：</p>
+            <ul>
+                <li><strong>权限控制：</strong>支持基于角色的访问控制，对不同用户和服务进行权限分配。</li>
+                <li><strong>登录认证：</strong>提供登录认证机制，保护配置信息和服务列表的安全。</li>
+                <li><strong>配置加密：</strong>支持对敏感配置进行加密处理。</li>
+                <li><strong>通信安全：</strong>支持HTTPS等安全通信协议，确保数据传输的安全性。</li>
+            </ul>
+
+            <h2 id="section-14">14. Nacos在处理网络分区时采取了哪些策略？</h2>
+            <p>Nacos处理网络分区的策略包括：</p>
+            <ul>
+                <li><strong>自动切换：</strong>在CAP理论中，Nacos可根据需要在一致性（CP）和可用性（AP）之间自动切换。</li>
+                <li><strong>故障检测：</strong>通过心跳机制和健康检查来检测网络分区情况。</li>
+                <li><strong>服务降级：</strong>在网络分区发生时，Nacos能够自动进行服务降级，保证核心服务的可用性。</li>
+                <li><strong>数据同步恢复：</strong>网络分区恢复后，Nacos会同步分区期间的数据变更，保持数据的一致性。</li>
+            </ul>
+
+            <h2 id="section-15">15. Nacos如何支持服务的灰度发布？</h2>
+            <p>Nacos支持服务的灰度发布方式包括：</p>
+            <ul>
+                <li><strong>流量控制：</strong>可以控制特定服务或用户的流量比例，实现灰度发布。</li>
+                <li><strong>配置管理：</strong>利用Nacos的动态配置管理，逐步应用新配置实现渐进式发布。</li>
+                <li><strong>标签和分组：</strong>通过设置不同的标签或分组，将服务请求分配到不同的实例进行灰度测试。</li>
+                <li><strong>版本控制：</strong>管理不同版本的服务，方便进行灰度发布和回滚。</li>
+            </ul>
+
+            <h2 id="section-16">16. Nacos中服务权重是如何工作的？</h2>
+            <p>Nacos中服务权重的工作机制如下：</p>
+            <ul>
+                <li><strong>权重分配：</strong>服务提供者可以在Nacos中被分配不同的权重值。</li>
+                <li><strong>负载均衡：</strong>在进行服务调用时，Nacos会根据权重值影响负载均衡的决策。</li>
+                <li><strong>流量控制：</strong>高权重的服务实例将接收更多的请求流量。</li>
+                <li><strong>动态调整：</strong>权重值可以动态调整，以响应服务的实时性能和负载变化。</li>
+            </ul>
+
+            <h2 id="section-17">17. Nacos在服务治理方面提供了哪些功能？</h2>
+            <p>Nacos在服务治理方面提供的功能包括：</p>
+            <ul>
+                <li><strong>服务发现与注册：</strong>提供服务注册和发现机制，支持服务间的动态发现和路由。</li>
+                <li><strong>配置管理：</strong>动态配置管理，帮助应对快速变化的配置需求。</li>
+                <li><strong>服务监控：</strong>提供服务的实时监控和状态检查。</li>
+                <li><strong>流量管理：</strong>包括流量分配、灰度发布和服务降级策略。</li>
+            </ul>
+
+            <h2 id="section-18">18. Nacos的客户端缓存机制是怎样的？</h2>
+            <p>Nacos的客户端缓存机制包括：</p>
+            <ul>
+                <li><strong>本地缓存：</strong>在客户端本地缓存服务列表，减少对注册中心的频繁访问。</li>
+                <li><strong>数据同步：</strong>定期与Nacos服务器同步更新缓存数据。</li>
+                <li><strong>失效处理：</strong>当发现缓存数据过时或无效时，自动重新从服务端拉取数据。</li>
+                <li><strong>减轻压力：</strong>通过本地缓存减轻Nacos服务器的负载压力。</li>
+            </ul>
+
+            <h2 id="section-19">19. Nacos支持的服务健康检查机制有哪些？</h2>
+            <p>Nacos支持的服务健康检查机制包括：</p>
+            <ul>
+                <li><strong>心跳检测：</strong>服务实例定期向Nacos发送心跳，以证明其健康状态。</li>
+                <li><strong>故障自动摘除：</strong>如果服务实例未能按时发送心跳，Nacos将其视为不健康并自动摘除。</li>
+                <li><strong>自定义健康检查：</strong>支持自定义健康检查策略，以适应特定的业务需求。</li>
+                <li><strong>实时监控：</strong>提供实时的服务监控和警报机制，以快速响应服务故障。</li>
+            </ul>
+
+            <h2 id="section-20">20. Nacos在处理跨云和多数据中心场景时的策略是什么？</h2>
+            <p>Nacos处理跨云和多数据中心的策略：</p>
+            <ul>
+                <li><strong>多集群支持：</strong>Nacos支持在多个集群中运行，能够跨云和跨数据中心提供服务。</li>
+                <li><strong>数据同步：</strong>在不同集群间同步服务注册和配置数据，保证数据一致性。</li>
+                <li><strong>区域感知路由：</strong>提供区域感知的路由能力，优先路由到同一区域或数据中心的服务实例。</li>
+            </ul>
+
+            <h2 id="section-21">21. Nacos如何实现服务配置的热更新？</h2>
+            <p>Nacos实现服务配置热更新的方法：</p>
+            <ul>
+                <li><strong>动态监听机制：</strong>服务客户端监听Nacos中配置的变化，一旦配置更新，客户端可以立即感知。</li>
+                <li><strong>无需重启更新：</strong>配置更新后，服务客户端可以不重启服务应用即可加载最新配置。</li>
+                <li><strong>配置版本管理：</strong>Nacos支持配置的版本管理，可以随时回滚至之前的配置版本。</li>
+            </ul>
+
+            <h2 id="section-22">22. Nacos如何保证在云原生环境中的高效运行？</h2>
+            <p>Nacos在云原生环境中保证高效运行的策略包括：</p>
+            <ul>
+                <li><strong>容器化部署：</strong>Nacos支持容器化部署，如Docker，易于在云原生环境中进行扩展和管理。</li>
+                <li><strong>Kubernetes集成：</strong>Nacos提供与Kubernetes的良好集成，支持在Kubernetes环境下的服务发现和配置管理。</li>
+                <li><strong>弹性伸缩：</strong>支持根据负载变化自动伸缩服务实例，优化资源使用。</li>
+                <li><strong>轻量级和微服务友好：</strong>Nacos设计轻量级，适合微服务架构，易于在云原生环境中快速部署。</li>
+            </ul>
+
+            <h2 id="section-23">23. Nacos的配置监听机制是如何实现的？</h2>
+            <p>Nacos的配置监听机制实现方式：</p>
+            <ul>
+                <li><strong>长轮询机制：</strong>客户端通过长轮询机制向Nacos服务器查询配置更新，实现实时配置更新监听。</li>
+                <li><strong>事件驱动：</strong>当配置发生变化时，Nacos服务器会触发事件，通知所有监听该配置的客户端。</li>
+                <li><strong>配置缓存：</strong>客户端本地维护配置缓存，减少对Nacos服务器的直接调用，提高效率。</li>
+            </ul>
+
+            <h2 id="section-24">24. Nacos如何支持服务的动态伸缩？</h2>
+            <p>Nacos支持服务动态伸缩的方式：</p>
+            <ul>
+                <li><strong>实时服务注册与发现：</strong>随着服务实例的动态增减，Nacos能够实时更新服务信息，确保服务消费者能够及时发现新的服务实例。</li>
+                <li><strong>负载均衡策略：</strong>Nacos提供灵活的负载均衡策略，支持根据实例数量动态调整流量分配。</li>
+                <li><strong>健康检查机制：</strong>通过健康检查确保只有健康的服务实例参与服务提供。</li>
+            </ul>
+
+            <h2 id="section-25">25. Nacos的权限控制和安全机制有哪些？</h2>
+            <p>Nacos的权限控制和安全机制包括：</p>
+            <ul>
+                <li><strong>认证机制：</strong>支持用户认证，确保只有授权用户可以访问Nacos服务。</li>
+                <li><strong>角色和权限管理：</strong>提供基于角色的访问控制，可以细粒度地管理用户对服务和配置的操作权限。</li>
+                <li><strong>安全通信：</strong>支持HTTPS等安全通信协议，保障数据传输的安全性。</li>
+            </ul>
+
+            <h2 id="section-26">26. Nacos在灾难恢复中的角色和功能是什么？</h2>
+            <p>Nacos在灾难恢复中的角色和功能：</p>
+            <ul>
+                <li><strong>服务注册信息的备份：</strong>Nacos确保服务注册信息在多个地点备份，以便在主数据中心发生故障时快速恢复。</li>
+                <li><strong>配置数据的同步和恢复：</strong>在灾难发生时，Nacos能够保证配置数据的快速同步和恢复。</li>
+                <li><strong>故障检测和自动切换：</strong>Nacos能够检测到服务实例的故障，并自动切换到备份的服务实例，确保服务的持续可用性。</li>
+            </ul>
+
+            <h2 id="section-27">27. Nacos是如何实现流量控制和熔断机制的？</h2>
+            <p>Nacos实现流量控制和熔断机制的方式：</p>
+            <ul>
+                <li><strong>流量控制规则：</strong>Nacos允许用户定义流量控制规则，如限流策略，以避免服务过载。</li>
+                <li><strong>服务降级和熔断：</strong>在服务负载过高或响应时间过长时，Nacos支持服务的自动降级和熔断，以保护系统的稳定性。</li>
+                <li><strong>动态规则调整：</strong>支持基于实时监控数据动态调整流量控制和熔断规则。</li>
+            </ul>
+
+            <h2 id="section-28">28. Nacos在大规模服务管理中的性能优化策略有哪些？</h2>
+            <p>Nacos在大规模服务管理中的性能优化策略包括：</p>
+            <ul>
+                <li><strong>分布式存储：</strong>采用分布式存储方案，提高大规模服务数据的处理能力和效率。</li>
+                <li><strong>增量更新机制：</strong>对服务列表和配置信息采用增量更新方式，减少网络传输量和数据处理量。</li>
+                <li><strong>负载均衡优化：</strong>对负载均衡算法进行优化，确保在大规模服务环境下的高效运作。</li>
+                <li><strong>缓存策略：</strong>在客户端实现缓存机制，减少对Nacos服务器的直接查询，降低服务器负载。</li>
+            </ul>
+
+            <h2 id="section-29">29. Nacos支持的配置管理文件格式有哪些？</h2>
+            <p>Nacos支持的配置管理文件格式包括：</p>
+            <ul>
+                <li><strong>Properties格式：</strong>传统的键值对格式，适用于简单的配置需求。</li>
+                <li><strong>YAML格式：</strong>支持层次化的YAML格式，适用于复杂的配置结构。</li>
+                <li><strong>JSON格式：</strong>支持JSON格式，方便与现代Web应用集成。</li>
+            </ul>
+
+            <h2 id="section-30">30. Nacos中的命名空间、配置分组和服务分组有何区别和用途？</h2>
+            <p>Nacos中的命名空间、配置分组和服务分组区别及用途如下：</p>
+            <ul>
+                <li><strong>命名空间：</strong>主要用于环境隔离，比如区分开发环境、测试环境和生产环境。</li>
+                <li><strong>配置分组：</strong>用于将配置细分到更小的集合，便于管理和区分不同应用或服务的配置。</li>
+                <li><strong>服务分组：</strong>允许同一个服务在不同的分组中有不同的实例，适用于对同一服务的不同实现进行分组管理。</li>
+            </ul>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>📖 此页目录</h3>
+                <ul class="toc-list" id="toc-list">
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <button class="back-to-top" id="back-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        function generateToc() {
+            const headings = document.querySelectorAll('h2');
+            const tocList = document.getElementById('toc-list');
+            
+            headings.forEach((heading, index) => {
+                const id = heading.getAttribute('id');
+                const text = heading.textContent;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.textContent = text;
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        }
+
+        function highlightCurrentSection() {
+            const headings = document.querySelectorAll('h2');
+            const links = document.querySelectorAll('.toc-list a');
+            let currentSection = headings[0] ? headings[0].getAttribute('id') : '';
+
+            headings.forEach((heading) => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    currentSection = heading.getAttribute('id');
+                }
+            });
+
+            links.forEach((link) => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                    link.scrollIntoView({ block: 'nearest' });
+                }
+            });
+        }
+
+        function updateScrollState() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const button = document.getElementById('back-to-top');
+            const scrollTop = contentWrapper ? contentWrapper.scrollTop : window.scrollY;
+            if (scrollTop > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+            highlightCurrentSection();
+        }
+
+        function bindScrollSpy() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            const scrollTarget = contentWrapper || window;
+
+            scrollTarget.addEventListener('scroll', updateScrollState);
+            document.querySelectorAll('.toc-list a').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (!target || !contentWrapper) return;
+                    event.preventDefault();
+                    contentWrapper.scrollTo({
+                        top: target.offsetTop - 16,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            updateScrollState();
+        }
+
+        function scrollToTop() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            if (contentWrapper) {
+                contentWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateToc();
+            bindScrollSpy();
+        });
+    </script>
+</body>
+</html>
